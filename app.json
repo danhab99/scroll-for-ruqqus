@@ -1,0 +1,12 @@
+{
+  "name": "scroll-for-ruqqus",
+  "displayName": "scroll-for-ruqqus",
+  "expo": {
+    "name": "scroll-for-ruqqus",
+    "slug": "scroll-for-ruqqus",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
