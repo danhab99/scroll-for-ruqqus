@@ -8,6 +8,7 @@ import { View, Text } from 'react-native'
 import { IconButton } from './components'
 
 import Feed from './views/feed'
+import Login from './views/login';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -80,6 +81,7 @@ export default function App() {
         drawerContent={ps => <CustomDrawerContent {...ps} />}
       >
         <Drawer.Screen name="Home" component={StackNavigator} />
+        <Drawer.Screen name="Login" component={Login} />
       </Drawer.Navigator>
     </NavigationContainer>
   );
