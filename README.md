@@ -4,6 +4,15 @@ This is a 3rd party [Ruqqus](https://ruqqus.com/) client for Android and iOS\* w
 
 ![initial dev screenshot](docs/readme/initialdevscreenshot.png)
 
+## secrets.js
+
+Get your API keys from [here](https://ruqqus.com/settings/apps) and add them to `./secrets.js`
+
+```js
+# secrets.js
+export const ClientID = "CLIENT ID HERE"
+export const ClientSecret = "CLIENT SECRET HERE"
+```
 
 ## Todo
 
