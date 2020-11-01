@@ -1,6 +1,6 @@
-import { NavigationContainer, DrawerActions } from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { createDrawerNavigator } from '@react-navigation/drawer';
+import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { COLORS, FONTSIZE, SPACE } from './theme'
@@ -11,6 +11,19 @@ import Feed from './views/feed'
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
+
+function CustomDrawerContent(props) {
+  return (
+    <DrawerContentScrollView {...props}>
+      <DrawerItemList 
+        activeTintColor="white"
+        inactiveTintColor="lightgray"
+        activeBackgroundColor={COLORS.primary}
+        {...props} 
+      />
+    </DrawerContentScrollView>
+  )
+}
 
 function StackTitle(props) {
   return (
@@ -62,8 +75,9 @@ export default function App() {
       <Drawer.Navigator 
         initialRouteName="Home"
         drawerStyle={{
-          backgroundColor: COLORS.backgroundHighlight
+          backgroundColor: COLORS.backgroundHighlight,
         }}
+        drawerContent={ps => <CustomDrawerContent {...ps} />}
       >
         <Drawer.Screen name="Home" component={StackNavigator} />
       </Drawer.Navigator>
