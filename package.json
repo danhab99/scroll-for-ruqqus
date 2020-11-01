@@ -8,6 +8,11 @@
     "test": "jest"
   },
   "dependencies": {
+    "@react-native-community/masked-view": "^0.1.10",
+    "@react-navigation/drawer": "^5.10.2",
+    "@react-navigation/native": "^5.8.2",
+    "@react-navigation/stack": "^5.11.1",
+    "color": "^3.1.3",
     "expo": "~39.0.2",
     "expo-splash-screen": "~0.6.2",
     "expo-status-bar": "~1.0.2",
@@ -15,11 +20,17 @@
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-native": "~0.63.3",
-    "react-native-gesture-handler": "~1.7.0",
-    "react-native-reanimated": "~1.13.0",
-    "react-native-screens": "~2.10.1",
+    "react-native-gesture-handler": "^1.7.0",
+    "react-native-reanimated": "^1.13.1",
+    "react-native-safe-area-context": "^3.1.8",
+    "react-native-screens": "^2.10.1",
     "react-native-unimodules": "~0.11.0",
-    "react-native-web": "~0.13.12"
+    "react-native-vector-icons": "^7.1.0",
+    "react-native-web": "~0.13.12",
+    "readline": "^1.3.0",
+    "redux": "^4.0.5",
+    "redux-thunk": "^2.3.0",
+    "ruqqus-js": "^3.0.0"
   },
   "devDependencies": {
     "@babel/core": "~7.9.0",
