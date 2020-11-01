@@ -7,7 +7,9 @@ export const COLORS = {
   text: '#fff',
   background: '#181818',
   backgroundHighlight: '#1f2023',
+  backgroundDark: '#0f0f0f',
   primary: '#693ccd',
+  muted: '#aaa'
 }
 
 const ChangeVal = dir => (c, d=(1/3)) => Color(c)[dir](d).hex().toString()
@@ -51,6 +53,15 @@ const Style = StyleSheet.create({
     padding: SPACE(1),
     backgroundColor: COLORS.background,
     height: '100%'
+  },
+  horizontal: {
+    flexDirection: 'row',
+    alignContent: 'space-around',
+    display: "flex"
+  },
+  bottomButtons: {
+    marginTop: SPACE(0.3),
+    marginBottom: SPACE(0.3),
   }
 })
 
