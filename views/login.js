@@ -1,17 +1,43 @@
 import React from 'react'
 import { Linking, View, Text } from 'react-native'
-import { getAuthURL } from 'ruqqus-js'
-import { ClientID } from '../secrets'
-import * as Url from 'url'
+import { getAuthURL, Client } from 'ruqqus-js'
+import { ClientID, ClientSecret } from '../secrets'
+import parse from 'url-parse'
 
 export default class Login extends React.Component {
   constructor(props) {
     super(props)
+
+    this.catchTokens = this.catchTokens.bind(this)
   }
 
-  catchTokens({ url }) {
-    let u = Url(url)
-    console.log(u)
+  async catchTokens({ url }) {
+    url = parse(url, true)
+    console.log(url)
+
+    if (url.query.state == this.stateToken) {
+      console.log('CODE', url.query.code)
+
+      const client = new Client({
+        id: ClientID,
+        token: ClientSecret,
+        code: url.query.code
+      })
+
+      setTimeout(async () => {
+        debugger
+        // let a1 = await client.guilds.isAvailable('ruqqus')
+        let a2 = await client.guilds.isAvailable('+ruqqus')
+
+        console.log('IS WORKING', a2)
+      }, 3000)
+      
+    }
+    else {
+      // Try login procedure again
+      this.componentWillUnmount()
+      this.componentDidMount()
+    }
   }
 
   async componentDidMount() {
