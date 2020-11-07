@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, Text, Image } from 'react-native'
 import Style, { COLORS, FONTS, FONTSIZE, SPACE } from '../theme'
-import { Input, LinkText, Button } from '../components'
+import { Input, LinkText, Button, IconButton } from '../components'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export default class Login extends React.Component {
@@ -33,16 +33,34 @@ export default class Login extends React.Component {
   }
 
   componentDidMount() {
-    AsyncStorage.getItem('servers', servers => this.setState({
+    AsyncStorage.getItem('servers', (err, servers) => this.setState({
       servers: JSON.parse(servers) || []
     }))
   }
 
+  componentDidUpdate() {
+    console.log('Saving servers')
+    AsyncStorage.setItem('servers', JSON.stringify(this.state.servers))
+  }
+
   saveServer() {
-    this.setState(
-      prev => ({servers: prev.servers.concat([this.state.newServer])}),
-      () => AsyncStorage.setItem('servers', JSON.stringify(this.state.servers))
-    )
+    this.setState(prev => ({
+      servers: prev.servers.concat([this.state.newServer]),
+      newServer: {
+        clientID: '',
+        clientSecret: '',
+        domain: ''
+      }
+    }))
+  }
+
+  deleteServer(key) {
+    this.setState(prev => {
+      prev.servers.splice(key, 1)
+      return {
+        servers: prev.servers
+      }
+    })
   }
 
   render() {
@@ -104,7 +122,8 @@ export default class Login extends React.Component {
           }}>
             <View style={{
               display: 'flex',
-              flexDirection: 'row'
+              flexDirection: 'row',
+              justifyContent: 'space-between'
             }}>
               <Image
                 style={{
@@ -125,13 +144,18 @@ export default class Login extends React.Component {
               }}>
                 {server.domain}
               </Text>
+
+              <IconButton 
+                icon="delete" 
+                onPress={() => this.deleteServer(i)}
+              />
             </View>
             
 
             <Text style={{
               color: COLORS.text,
             }}>
-              {server.clientID}
+              <Text style={{color: COLORS.muted}}>Client ID:</Text> {server.clientID}
             </Text>
 
             <Button
