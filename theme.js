@@ -62,6 +62,21 @@ const Style = StyleSheet.create({
   bottomButtons: {
     marginTop: SPACE(0.3),
     marginBottom: SPACE(0.3),
+  },
+  input: {
+    borderBottomColor: COLORS.primary,
+    borderBottomWidth: 2,
+    color: COLORS.text,
+    fontSize: FONTSIZE(1.5)
+  },
+  inputLabel: {
+    color: COLORS.muted,
+    marginTop: SPACE(1)
+  },
+  card: {
+    backgroundColor: COLORS.backgroundHighlight,
+    padding: SPACE(1),
+    borderRadius: 4,
   }
 })
 

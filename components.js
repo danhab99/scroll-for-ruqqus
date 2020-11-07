@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Pressable, Text, Image } from 'react-native';
+import { View, Pressable, Text, Image, Linking } from 'react-native';
+import { TextInput } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Style, { SPACE, FONTSIZE, COLORS } from './theme'
 
@@ -78,7 +79,6 @@ export class SubmissionCard extends React.Component {
           <Text style={{
             fontSize: FONTSIZE(2),
             color: COLORS.text,
-            marginLeft: SPACE(0.6)
           }}>
             {post?.content?.title}
           </Text>
@@ -104,4 +104,53 @@ export class SubmissionCard extends React.Component {
       </View>
     )
   }
+}
+
+export function Input(props) {
+  return (<View>
+    <Text style={Style.inputLabel}>
+      {props.label}
+    </Text>
+    <TextInput
+      style={{
+        ...props.style, 
+        ...Style.input
+      }}
+      {...props}
+    />
+  </View>)
+}
+
+export function LinkText(props) {
+  return <Text
+    style={{
+      color: COLORS.primary,
+      textDecorationColor: COLORS.primary,
+      textDecorationStyle: "solid",
+      textDecorationLine: 'underline',
+      ...props.style
+    }}
+    onPress={() => Linking.openURL(props.url)}
+  >
+    {props.children}
+  </Text>
+}
+
+export function Button(props) {
+  return (<Pressable onPress={props.onPress}> 
+    <Text
+      style={{
+        backgroundColor: COLORS.primary,
+        color: COLORS.text,
+        marginTop: SPACE(1),
+        justifyContent: 'center',
+        textAlign: 'center',
+        fontSize: FONTSIZE(1.5),
+        padding: SPACE(0.5),
+        borderRadius: 5
+      }}
+    >
+      {props.text}
+    </Text>
+  </Pressable>)
 }
