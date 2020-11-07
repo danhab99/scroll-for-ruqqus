@@ -1,0 +1,3 @@
+[submodule "ruqqus-js"]
+	path = ruqqus-js
+	url = git@github.com:danhab99/ruqqus-js.git
