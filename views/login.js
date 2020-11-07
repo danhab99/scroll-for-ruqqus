@@ -59,8 +59,20 @@ export default class Login extends React.Component {
           </Text>
 
           <Text style={{color: COLORS.text}}>
-            Until somebody implements proper <LinkText url="https://oauth.net/2/grant-types/implicit/">implicit OAuth</LinkText>, please tap <LinkText url="https://ruqqus.com/settings/apps">here</LinkText> to apply for app keys so you can login.
+            Until somebody implements proper <LinkText url="https://oauth.net/2/grant-types/implicit/">implicit OAuth</LinkText>, you're going to have to apply for app keys with your ruqqus-compatible server admins. Type in the domain first to get a link to your app setting page.
           </Text>
+
+          <Input 
+            label="Domain"
+            onChangeText={this.onChangeServer('domain')}
+            autoCompleteType="off"
+            autoCapitalize="none"
+            value={this.state.newServer.domain}
+          />
+
+          {this.state.newServer.domain
+          ? <Text style={{color: COLORS.text}}>Please tap <LinkText url={`https://${this.state.newServer.domain}/settings/apps`}>here</LinkText> to apply for the client ID and client secret</Text>
+          : null}
          
           <Input 
             label="Client ID"
@@ -76,14 +88,6 @@ export default class Login extends React.Component {
             autoCompleteType="off"
             autoCapitalize="none"
             value={this.state.newServer.clientSecret}
-          />
-
-          <Input 
-            label="Domain"
-            onChangeText={this.onChangeServer('domain')}
-            autoCompleteType="off"
-            autoCapitalize="none"
-            value={this.state.newServer.domain}
           />
 
           <Button
