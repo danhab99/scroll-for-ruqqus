@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Pressable, Text, Image, Linking } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import Style, { SPACE, FONTSIZE, COLORS } from './theme'
+import Style, { SPACE, FONTSIZE, COLORS, Lighten } from './theme'
 
 export function IconButton(props) {
   return (
@@ -124,7 +124,7 @@ export function Input(props) {
 export function LinkText(props) {
   return <Text
     style={{
-      color: COLORS.primary,
+      color: Lighten(COLORS.primary),
       textDecorationColor: COLORS.primary,
       textDecorationStyle: "solid",
       textDecorationLine: 'underline',
