@@ -6,9 +6,23 @@ import React from 'react';
 import { COLORS, FONTSIZE, SPACE } from './theme'
 import { View, Text } from 'react-native'
 import { IconButton } from './components'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import Feed from './views/feed'
 import Login from './views/login';
+
+AsyncStorage.getAllKeys((err, keys) => {
+  if (err) {
+    console.error('ASYNC STORAGE ERROR', err)
+  }
+  else {
+    keys.forEach(key => {
+      AsyncStorage.getItem(key, (err, value) => {
+        console.log('ASYNC STORAGE', key, value || err)
+      })
+    })
+  }
+})
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
