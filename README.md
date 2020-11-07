@@ -11,13 +11,15 @@ Get your API keys from [here](https://ruqqus.com/settings/apps) and add them to 
 ```js
 # secrets.js
 export const ClientID = "CLIENT ID HERE"
-export const ClientSecret = "CLIENT SECRET HERE"
+//export const ClientSecret = "CLIENT SECRET HERE"
+// We want to avoid that ^
 ```
 
 ## Todo
 
 - [ ] Icon and logo design
-- [ ] Still waiting on app keys from ruqqus admins
+- [x] Still waiting on app keys from ruqqus admins
 - [ ] Implement app ¯\\\_(ツ)_/¯
+- [ ] Ruqqus api requires implicit oauth
 
 <sup>* I don't have an iPhone so iOS compatibility is gonna be shotty. If you have an iPhone and are willing to fix, plz submit pull request</sup>
