@@ -1,0 +1,35 @@
+<%- include('../templates/head') %>
+
+<h1>Avaliable Ruqqus Sites</h1>
+
+<% if (user) { %>
+<div class="card" style="margin-bottom: 1em; width: min(6cm, 100%);">
+  <h4 style="margin: 1%;">Add a new site</h4>
+  <form action="/sites/new" method="POST">
+    <input type="text" placeholder="Name" name="name" required autocomplete="off"/>
+    <input type="text" placeholder="Domain (e.g. ruqqus.com)" name="domain" required autocomplete="off"/>
+    <input type="text" placeholder="Client ID" name="clientID" required autocomplete="off" autocapitalize="off"/>
+    <input type="password" placeholder="Client Secret" name="clientSecret" required autocomplete="off" autocapitalize="off"/>
+    <input type="submit" />
+  </form>
+</div>
+<% } %>
+
+<br />
+
+<form action="/" method="GET">
+  <input name="name" placeholder="type name of site here" type="search" autocapitalize="none" autocomplete="none"/>
+  <input type="submit" value="Search" />
+</form>
+
+<div style="display: flex; flex-direction: row; flex-wrap: wrap; justify-content: flex-start;">
+  <% for (let site of sites) { %>
+    <div class="card" style="margin: 10px;">
+      <h3><a href="https://<%= site.domain %>"><%= site.name %></a></h3>
+      <p>Client ID: <%= site.clientID %></p>
+    </div>
+  <% } %>
+</div>
+
+
+<%- include('../templates/foot') -%>
