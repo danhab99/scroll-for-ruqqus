@@ -6,14 +6,16 @@ const session = require('express-session')
 const MongoStore = require('connect-mongo')(session)
 const path = require('path')
 
+const Site = require('./schemas/site')
+
 const app = express()
 
 app.use(session({
   secret: process.env.COOKIE_SECRET,
-  resave: false,
+  resave: true,
   unset: 'destroy',
   saveUninitialized: false,
-  rolling: false,
+  rolling: true,
   cookie: { 
     secure: false, 
     maxAge: 6.048e+8, // 1 week
@@ -25,8 +27,16 @@ app.use(session({
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
+app.use(require('./route/login'))
+app.use('/sites', require('./route/sites'))
+
 app.get('/', (req, res) => {
-  res.render('views/index.ejs')
+  Site.find(req.query.name ? {name: RegExp(req.query.name)} : {}).then(sites => {
+    res.render('index', {
+      user: req.user,
+      sites
+    })
+  })
 })
 
 mongoose.connection.on("connecting", () =>
