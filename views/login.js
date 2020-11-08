@@ -14,7 +14,7 @@ export default class Login extends React.Component {
       newServer: {
         clientID: '',
         clientSecret: '',
-        domain: ''
+        domain: 'ruqqus.com'
       },
       servers: []
     }
@@ -134,7 +134,7 @@ export default class Login extends React.Component {
           </Text>
 
           <Text style={{color: COLORS.text}}>
-            Until somebody implements proper <LinkText url="https://oauth.net/2/grant-types/implicit/">implicit OAuth</LinkText>, you're going to have to apply for app keys with your ruqqus-compatible server admins. Type in the domain first to get a link to your app setting page.
+            Until somebody implements proper <LinkText url="https://oauth.net/2/grant-types/implicit/">implicit OAuth</LinkText>, you're going to have to apply for app keys with your ruqqus-compatible server admins.
           </Text>
 
           <Input 
