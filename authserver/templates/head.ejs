@@ -1,0 +1,83 @@
+<html>
+  <header>
+    <title>Scroll-For-Ruqqus Auth Server</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <style>
+      body {
+        background-color: rgb(24, 24, 24);
+        padding: 1em;
+      }
+
+      * {
+        color: white;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
+      header {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+      }
+
+      a {
+        color: rgb(128, 90, 213)
+      }
+
+      a:hover {
+        color: rgb(175, 158, 211)
+      }
+
+      a.button, header a {
+        background-color: rgb(128, 90, 213);
+        color: white;
+        padding: 0.5em;
+        border-radius: 5px;
+        text-align: center;
+      }
+
+      header > h3 {
+        color: white;
+      }
+
+      .card {
+        background-color:  rgb(32, 32, 32);
+        padding: 5px;
+        border-radius: 5px;
+        display: inline-block;
+      }
+    </style>
+  </header>
+  <body>
+    <header>
+      <h1>Scroll-For-Ruqqus Auth Server</h1>
+
+      <div style="display: flex; flex-direction: column; justify-content: space-evenly;">
+        <% if (user) { %>
+          <h3>Logged in as <% user.email %> </h3>
+          <a href="/logout">Logout</a>
+        <% } else { %>
+          <a href="/login">Login</a>
+        <% } %>
+        <a href="/register">Register</a>
+      </div>
+    </header>
+
+    <aside>
+      <p>
+        Scroll For Ruqqus is a 3rd party client app for the <a href="https://github.com/ruqqus/ruqqus">ruqqus api</a>. While the <a href="https://play.google.com/store/apps/details?id=com.ruqqus&hl=en_US&gl=US">Ruqqus (Beta)</a> is bound to the <a href="https://ruqqus.com">ruqqus.com</a> domain, Scroll For Ruqqus is free to connect to any ruqqus compatible server. Since ruqqus doesn't yet implement <a href="https://en.wikipedia.org/wiki/OAuth">Implicit OAuth</a>, an auth server is required to conduct part of the authentication procedure. This server will provide this service for free until the api will support implicit oauth.
+      </p>
+      
+      <div style="margin-top: 1em;" class="card">
+        <h2 style="margin-bottom: 0.33em;">Links</h2>
+        <p>
+          <a href="https://github.com/ruqqus/ruqqus">Ruqqus Github</a>
+          <br />
+          <a href="https://github.com/dahab99/scroll-for-ruqqus">Scroll For Ruqqus Github</a>
+          <br />
+          <a href="https://ruqqus.com/discord">Ruqqus Discord</a>
+          <br />
+        </p>
+      </div>
+    </aside>
+
+  
