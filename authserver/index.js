@@ -31,7 +31,7 @@ app.use(require('./route/login'))
 app.use('/sites', require('./route/sites'))
 
 app.get('/', (req, res) => {
-  Site.find(req.query.name ? {name: RegExp(req.query.name)} : {}).then(sites => {
+  Site.find(req.query.name ? {name: RegExp(`.*${req.query.name}.*`, 'i')} : {}).then(sites => {
     res.render('index', {
       user: req.user,
       sites
