@@ -33,6 +33,8 @@
         padding: 0.5em;
         border-radius: 5px;
         text-align: center;
+        margin: 0.5em;
+        display: inline-block;
       }
 
       header > h3 {
@@ -82,14 +84,16 @@
     <header>
       <h1>Scroll-For-Ruqqus Auth Server</h1>
 
-      <div style="display: flex; flex-direction: column; justify-content: space-evenly;">
-        <% if (user) { %>
-          <h3>Logged in as <% user.email %> </h3>
-          <a href="/logout">Logout</a>
-        <% } else { %>
-          <a href="/login">Login</a>
-        <% } %>
-        <a href="/register">Register</a>
+      <div style="display: inline-block;">
+        <div style="display: flex; flex-direction: row; justify-content: space-evenly;">
+          <% if (user) { %>
+            <h3>Logged in as <%= user.email %> </h3>
+            <a href="/logout">Logout</a>
+          <% } else { %>
+            <a href="/login">Login</a>
+          <% } %>
+          <a href="/register">Register</a>
+        </div>
       </div>
     </header>
 
