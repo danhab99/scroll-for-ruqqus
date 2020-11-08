@@ -91,7 +91,7 @@ export default class App extends React.Component {
       else {
         keys.forEach(key => {
           AsyncStorage.getItem(key, (err, value) => {
-            console.log('ASYNC STORAGE', key, value || err)
+            console.log('ASYNC STORAGE', key, JSON.parse(value || err))
           })
         })
       }
