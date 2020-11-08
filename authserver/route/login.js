@@ -4,6 +4,7 @@ const LocalStrategy = require('passport-local').Strategy
 const bodyParser = require('body-parser')
 
 const User = require('../schemas/user')
+const requireLogin = require('../requireLogin')
 
 const route = express.Router()
 
@@ -65,7 +66,7 @@ route.post('/login',
   }
 )
 
-route.use('/logout', (req, res) => {
+route.use('/logout', requireLogin, (req, res) => {
   req.logout()
   res.redirect('/')
 })
