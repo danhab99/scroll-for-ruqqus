@@ -1,0 +1,27 @@
+<%- include('../templates/head') %>
+
+<h1>Register</h1>
+
+<% include('../templates/error') %> 
+
+<form action="/register" method="POST">
+  <input name="email" type="email" required placeholder="email" />
+  <input id="p1" name="password" type="password" required placeholder="password" />
+  <input id="p2" name="confirmpassword" type="password" required placeholder="confirm password" />
+  <input type="submit" value="Sign up" id="sub" disabled/>
+</form>
+
+<script>
+  const pass = document.getElementById('p1')
+  const cpass = document.getElementById('p2')
+  const sub = document.getElementById('sub')
+
+  const c = () => {
+    sub.disabled = pass.value !== cpass.value
+  }
+
+  pass.addEventListener('change', c)
+  cpass.addEventListener('change', c)
+</script>
+
+<%- include('../templates/foot') -%>
