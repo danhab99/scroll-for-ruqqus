@@ -4,16 +4,14 @@ This is a 3rd party [Ruqqus](https://ruqqus.com/) client for Android and iOS\* w
 
 ![initial dev screenshot](docs/readme/initialdevscreenshot.png)
 
-## secrets.js
+## Dev setup
 
-Get your API keys from [here](https://ruqqus.com/settings/apps) and add them to `./secrets.js`
-
-```js
-# secrets.js
-export const ClientID = "CLIENT ID HERE"
-//export const ClientSecret = "CLIENT SECRET HERE"
-// We want to avoid that ^
-```
+1. Have [nodejs](https://nodejs.org/en/download/package-manager/) installed
+2. Clone this repo and open a terminal in it
+3. Run `npm i` to install all the dependencies
+4. While that's working download the [expo](https://expo.io/tools#client) app on your phone
+5. When you have all the dependencies run `npm run web` to start the hotreloader
+6. Scan the QR code that will appear in your terminal or browser with the expo app
 
 ## Todo
 
