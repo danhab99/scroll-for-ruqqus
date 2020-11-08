@@ -70,30 +70,29 @@ export default class Login extends React.Component {
     console.log('TOKENS', u)
     u.query.state = JSON.parse(u.query.state)
 
-    if (u.query.state.confirm == this.confirmToken) {
-      let server = this.state.servers[u.query.state.key]
+    let server = this.state.servers[u.query.state.key]
 
-      const client = new Ruqqus.Client({
-        id: server.clientID,
-        token: server.clientSecret,
-        code: u.query.code
-      });
+    const client = new Client({
+      id: server.clientID,
+      token: server.clientSecret,
+      code: u.query.code,
+      domain: server.domain
+    });
 
-      this.setState(prev => {
-        prev.servers[u.query.state.key].code = u.query.code
-        return {
-          servers: prev.servers
-        }
-      })
-    }
-    else {
-      throw new Error('Bad confirm token')
-    }
+    client.on("ready", () => {
+      console.log(`Logged in as ${client.user.username}!`);
+    })
+
+    this.setState(prev => {
+      prev.servers[u.query.state.key].code = u.query.code
+      return {
+        servers: prev.servers
+      }
+    })
   }
 
   async connectAccount(key) {
     this.listener = Linking.addEventListener('url', this.catchTokens)
-    this.confirmToken = Math.random().toString(36).substring(2, 15)
 
     let returnUrl = await Linking.getInitialURL()
 
@@ -105,7 +104,6 @@ export default class Login extends React.Component {
       id: server.clientID,
       redirect: `${returnUrl}`,
       state: JSON.stringify({
-        confirm: this.confirmToken,
         key
       }),
       scopes: "identity,create,read,update,delete,vote,guildmaster",
