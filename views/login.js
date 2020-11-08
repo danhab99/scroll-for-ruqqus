@@ -1,8 +1,10 @@
 import React from 'react'
-import { View, Text, Image } from 'react-native'
+import { View, Text, Image, Linking } from 'react-native'
 import Style, { COLORS, FONTS, FONTSIZE, SPACE } from '../theme'
 import { Input, LinkText, Button, IconButton } from '../components'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { getAuthURL, Client } from 'ruqqus-js'
+import * as Url from 'url'
 
 export default class Login extends React.Component {
   constructor(props) {
@@ -18,7 +20,7 @@ export default class Login extends React.Component {
     }
 
     this.onChangeServer = this.onChangeServer.bind(this)
-
+    this.catchTokens = this.catchTokens.bind(this)
   }
 
   onChangeServer(key) {
@@ -61,6 +63,63 @@ export default class Login extends React.Component {
         servers: prev.servers
       }
     })
+  }
+
+  catchTokens({ url }) {
+    let u = Url.parse(url, true)
+    console.log('TOKENS', u)
+    u.query.state = JSON.parse(u.query.state)
+
+    if (u.query.state.confirm == this.confirmToken) {
+      let server = this.state.servers[u.query.state.key]
+
+      const client = new Ruqqus.Client({
+        id: server.clientID,
+        token: server.clientSecret,
+        code: u.query.code
+      });
+
+      this.setState(prev => {
+        prev.servers[u.query.state.key].code = u.query.code
+        return {
+          servers: prev.servers
+        }
+      })
+    }
+    else {
+      throw new Error('Bad confirm token')
+    }
+  }
+
+  async connectAccount(key) {
+    this.listener = Linking.addEventListener('url', this.catchTokens)
+    this.confirmToken = Math.random().toString(36).substring(2, 15)
+
+    let returnUrl = await Linking.getInitialURL()
+
+    console.log('RETURN URL', returnUrl)
+
+    let server = this.state.servers[key]
+   
+    let authUrl = getAuthURL({
+      id: server.clientID,
+      redirect: `${returnUrl}`,
+      state: JSON.stringify({
+        confirm: this.confirmToken,
+        key
+      }),
+      scopes: "identity,create,read,update,delete,vote,guildmaster",
+      permanent: true,
+      domain: server.domain
+    })
+
+    if (await Linking.canOpenURL(authUrl)) {
+      console.log('OPENING URL', authUrl)
+      Linking.openURL(authUrl)
+    }
+    else {
+      throw new Error('Cannot open auth link')
+    }
   }
 
   render() {
@@ -160,6 +219,7 @@ export default class Login extends React.Component {
 
             <Button
               text="Connect account"
+              onPress={() => this.connectAccount(i)}
             />
           </View>)
         })}
