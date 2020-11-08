@@ -13,11 +13,11 @@
         font-family: Arial, Helvetica, sans-serif;
       }
 
-      header {
+      /* header {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
-      }
+      } */
 
       a {
         color: rgb(128, 90, 213)
@@ -82,19 +82,15 @@
   </header>
   <body>
     <header>
-      <h1>Scroll-For-Ruqqus Auth Server</h1>
-
-      <div style="display: inline-block;">
-        <div style="display: flex; flex-direction: row; justify-content: space-evenly;">
-          <% if (user) { %>
-            <h3>Logged in as <%= user.email %> </h3>
-            <a href="/logout">Logout</a>
-          <% } else { %>
-            <a href="/login">Login</a>
-          <% } %>
-          <a href="/register">Register</a>
-        </div>
+      <div style="display: flex; flex-direction: row; justify-content: flex-end;">
+        <% if (user) { %>
+          <a href="/logout">Logout of <%= user.email %></a>
+        <% } else { %>
+          <a href="/login">Login</a>
+        <% } %>
+        <a href="/register">Register</a>
       </div>
+      <h1>Scroll-For-Ruqqus Auth Server</h1>
     </header>
 
     <aside>
