@@ -1,5 +1,6 @@
 const express = require('express')
 const bodyParser = require('body-parser')
+const { getAuthURL } = require('ruqqus-js')
 
 const Site = require('../schemas/site')
 const requireLogin = require('../requireLogin')
@@ -19,6 +20,21 @@ route.post('/new', requireLogin, bodyParser.urlencoded(), (req, res) => {
         res.redirect('/')
       })
     }
+  })
+})
+
+route.get('/authenticate', (req, res) => {
+  Site.findOne({_id: req.query.id}).then(site => {
+    let link = getAuthURL({
+      id: site.clientID,
+      redirect: site.redirect,
+      state: req.query.state,
+      scope: 'identity,create,read,update,delete,vote,guildmaster',
+      permanent: true,
+      domain: site.domain
+    })
+
+    res.redirect(link)
   })
 })
 

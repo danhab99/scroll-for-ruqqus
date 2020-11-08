@@ -17,6 +17,10 @@ const siteSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  redriect: {
+    type: String,
+    required: true
+  },
   owner: {
     type: mongoose.SchemaTypes.ObjectId,
     ref: 'users'
