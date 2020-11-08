@@ -82,21 +82,38 @@ function StackNavigator(props) {
   )
 }
 
-export default function App() {
-  return (
-    <NavigationContainer>
-      <StatusBar style="light"/>
+export default class App extends React.Component {
+  componentDidMount() {
+    AsyncStorage.getAllKeys((err, keys) => {
+      if (err) {
+        console.error('ASYNC STORAGE ERROR', err)
+      }
+      else {
+        keys.forEach(key => {
+          AsyncStorage.getItem(key, (err, value) => {
+            console.log('ASYNC STORAGE', key, value || err)
+          })
+        })
+      }
+    })
+  }
 
-      <Drawer.Navigator 
-        initialRouteName="Home"
-        drawerStyle={{
-          backgroundColor: COLORS.backgroundHighlight,
-        }}
-        drawerContent={ps => <CustomDrawerContent {...ps} />}
-      >
-        <Drawer.Screen name="Home" component={StackNavigator} />
-        <Drawer.Screen name="Login" component={Login} />
-      </Drawer.Navigator>
-    </NavigationContainer>
-  );
+  render() {
+    return (
+      <NavigationContainer>
+        <StatusBar style="light"/>
+  
+        <Drawer.Navigator 
+          initialRouteName="Home"
+          drawerStyle={{
+            backgroundColor: COLORS.backgroundHighlight,
+          }}
+          drawerContent={ps => <CustomDrawerContent {...ps} />}
+        >
+          <Drawer.Screen name="Home" component={StackNavigator} />
+          <Drawer.Screen name="Login" component={Login} />
+        </Drawer.Navigator>
+      </NavigationContainer>
+    );
+  }
 }
