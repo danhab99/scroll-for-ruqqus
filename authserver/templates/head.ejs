@@ -40,10 +40,41 @@
       }
 
       .card {
-        background-color:  rgb(32, 32, 32);
+        background-color: rgb(32, 32, 32);
         padding: 5px;
         border-radius: 5px;
         display: inline-block;
+      }
+
+      input {
+        background-color: rgb(32, 32, 32);
+        box-shadow: none;
+        border: none;
+        border-bottom: 1px solid rgb(128, 90, 213);
+        padding: 0.5em;
+        margin-bottom: 0.5em;
+      }
+
+      input:not([type='submit']) {
+        width: 100%;
+      }
+
+      input[type="submit"] {
+        background-color: rgb(128, 90, 213);
+        border-radius: 5px;
+      }
+
+      input[type="submit"]:disabled {
+        background-color: rgb(99, 99, 99);
+        border-radius: 5px;
+      }
+
+      .error {
+        background-color: rgba(255, 0, 0, 0.192);
+        border-radius: 10px;
+        border: 2px solid red;
+        padding: 0.66em;
+        margin-bottom: 1em;
       }
     </style>
   </header>
@@ -80,4 +111,5 @@
       </div>
     </aside>
 
+    <hr style="border: 1px solid  rgb(70, 70, 70);" />
   
