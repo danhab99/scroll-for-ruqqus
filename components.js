@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Pressable, Text, Image, Linking } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import Style, { SPACE, FONTSIZE, COLORS, Lighten } from './theme'
+import Style, { SPACE, FONTSIZE, COLORS, Lighten, Darken, FONTS } from './theme'
 import TimeAgo from 'react-native-timeago';
 import YoutubePlayer from "react-native-youtube-iframe";
 
@@ -109,68 +109,85 @@ export class SubmissionCard extends React.Component {
     var { post } = this.props
     return (
       <View style={{
-        backgroundColor: COLORS.backgroundHighlight,
-        borderRadius: 4,
+        ...Style.card,
+        padding: 0,
         marginBottom: SPACE(1),
-        padding: SPACE(0.5)
       }}>
-        <View style={Style.horizontal}>
-          <Image 
-            source={{ uri: post?.guild?.icon_url }}
-            style={{
-              width: 20,
-              height: 20,
-              marginRight: SPACE(0.5),
-              borderRadius: 4
-            }}
-          />
-  
-          <View>
-            <Pressable>
-              <Text style={{
-                color: COLORS.primary
-              }}>
-                +{post?.guild?.name}
-              </Text>
-            </Pressable>
-          </View>
-          
-          <Delimiter />
-  
-          <View>
-            <Pressable>
+        <View style={{padding: SPACE(1/2)}}>
+          <View style={Style.horizontal}>
+            <Image 
+              source={{ uri: post?.guild?.icon_url }}
+              style={{
+                width: 20,
+                height: 20,
+                marginRight: SPACE(0.5),
+                borderRadius: 4
+              }}
+            />
+    
+            <View>
+              <Pressable>
+                <Text style={{
+                  color: COLORS.primary
+                }}>
+                  +{post?.guild?.name}
+                </Text>
+              </Pressable>
+            </View>
+            
+            <Delimiter />
+    
+            <View>
+              <Pressable>
+                <Text style={{ color: COLORS.muted }}>
+                  {post?.author?.username}
+                </Text>
+              </Pressable>
+            </View>
+
+            <Delimiter />
+
+            <View>
               <Text style={{ color: COLORS.muted }}>
-                {post?.author?.username}
+                {post?.content?.domain}
               </Text>
-            </Pressable>
+            </View>
+
+            <Delimiter />
+
+            <View>
+              <Text style={{ color: COLORS.muted }}>
+                <TimeAgo time={post?.created_at * 1000}/> {post?.edited > 0 ? "(edited)" : ""}
+              </Text>
+            </View>
           </View>
 
-          <Delimiter />
-
           <View>
-            <Text style={{ color: COLORS.muted }}>
-              {post?.content?.domain}
+            <Text style={{
+              fontSize: FONTSIZE(2),
+              color: COLORS.text,
+            }}>
+              {post?.content?.title}
             </Text>
           </View>
 
-          <Delimiter />
-
-          <View>
-            <Text style={{ color: COLORS.muted }}>
-              <TimeAgo time={post?.created_at * 1000}/> {post?.edited > 0 ? "(edited)" : ""}
+          <View style={Style.horizontal}>
+            <Text style={{
+              color: COLORS.text,
+              fontSize: FONTSIZE(1.2)
+            }}>
+              <Text style={{color: Lighten(COLORS.primary)}}>{post?.votes?.upvotes}↑</Text> <Text style={{color: Darken(COLORS.primary, 1/10)}}>{post?.votes?.downvotes}↓</Text>  <Text style={{color: COLORS.muted}}>({post?.votes?.score})</Text>
             </Text>
+
+            {/* <Text style={{
+              color: COLORS.text,
+              fontSize: FONTSIZE(1)
+            }}>
+              // TODO: COMMENNT COUNT HERE
+            </Text> */}
           </View>
         </View>
 
-        <View>
-          <Text style={{
-            fontSize: FONTSIZE(2),
-            color: COLORS.text,
-          }}>
-            {post?.content?.title}
-          </Text>
-        </View>
-  
         <View>
           <SubmissionContent content={post?.content} />
         </View>
