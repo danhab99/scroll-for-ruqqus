@@ -277,7 +277,7 @@ export default class Login extends React.Component {
               </Text>
 
               <Button
-                text="Connect account"
+                text="Connect an account"
                 onPress={() => this.connectAccount(server._id)}
                 style={{
                   marginTop: SPACE(1)
