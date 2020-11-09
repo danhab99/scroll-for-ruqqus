@@ -14,7 +14,8 @@ export default class Collection {
   }
 
   _setItem(data) {
-    return AsyncStorage.setItem(this._collection, JSON.stringify(data)).then(this._onChange())
+    return AsyncStorage.setItem(this._collection, JSON.stringify(data))
+      .then(this._onChange())
   }
 
   _onChange() {
@@ -31,13 +32,8 @@ export default class Collection {
   create(item) {
     return this._getItem()
       .then(items => {
-        let u
-        do {
-          u = uuid.v1()
-        } while (Object.keys(items).includes(u))
-        
         items.push({
-          _id: u,
+          _id: uuid.v1(),
           ...item
         })
 
@@ -47,19 +43,7 @@ export default class Collection {
 
   find(pattern={}) {
     return this._getItem()
-      .then((items=[]) => {
-        let ret = []
-
-        if (items){
-          for (let item of items) {
-            if (isMatch(item, pattern)) {
-              ret.push(item)
-            }
-          }
-        }
-
-        return ret
-      })
+      .then((items=[]) => items.filter(x => isMatch(x, pattern)))
   }
 
   findOne(pattern) {
@@ -75,6 +59,7 @@ export default class Collection {
       .then(items => {
         items = items.map(x => Object.assign(x, change))
         return this._getItem().then(original => Object.assign(original, items))
+          .then(this._setItem)
       })
   }
 
