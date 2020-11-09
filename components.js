@@ -3,6 +3,8 @@ import { View, Pressable, Text, Image, Linking } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Style, { SPACE, FONTSIZE, COLORS, Lighten } from './theme'
+import TimeAgo from 'react-native-timeago';
+import YoutubePlayer from "react-native-youtube-iframe";
 
 export function IconButton(props) {
   return (
@@ -14,6 +16,83 @@ export function IconButton(props) {
       </Pressable>
     </View>
   )
+}
+
+function Delimiter(props) {
+  return (<View>
+    <Text style={{
+      color: COLORS.text,
+      marginRight: SPACE(0.5),
+      marginLeft: SPACE(0.5)
+    }}>
+      •
+    </Text>
+  </View>)
+}
+
+class ScaledImage extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { 
+      source: { 
+        uri: this.props.uri 
+      },
+      aspectRatio: 1
+    };
+  }
+
+  componentDidMount() {
+    Image.getSize(this.props.url, (width, height) => {
+      this.setState({
+        aspectRatio: width / height
+      })
+    });
+  }
+
+  render() {
+    return (
+      <Image
+        source={{uri: this.props.url}}
+        style={{
+          width: '100%',
+          aspectRatio: this.state.aspectRatio
+        }}
+      />
+    );
+  }
+}
+
+function SubmissionContent({content}) {
+  if (['i.ruqqus.com', 'i.imgur.com'].includes(content.domain)) {
+    return <ScaledImage
+      url={content.url}
+    />
+  }
+  else if (content.domain == 'text post') {
+    return <Text style={{
+      color: COLORS.text,
+      backgroundColor: COLORS.background,
+      padding: SPACE(0.5),
+      borderRadius: 5
+    }}>
+      {content.body.text}
+    </Text>
+  }
+  else if (content.domain.includes('youtu')) {
+    let s = content.url.split('/')
+    let id = s[s.length - 1]
+    return (<YoutubePlayer
+      height={180}
+      videoId={id}
+    />)
+  }
+  else {
+    return <Pressable onPress={() => Linking.openURL(content.url)}>
+      <ScaledImage
+        url={content.thumbnail}
+      />
+    </Pressable>
+  }
 }
 
 export class SubmissionCard extends React.Component {
@@ -30,14 +109,14 @@ export class SubmissionCard extends React.Component {
     var { post } = this.props
     return (
       <View style={{
-        backgroundColor: COLORS.backgroundDark,
+        backgroundColor: COLORS.backgroundHighlight,
         borderRadius: 4,
         marginBottom: SPACE(1),
         padding: SPACE(0.5)
       }}>
         <View style={Style.horizontal}>
           <Image 
-            source={{ uri: post?.content?.guild?.icon_url }}
+            source={{ uri: post?.guild?.icon_url }}
             style={{
               width: 20,
               height: 20,
@@ -51,20 +130,12 @@ export class SubmissionCard extends React.Component {
               <Text style={{
                 color: COLORS.primary
               }}>
-                {post?.content?.guild?.name}
+                +{post?.guild?.name}
               </Text>
             </Pressable>
           </View>
           
-          <View>
-            <Text style={{
-              color: COLORS.text,
-              marginRight: SPACE(0.5),
-              marginLeft: SPACE(0.5)
-            }}>
-              •
-            </Text>
-          </View>
+          <Delimiter />
   
           <View>
             <Pressable>
@@ -72,6 +143,22 @@ export class SubmissionCard extends React.Component {
                 {post?.author?.username}
               </Text>
             </Pressable>
+          </View>
+
+          <Delimiter />
+
+          <View>
+            <Text style={{ color: COLORS.muted }}>
+              {post?.content?.domain}
+            </Text>
+          </View>
+
+          <Delimiter />
+
+          <View>
+            <Text style={{ color: COLORS.muted }}>
+              <TimeAgo time={post?.created_at * 1000}/> {post?.edited > 0 ? "(edited)" : ""}
+            </Text>
           </View>
         </View>
 
@@ -85,7 +172,7 @@ export class SubmissionCard extends React.Component {
         </View>
   
         <View>
-          <Text style={{color: COLORS.muted}}>Temporary Content</Text>
+          <SubmissionContent content={post?.content} />
         </View>
 
         <View style={{
