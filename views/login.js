@@ -163,6 +163,12 @@ export default class Login extends React.Component {
     this._accounts.delete({_id: id})
   }
 
+  useAccount(id) {
+    console.log('Using account', id)
+    AsyncStorage.setItem('activeAccount', id)
+    this.props.navigation.navigate('Home')
+  }
+
   render() {
     return (
       <ScrollView style={Style.view}>
@@ -314,6 +320,7 @@ export default class Login extends React.Component {
                     style={{
                       marginRight: SPACE(1)
                     }}
+                    onPress={() => this.useAccount(account._id)}
                   />
 
                   <IconButton 
