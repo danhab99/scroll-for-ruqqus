@@ -57,7 +57,8 @@ const Style = StyleSheet.create({
   horizontal: {
     flexDirection: 'row',
     alignContent: 'space-around',
-    display: "flex"
+    display: "flex",
+    flexWrap: 'wrap'
   },
   bottomButtons: {
     marginTop: SPACE(0.3),
