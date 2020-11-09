@@ -47,7 +47,7 @@ export default class Login extends React.Component {
     this._accounts = new Collection('accounts')
     this._accounts.onChange(() => {
       this._accounts.find().then(accounts => {
-
+        debugger
       })
     })
   }
@@ -83,12 +83,11 @@ export default class Login extends React.Component {
     this._servers.delete({_id: id})
   }
 
-  catchTokens({ url }) {
+  async catchTokens({ url }) {
     let u = Url.parse(url, true)
     console.log('TOKENS', u)
     let serverID = u.query.state
-
-    let server = this._servers
+    let server = await this._servers.findById(serverID)
 
     const client = new Client({
       id: server.clientID,
@@ -97,23 +96,38 @@ export default class Login extends React.Component {
       domain: server.domain
     });
 
-    client.on("login", () => {
-      console.log(`Logged in!`, client);
-      this._accounts.create({
-
+    Promise.all([
+      new Promise(resolve => {
+        client.on("login", () => {
+          console.log('Logged in')
+          resolve()
+        })
+      }),
+      new Promise(resolve => {
+        client.on('refresh', () => {
+          console.log('Refreshed tokens')
+          resolve()
+        })
       })
-    })    
+    ]).then(() => {
+      this._accounts.create({
+        serverID,
+        username: client.user.username,
+        keys: {
+          access: client.keys.refresh.access_token,
+          refresh: client.keys.refresh.refresh_token
+        }
+      })
+      console.log("Saved user named", client.user.username)
+    })
   }
 
   async connectAccount(id) {
     this.listener = Linking.addEventListener('url', this.catchTokens)
-
     let returnUrl = await Linking.getInitialURL()
-
     console.log('RETURN URL', returnUrl)
-
-    let server = this.state.servers[key]
-   
+    let server = await this._servers.findById(id)
+    
     let authUrl = getAuthURL({
       id: server.clientID,
       redirect: `${returnUrl}`,
