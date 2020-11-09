@@ -170,57 +170,63 @@ export default class Login extends React.Component {
             onPress={() => this.saveServer()}
           />
         </View>
-
-        {this.state.servers.map((server, i) => {
-          return (
-          <View key={`${i}`} style={{
-            ...Style.card,
-            marginTop: SPACE(2)
-          }}>
-            <View style={{
-              display: 'flex',
-              flexDirection: 'row',
-              justifyContent: 'space-between'
+        
+        <ScrollView>
+          {this.state.servers.map((server, i) => {
+            return (
+            <View key={`${i}`} style={{
+              ...Style.card,
+              marginTop: SPACE(2)
             }}>
-              <Image
-                style={{
-                  width: 30,
-                  height: 30,
-                  borderRadius: 4,
-                  marginRight: SPACE(0.2)
-                }}
-                source={{
-                  uri: `https://${server.domain}/assets/images/logo/favicon.png`
-                }}
-              />
+              <View style={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-between'
+              }}>
+                <Image
+                  style={{
+                    width: 30,
+                    height: 30,
+                    borderRadius: 4,
+                    marginRight: SPACE(0.2)
+                  }}
+                  source={{
+                    uri: `https://${server.domain}/assets/images/logo/favicon.png`
+                  }}
+                />
+
+                <Text style={{
+                  color: COLORS.text,
+                  fontSize: FONTSIZE(2),
+                  justifyContent: 'center'
+                }}>
+                  {server.domain}
+                </Text>
+
+                <IconButton 
+              <IconButton 
+                <IconButton 
+                  icon="delete" 
+                icon="delete" 
+                  icon="delete" 
+                  onPress={() => this.deleteServer(server._id)}
+                />
+              </View>
+              
 
               <Text style={{
                 color: COLORS.text,
-                fontSize: FONTSIZE(2),
-                justifyContent: 'center'
               }}>
-                {server.domain}
+                <Text style={{color: COLORS.muted}}>Client ID:</Text> {server.clientID}
               </Text>
 
-              <IconButton 
-                icon="delete" 
-                onPress={() => this.deleteServer(i)}
+              <Button
+                text="Connect account"
+                onPress={() => this.connectAccount(i)}
               />
-            </View>
-            
-
-            <Text style={{
-              color: COLORS.text,
-            }}>
-              <Text style={{color: COLORS.muted}}>Client ID:</Text> {server.clientID}
-            </Text>
-
-            <Button
-              text="Connect account"
-              onPress={() => this.connectAccount(i)}
-            />
-          </View>)
-        })}
+            </View>)
+          })}
+        </ScrollView>
       </View>
     )
   }
