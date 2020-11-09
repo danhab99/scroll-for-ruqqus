@@ -1,6 +1,6 @@
 import React from 'react'
-import { ScrollView } from 'react-native'
-import Style from '../theme'
+import { ScrollView, ActivityIndicator, View } from 'react-native'
+import Style, { COLORS } from '../theme'
 import { SubmissionCard } from '../components'
 import InitClient from '../init_client'
 
@@ -26,10 +26,17 @@ export default class Feed extends React.Component{
   }
   
   render() {
-    return (
-      <ScrollView style={Style.view}>
-        {this.state.posts.map((post, i) => <SubmissionCard key={`${i}`} post={post} />)}
-      </ScrollView>
-    )
+    if (this.state.posts.length > 0) {
+      return (
+        <ScrollView style={Style.view}>
+          {this.state.posts.map((post, i) => <SubmissionCard key={`${i}`} post={post} />)}
+        </ScrollView>
+      )
+    }
+    else {
+      return <View style={Style.view}>
+        <ActivityIndicator size="large" color={COLORS.primary}/>
+      </View>
+    }
   }
 }
