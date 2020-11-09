@@ -10,7 +10,7 @@ export default class Collection {
 
   _getItem() {
     return AsyncStorage.getItem(this._collection)
-      .then(data => JSON.parse(data))
+      .then(data => JSON.parse(data || '[]'))
   }
 
   _setItem(data) {
@@ -35,7 +35,7 @@ export default class Collection {
         do {
           u = uuid.v1()
         } while (Object.keys(items).includes(u))
-
+        
         items.push({
           _id: u,
           ...item
@@ -47,11 +47,14 @@ export default class Collection {
 
   find(pattern={}) {
     return this._getItem()
-      .then(items => {
+      .then((items=[]) => {
         let ret = []
-        for (let item of items) {
-          if (isMatch(item, pattern)) {
-            ret.push(item)
+
+        if (items){
+          for (let item of items) {
+            if (isMatch(item, pattern)) {
+              ret.push(item)
+            }
           }
         }
 
@@ -60,7 +63,11 @@ export default class Collection {
   }
 
   findOne(pattern) {
-    return this.findOne(pattern).then(d => d[0])
+    return this.find(pattern).then(d => d[0])
+  }
+
+  findById(id) {
+    return this.findOne({_id: id})
   }
 
   update(pattern, change) {
