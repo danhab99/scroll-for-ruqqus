@@ -1,10 +1,11 @@
 import React from 'react'
-import { View, Text, Image, Linking } from 'react-native'
+import { View, Text, Image, Linking, ScrollView } from 'react-native'
 import Style, { COLORS, FONTS, FONTSIZE, SPACE } from '../theme'
 import { Input, LinkText, Button, IconButton } from '../components'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { getAuthURL, Client } from 'ruqqus-js'
 import * as Url from 'url'
+import Collection from '../asyncstorage'
 
 export default class Login extends React.Component {
   constructor(props) {
@@ -35,34 +36,28 @@ export default class Login extends React.Component {
   }
 
   componentDidMount() {
-    AsyncStorage.getItem('servers', (err, servers) => this.setState({
-      servers: JSON.parse(servers) || []
-    }))
-  }
-
-  componentDidUpdate() {
-    console.log('Saving servers')
-    AsyncStorage.setItem('servers', JSON.stringify(this.state.servers))
+    this._servers = new Collection('servers')
+    this._servers.onChange(() => {
+      this._servers.find().then(servers => {
+        this.setState({servers})
+      })
+    })
   }
 
   saveServer() {
-    this.setState(prev => ({
-      servers: prev.servers.concat([this.state.newServer]),
+    this._servers.create(this.state.newServer)
+
+    this.setState({
       newServer: {
         clientID: '',
         clientSecret: '',
-        domain: ''
-      }
-    }))
-  }
-
-  deleteServer(key) {
-    this.setState(prev => {
-      prev.servers.splice(key, 1)
-      return {
-        servers: prev.servers
+        domain: 'ruqqus.com'
       }
     })
+  }
+
+  deleteServer(id) {
+    this._servers.delete({_id: id})
   }
 
   catchTokens({ url }) {
@@ -79,16 +74,19 @@ export default class Login extends React.Component {
       domain: server.domain
     });
 
-    client.on("ready", () => {
-      console.log(`Logged in as ${client.user.username}!`);
-    })
+    client.on("login", () => {
+      console.log(`Logged in!`, client);
+      this.setState(prev => {
+        if (!prev.servers[u.query.state.key].accounts) {
+          prev.servers[u.query.state.key].accounts = []
+        }
 
-    this.setState(prev => {
-      prev.servers[u.query.state.key].code = u.query.code
-      return {
-        servers: prev.servers
-      }
-    })
+        prev.servers[u.query.state.key].accounts[client.user.username] = client.user
+        return {
+          servers: prev.servers
+        }
+      })
+    })    
   }
 
   async connectAccount(key) {
@@ -204,10 +202,6 @@ export default class Login extends React.Component {
                 </Text>
 
                 <IconButton 
-              <IconButton 
-                <IconButton 
-                  icon="delete" 
-                icon="delete" 
                   icon="delete" 
                   onPress={() => this.deleteServer(server._id)}
                 />
