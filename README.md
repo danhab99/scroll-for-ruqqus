@@ -2,7 +2,10 @@
 
 This is a 3rd party [Ruqqus](https://ruqqus.com/) client for Android and iOS\* written in React Native following [Boost For Reddit's](https://play.google.com/store/apps/details?id=com.rubenmayayo.reddit) UI/UX.
 
-![initial dev screenshot](docs/readme/initialdevscreenshot.png)
+<div style="display: flex; flexDirection: row; justify-content: space-evenly;">
+<img src="docs/readme/initialdevscreenshot.png" style="width: 40%">
+<img src="docs/readme/examplelogin.png" style="width: 40%">
+</div>
 
 ## Dev setup
 
