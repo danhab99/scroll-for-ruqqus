@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Pressable, Text, Image, Linking, Modal } from 'react-native';
+import { View, Pressable, Text, Image, Linking, Modal, ActivityIndicator } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Style, { SPACE, FONTSIZE, COLORS, Lighten, Darken, FONTS } from './theme'
@@ -96,7 +96,7 @@ function SubmissionContent({content}) {
 }
 
 function SubmissionMoreButton(props) {
-  return <Pressable onPress={() => props.onPress}>
+  return <Pressable onPress={() => props.onPress()}>
     <View
       style={{
         display: 'flex',
@@ -123,12 +123,44 @@ function SubmissionMoreButton(props) {
   </Pressable>
 }
 
+class SubmissionDelayControl extends React.Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      waiting: false
+    }
+  }
+
+  onPress() {
+    this.setState({waiting: true}, () => {
+      Promise.resolve(this.props.onPress()).then(() => {
+        this.setState({waiting: false})
+      })
+    })
+  }
+
+  render() {
+    if (this.state.waiting) {
+      return <ActivityIndicator size="small" color={COLORS.primary} />
+    }
+    else {
+      return <IconButton 
+        icon={this.props.icon}
+        style={Style.bottomButtons}
+        color={this.props.active ? COLORS.primary : 'white'}
+        onPress={() => this.onPress()}
+      />
+    }
+  }
+}
+
 export class SubmissionCard extends React.Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      post: {},
+      post: this.props.post,
       id: props.pid,
       modalVisible: false
     }
@@ -138,8 +170,20 @@ export class SubmissionCard extends React.Component {
     this.setState(prev => ({modalVisible: !prev.modalVisible}))
   }
 
+  upvote() {
+    return this.state.post[this.state.post.votes.voted === 0 ? 'upvote' : 'removeVote']().then(post => {
+      this.setState({post})
+    })
+  }
+
+  downvote()  {
+    return this.state.post[this.state.post.votes.voted === 0 ? 'downvote' : 'removeVote']().then(post => {
+      this.setState({post})
+    })
+  }
+
   render() {
-    var { post } = this.props
+    var { post } = this.state
     return (
       <View style={{
         ...Style.card,
@@ -198,6 +242,7 @@ export class SubmissionCard extends React.Component {
               <SubmissionMoreButton
                 label="Open In Browser"
                 icon="open-in-browser"
+                onPress={() => Linking.openURL(post?.full_link)}
               />
 
               <SubmissionMoreButton
@@ -296,11 +341,29 @@ export class SubmissionCard extends React.Component {
           ...Style.horizontal,
           justifyContent: 'space-around',
         }}>
-          <IconButton icon="arrow-upward" style={Style.bottomButtons} />
-          <IconButton icon="arrow-downward" style={Style.bottomButtons} />
-          <IconButton icon="save" style={Style.bottomButtons} />
-          <IconButton icon="comment" style={Style.bottomButtons} />
-          <IconButton icon="more-vert" style={Style.bottomButtons} onPress={() => this.togglModal()} />
+          <SubmissionDelayControl 
+            icon="arrow-upward"
+            active={this.state?.post?.votes?.voted === 1}
+            onPress={() => this.upvote()}
+          />
+          <SubmissionDelayControl 
+            icon="arrow-downward"
+            active={this.state?.post?.votes?.voted === -1}
+            onPress={() => this.downvote()}
+          />
+          <IconButton 
+            icon="save" 
+            style={Style.bottomButtons} 
+          />
+          <IconButton 
+            icon="comment" 
+            style={Style.bottomButtons} 
+          />
+          <IconButton 
+            icon="more-vert" 
+            style={Style.bottomButtons} 
+            onPress={() => this.togglModal()} 
+          />
         </View>
       </View>
     )
