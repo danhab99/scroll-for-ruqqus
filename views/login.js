@@ -47,7 +47,20 @@ export default class Login extends React.Component {
     this._accounts = new Collection('accounts')
     this._accounts.onChange(() => {
       this._accounts.find().then(accounts => {
-        debugger
+        this.setState(prev => {
+          accounts.forEach(account => {
+            for (let i in prev.servers) {
+              if (account.serverID == prev.servers[i]._id) {
+                if (!prev.servers[i].accounts) {
+                  prev.servers[i].accounts = []
+                }
+                prev.servers[i].accounts.push(account)
+              }
+            }
+          })
+
+          return prev.servers
+        })
       })
     })
   }
@@ -146,9 +159,13 @@ export default class Login extends React.Component {
     }
   }
 
+  deleteAccount(id) {
+    this._accounts.delete({_id: id})
+  }
+
   render() {
     return (
-      <View style={Style.view}>
+      <ScrollView style={Style.view}>
         <View style={Style.card}>
           <Text
             style={{
@@ -194,6 +211,9 @@ export default class Login extends React.Component {
           <Button
             text="Save"
             onPress={() => this.saveServer()}
+            style={{
+              marginTop: SPACE(1)
+            }}
           />
 
           {this.state.error !== ''
@@ -211,7 +231,7 @@ export default class Login extends React.Component {
             : null}
         </View>
         
-        <ScrollView>
+        <View>
           {this.state.servers.map((server, i) => {
             return (
             <View key={`${i}`} style={{
@@ -259,11 +279,53 @@ export default class Login extends React.Component {
               <Button
                 text="Connect account"
                 onPress={() => this.connectAccount(server._id)}
+                style={{
+                  marginTop: SPACE(1)
+                }}
               />
+
+              <View>
+                {(server.accounts || []).map((account, i) => <View 
+                  key={`${i}`}
+                  style={{
+                    marginTop: SPACE(1),
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'flex-end',
+                    alignContent: 'center',
+                    alignItems: 'center',
+                    
+                  }}
+                >
+                  <Text style={{
+                    color: COLORS.text,
+                    fontWeight: 'bold',
+                    textAlign: 'center',
+                    margin: 'auto',
+                    alignContent: 'center',
+                    fontSize: FONTSIZE(1.5),
+                    marginRight: SPACE(1)
+                  }}>
+                    @{account.username}
+                  </Text>
+
+                  <Button 
+                    text="Login"
+                    style={{
+                      marginRight: SPACE(1)
+                    }}
+                  />
+
+                  <IconButton 
+                    icon="delete" 
+                    onPress={() => this.deleteAccount(account._id)}
+                  />
+                </View>)}
+              </View>
             </View>)
           })}
-        </ScrollView>
-      </View>
+        </View>
+      </ScrollView>
     )
   }
 }
