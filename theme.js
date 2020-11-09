@@ -77,6 +77,10 @@ const Style = StyleSheet.create({
     backgroundColor: COLORS.backgroundHighlight,
     padding: SPACE(1),
     borderRadius: 4,
+  },
+  root: {
+    backgroundColor: COLORS.background,
+    height: '100%'
   }
 })
 
