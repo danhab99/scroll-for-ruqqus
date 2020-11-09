@@ -3,7 +3,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { COLORS, FONTSIZE, SPACE } from './theme'
+import Style, { COLORS, FONTSIZE, SPACE } from './theme'
 import { View, Text } from 'react-native'
 import { IconButton } from './components'
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -71,6 +71,7 @@ function StackNavigator(props) {
 
 export default class App extends React.Component {
   componentDidMount() {
+    // AsyncStorage.clear()
     AsyncStorage.getAllKeys((err, keys) => {
       if (err) {
         console.error('ASYNC STORAGE ERROR', err)
@@ -87,20 +88,23 @@ export default class App extends React.Component {
 
   render() {
     return (
-      <NavigationContainer>
-        <StatusBar style="light"/>
-  
-        <Drawer.Navigator 
-          initialRouteName="Home"
-          drawerStyle={{
-            backgroundColor: COLORS.backgroundHighlight,
-          }}
-          drawerContent={ps => <CustomDrawerContent {...ps} />}
-        >
-          <Drawer.Screen name="Home" component={StackNavigator} />
-          <Drawer.Screen name="Login" component={Login} />
-        </Drawer.Navigator>
-      </NavigationContainer>
+      <View style={Style.root}>
+        <StatusBar />
+        <NavigationContainer>
+          <StatusBar style="light"/>
+    
+          <Drawer.Navigator 
+            initialRouteName="Home"
+            drawerStyle={{
+              backgroundColor: COLORS.backgroundHighlight,
+            }}
+            drawerContent={ps => <CustomDrawerContent {...ps} />}
+          >
+            <Drawer.Screen name="Home" component={StackNavigator} />
+            <Drawer.Screen name="Login" component={Login} />
+          </Drawer.Navigator>
+        </NavigationContainer>
+      </View>
     );
   }
 }
