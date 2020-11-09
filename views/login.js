@@ -42,6 +42,13 @@ export default class Login extends React.Component {
         this.setState({servers})
       })
     })
+
+    this._accounts = new Collection('accounts')
+    this._accounts.onChange(() => {
+      this._accounts.find().then(accounts => {
+
+      })
+    })
   }
 
   saveServer() {
@@ -63,9 +70,9 @@ export default class Login extends React.Component {
   catchTokens({ url }) {
     let u = Url.parse(url, true)
     console.log('TOKENS', u)
-    u.query.state = JSON.parse(u.query.state)
+    let serverID = u.query.state
 
-    let server = this.state.servers[u.query.state.key]
+    let server = this._servers
 
     const client = new Client({
       id: server.clientID,
@@ -76,20 +83,13 @@ export default class Login extends React.Component {
 
     client.on("login", () => {
       console.log(`Logged in!`, client);
-      this.setState(prev => {
-        if (!prev.servers[u.query.state.key].accounts) {
-          prev.servers[u.query.state.key].accounts = []
-        }
+      this._accounts.create({
 
-        prev.servers[u.query.state.key].accounts[client.user.username] = client.user
-        return {
-          servers: prev.servers
-        }
       })
     })    
   }
 
-  async connectAccount(key) {
+  async connectAccount(id) {
     this.listener = Linking.addEventListener('url', this.catchTokens)
 
     let returnUrl = await Linking.getInitialURL()
@@ -101,9 +101,7 @@ export default class Login extends React.Component {
     let authUrl = getAuthURL({
       id: server.clientID,
       redirect: `${returnUrl}`,
-      state: JSON.stringify({
-        key
-      }),
+      state: id,
       scopes: "identity,create,read,update,delete,vote,guildmaster",
       permanent: true,
       domain: server.domain
@@ -216,7 +214,7 @@ export default class Login extends React.Component {
 
               <Button
                 text="Connect account"
-                onPress={() => this.connectAccount(i)}
+                onPress={() => this.connectAccount(server._id)}
               />
             </View>)
           })}
