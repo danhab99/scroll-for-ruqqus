@@ -17,7 +17,8 @@ export default class Login extends React.Component {
         clientSecret: '',
         domain: 'ruqqus.com'
       },
-      servers: []
+      servers: [],
+      error: ''
     }
 
     this.onChangeServer = this.onChangeServer.bind(this)
@@ -51,16 +52,31 @@ export default class Login extends React.Component {
     })
   }
 
-  saveServer() {
-    this._servers.create(this.state.newServer)
-
+  displayError(error) {
     this.setState({
-      newServer: {
-        clientID: '',
-        clientSecret: '',
-        domain: 'ruqqus.com'
-      }
+      error
+    }, () => {
+      setTimeout(() => {
+        this.setState({error: ''})
+      }, 3000)
     })
+  }
+
+  saveServer() {
+    if (this.state.newServer.clientID !== '' && this.state.newServer.clientSecret !== '' && this.state.newServer.domain !==  '') {
+      this._servers.create(this.state.newServer)
+
+      this.setState({
+        newServer: {
+          clientID: '',
+          clientSecret: '',
+          domain: 'ruqqus.com'
+        }
+      })
+    }
+    else {
+      this.displayError("Please fill out the domain, client ID, and client secret")
+    }
   }
 
   deleteServer(id) {
@@ -112,7 +128,7 @@ export default class Login extends React.Component {
       Linking.openURL(authUrl)
     }
     else {
-      throw new Error('Cannot open auth link')
+      this.displayError(`Cannot open ${server.domain}`)
     }
   }
 
@@ -165,6 +181,20 @@ export default class Login extends React.Component {
             text="Save"
             onPress={() => this.saveServer()}
           />
+
+          {this.state.error !== ''
+            ? <Text style={{
+                color: COLORS.text,
+                backgroundColor: 'rgba(255,0,0,0.5)',
+                marginTop: SPACE(0.5),
+                borderRadius: 10,
+                borderColor: 'red',
+                borderWidth: 2,
+                padding: SPACE(0.5)
+              }}>
+                {this.state.error}
+              </Text>
+            : null}
         </View>
         
         <ScrollView>
