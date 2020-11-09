@@ -142,12 +142,12 @@ export function Button(props) {
       style={{
         backgroundColor: COLORS.primary,
         color: COLORS.text,
-        marginTop: SPACE(1),
         justifyContent: 'center',
         textAlign: 'center',
         fontSize: FONTSIZE(1.5),
         padding: SPACE(0.5),
-        borderRadius: 5
+        borderRadius: 5,
+        ...props.style
       }}
     >
       {props.text}
