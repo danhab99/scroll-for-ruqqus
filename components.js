@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Pressable, Text, Image, Linking } from 'react-native';
+import { View, Pressable, Text, Image, Linking, Modal } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Style, { SPACE, FONTSIZE, COLORS, Lighten, Darken, FONTS } from './theme'
@@ -95,14 +95,47 @@ function SubmissionContent({content}) {
   }
 }
 
+function SubmissionMoreButton(props) {
+  return <Pressable onPress={() => props.onPress}>
+    <View
+      style={{
+        display: 'flex',
+        justifyContent: "flex-start",
+        flexDirection: 'row',
+        marginBottom: SPACE(0.5)
+      }}
+    >
+      <Icon 
+        name={props.icon}
+        size={30}  
+        color={COLORS.text}
+      />
+      <Text
+        style={{
+          color: COLORS.text,
+          fontSize: FONTSIZE(2),
+          marginLeft: SPACE(1)
+        }}
+      >
+        {props.label}
+      </Text>
+    </View>
+  </Pressable>
+}
+
 export class SubmissionCard extends React.Component {
   constructor(props) {
     super(props)
 
     this.state = {
       post: {},
-      id: props.pid
+      id: props.pid,
+      modalVisible: false
     }
+  }
+
+  togglModal() {
+    this.setState(prev => ({modalVisible: !prev.modalVisible}))
   }
 
   render() {
@@ -113,6 +146,73 @@ export class SubmissionCard extends React.Component {
         padding: 0,
         marginBottom: SPACE(1),
       }}>
+        <Modal
+          transparent={true}
+          visible={this.state.modalVisible}
+          animationType="slide"
+          onRequestClose={() => this.togglModal()}
+        >
+          <View style={{
+            margin: SPACE(3),
+            alignItems: 'center',
+            shadowColor: '#000',
+            shadowOpacity: 0.5,
+            elevation: 5,
+            flex: 1,
+            justifyContent: 'center'
+          }}>
+            <View style={{
+              backgroundColor: COLORS.background,
+              padding: SPACE(2),
+              width: '100%',
+              borderRadius: 10
+            }}>
+              <IconButton
+                icon="close"
+                style={{
+                  marginBottom: SPACE(1)
+                }}
+                onPress={() => this.togglModal()}
+              />
+
+              <SubmissionMoreButton
+                label="Share"
+                icon="share"
+              />
+
+              <SubmissionMoreButton
+                label="Comments"
+                icon="comment"
+              />
+
+              <SubmissionMoreButton
+                label={`Go to ${post?.author?.username}`}
+                icon="person"
+              />
+
+              <SubmissionMoreButton
+                label={`Go to +${post?.guild?.name}`}
+                icon="add"
+              />
+
+              <SubmissionMoreButton
+                label="Open In Browser"
+                icon="open-in-browser"
+              />
+
+              <SubmissionMoreButton
+                label="Report"
+                icon="flag"
+              />
+
+              <SubmissionMoreButton
+                label="Hide"
+                icon="block"
+              />
+            </View>
+          </View>
+        </Modal>
+
         <View style={{padding: SPACE(1/2)}}>
           <View style={Style.horizontal}>
             <Image 
@@ -194,16 +294,13 @@ export class SubmissionCard extends React.Component {
 
         <View style={{
           ...Style.horizontal,
-          justifyContent: 'space-evenly'
+          justifyContent: 'space-around',
         }}>
           <IconButton icon="arrow-upward" style={Style.bottomButtons} />
           <IconButton icon="arrow-downward" style={Style.bottomButtons} />
           <IconButton icon="save" style={Style.bottomButtons} />
           <IconButton icon="comment" style={Style.bottomButtons} />
-          <IconButton icon="share" style={Style.bottomButtons} />
-          <IconButton icon="open-in-browser" style={Style.bottomButtons} />
-          <IconButton icon="flag" style={Style.bottomButtons} />
-          <IconButton icon="block" style={Style.bottomButtons} />
+          <IconButton icon="more-vert" style={Style.bottomButtons} onPress={() => this.togglModal()} />
         </View>
       </View>
     )
