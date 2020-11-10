@@ -39,6 +39,7 @@ function StackTitle(props) {
         fontsize={4} 
         onPress={() => props.navigation.toggleDrawer()}
       />
+
       <Text style={{
         color: COLORS.text,
         fontSize: FONTSIZE(2),
@@ -46,7 +47,7 @@ function StackTitle(props) {
         marginLeft: SPACE(1)
       }}>
         {props.children}
-      </Text>
+      </Text>    
     </View>
   )
 }
