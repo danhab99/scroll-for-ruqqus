@@ -1,6 +1,6 @@
 import React from 'react'
 import { FlatList, ActivityIndicator, View, TouchableHighlightBase } from 'react-native'
-import Style, { COLORS } from '../theme'
+import Style, { COLORS, SPACE } from '../theme'
 import { SubmissionCard } from '../components'
 import InitClient from '../init_client'
 
@@ -60,7 +60,8 @@ export default class Feed extends React.Component{
     return (
       <View style={{
         ...Style.view,
-        paddingBottom: 0
+        paddingBottom: 0,
+        paddingTop: 0
       }}>
         <FlatList
           data={this.state.posts}
@@ -70,6 +71,9 @@ export default class Feed extends React.Component{
           initialNumToRender={26}
           onRefresh={() => this.refresh()}
           refreshing={this.state.refreshing}
+          style={{
+            paddingTop: SPACE(1)
+          }}
         />
         {this.state.loadingMore 
           ? <View style={{position: 'absolute', bottom: 0, width: '100%'}}>
