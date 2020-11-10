@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Pressable, Text, Image, Linking, Modal, ActivityIndicator } from 'react-native';
+import { View, Pressable, Text, Image, Linking, Modal, ActivityIndicator, Share } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Style, { SPACE, FONTSIZE, COLORS, Lighten, Darken, FONTS } from './theme'
@@ -243,6 +243,7 @@ export class SubmissionCard extends React.Component {
               <SubmissionMoreButton
                 label="Share"
                 icon="share"
+                onPress={() => Share.share({message: this.state.post.full_link})}
               />
 
               <SubmissionMoreButton
