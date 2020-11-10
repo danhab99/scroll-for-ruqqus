@@ -1,7 +1,7 @@
 import React from 'react'
-import { FlatList, ActivityIndicator, View, TouchableHighlightBase } from 'react-native'
+import { FlatList, ActivityIndicator, View, Modal } from 'react-native'
 import Style, { COLORS, SPACE } from '../theme'
-import { SubmissionCard, IconButton } from '../components'
+import { SubmissionCard, IconButton, Popup, PopupButton } from '../components'
 import InitClient from '../init_client'
 
 export default class Feed extends React.Component{
@@ -12,7 +12,9 @@ export default class Feed extends React.Component{
       posts: [],
       page: 1,
       loadingMore: false,
-      refreshing: true
+      refreshing: true,
+      sortingVisible: false,
+      sorting: 'hot'
     }
 
     this.flatlist = React.createRef()
@@ -23,13 +25,26 @@ export default class Feed extends React.Component{
     this.props.navigation.setOptions({
       title: this.props.route.params.name ? `+${this.props.route.params.name}` : 'Frontpage',
       headerRight: () => (
-        <IconButton
-          icon="refresh"
-          style={{
-            marginRight: SPACE(1)
-          }}
-          onPress={() => this.refresh()}
-        />
+        <View style={{
+          display: 'flex',
+          flexDirection: 'row-reverse'
+        }}>
+          <IconButton
+            icon="refresh"
+            style={{
+              marginRight: SPACE(1)
+            }}
+            onPress={() => this.refresh()}
+          />
+
+          <IconButton
+            icon="sort"
+            style={{
+              marginRight: SPACE(1)
+            }}
+            onPress={() => this.toggleSorting()}
+          />
+        </View>
       )
     })
   }
@@ -37,7 +52,8 @@ export default class Feed extends React.Component{
   fetch() {
     return this.props.route.params.fetch(this._client, {
       page: this.state.page,
-      name: this.props.route.params.name
+      name: this.props.route.params.name,
+      sort: this.state.sorting
     })
   }
 
@@ -84,6 +100,17 @@ export default class Feed extends React.Component{
     })
   }
   
+  toggleSorting() {
+    this.setState(prev => ({sortingVisible: !prev.sortingVisible}))
+  }
+
+  setSorting(sorting) {
+    this.setState({sorting}, () => {
+      this.refresh()
+      this.toggleSorting()
+    })
+  }
+  
   render() {
     return (
       <View style={{
@@ -91,6 +118,36 @@ export default class Feed extends React.Component{
         paddingBottom: 0,
         paddingTop: 0
       }}>
+        <Popup
+          title="Sort"
+          visible={this.state.sortingVisible}
+          togglModal={() => this.toggleSorting()}
+        >
+          <PopupButton
+            label="Hot"
+            icon="whatshot"
+            onPress={() => this.setSorting('hot')}
+          />
+          
+          <PopupButton
+            label="New"
+            icon="star"
+            onPress={() => this.setSorting('new')}
+          />
+
+          <PopupButton
+            label="Disputed"
+            icon="announcement"
+            onPress={() => this.setSorting('dispted')}
+          />
+          
+          <PopupButton
+            label="Activity"
+            icon="chat"
+            onPress={() => this.setSorting('activity')}
+          />
+        </Popup>
+
         <FlatList
           ref={this.flatlist}
           data={this.state.posts}
