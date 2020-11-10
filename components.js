@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import Style, { SPACE, FONTSIZE, COLORS, Lighten, Darken, FONTS } from './theme'
 import TimeAgo from 'react-native-timeago';
 import YoutubePlayer from "react-native-youtube-iframe";
+import Collection from './asyncstorage'
 
 export function IconButton(props) {
   return (
@@ -162,8 +163,28 @@ export class SubmissionCard extends React.Component {
     this.state = {
       post: this.props.post,
       id: props.pid,
-      modalVisible: false
+      modalVisible: false,
+      saved: false
     }
+
+    this._savedPosts = new Collection('saved')
+    this._savedPosts.onChange(() => {
+      this._savedPosts.findOne({pid: this.state.post.id}).then(saved => this.setState({saved}))
+    })
+  }
+
+  toggleSaved() {
+    let bod = {pid: this.state.post.id}
+    return this._savedPosts
+      .findOne(bod)
+      .then(saved => {
+        if (saved) {
+          return this._savedPosts.delete(bod)
+        }
+        else {
+          return this._savedPosts.create(bod)
+        }
+      })
   }
 
   togglModal() {
@@ -351,9 +372,10 @@ export class SubmissionCard extends React.Component {
             active={this.state?.post?.votes?.voted === -1}
             onPress={() => this.downvote()}
           />
-          <IconButton 
-            icon="save" 
-            style={Style.bottomButtons} 
+          <SubmissionDelayControl 
+            icon="save"
+            active={this.state.saved}
+            onPress={() => this.toggleSaved()}
           />
           <IconButton 
             icon="comment" 
