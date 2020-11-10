@@ -68,7 +68,7 @@ function StackNavigator(props) {
         name="Home"
         component={Feed}
         initialParams={{
-          fetch: (client, options) => client.feeds.frontpage(options.page)
+          fetch: (client, options) => client.feeds.frontpage(options.page, options.sort)
         }}
       />
 
@@ -76,7 +76,7 @@ function StackNavigator(props) {
         name="Guild"
         component={Feed}
         initialParams={{
-          fetch: (client, options) => client.feeds.guild(options.name, options.page)
+          fetch: (client, options) => client.feeds.guild(options.name, options.page, options.sort)
         }}
       />
 
@@ -84,7 +84,7 @@ function StackNavigator(props) {
         name="Comments"
         component={Comments}
         initialParams={{
-          fetch: (client, options) => client.feeds.guild(options.name, options.page)
+          fetch: (client, options) => client.feeds.guild(options.name, options.page, options.sort)
         }}
       />
     </Stack.Navigator>
