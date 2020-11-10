@@ -1,5 +1,5 @@
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createStackNavigator, HeaderBackButton } from '@react-navigation/stack';
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
@@ -34,17 +34,10 @@ function StackTitle(props) {
       flexDirection: 'row',
       width: '100%'
     }}>
-      <IconButton 
-        icon="menu" 
-        fontsize={4} 
-        onPress={() => props.navigation.toggleDrawer()}
-      />
-
       <Text style={{
         color: COLORS.text,
         fontSize: FONTSIZE(2),
         fontWeight: 'bold',
-        marginLeft: SPACE(1)
       }}>
         {props.children}
       </Text>    
@@ -59,12 +52,30 @@ function StackNavigator(props) {
         headerStyle: {
           backgroundColor: COLORS.backgroundHighlight
         },
-        headerTitle: ps => <StackTitle {...ps} navigation={props.navigation} />
+        headerTitle: ps => <StackTitle {...ps}/>,
+        headerLeft: () => (<IconButton 
+          icon="menu" 
+          fontsize={4} 
+          onPress={() => props.navigation.toggleDrawer()}
+          style={{
+            marginLeft: SPACE(1)
+          }}
+        />)
       }}
     >
       <Stack.Screen
         name="Home"
         component={Feed}
+        initialParams={{
+          fetch: (client, options) => client.feeds.frontpage(options.page)
+        }}
+      />
+      <Stack.Screen
+        name="Guild"
+        component={Feed}
+        initialParams={{
+          fetch: (client, options) => client.feeds.guild(options.name, options.page)
+        }}
       />
     </Stack.Navigator>
   )
