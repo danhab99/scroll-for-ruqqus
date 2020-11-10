@@ -1,5 +1,5 @@
 import React from 'react'
-import { ScrollView, ActivityIndicator, View } from 'react-native'
+import { FlatList, ActivityIndicator, View, TouchableHighlightBase } from 'react-native'
 import Style, { COLORS } from '../theme'
 import { SubmissionCard } from '../components'
 import InitClient from '../init_client'
@@ -9,9 +9,12 @@ export default class Feed extends React.Component{
     super(props)
 
     this.state = {
-      posts: []
+      posts: [],
+      page: 1,
+      loadingMore: false
     }
-  } 
+  }
+
   componentDidMount() {
     InitClient().then(client => {
       this._client = client
@@ -24,13 +27,45 @@ export default class Feed extends React.Component{
       })
     })
   }
+
+  getMore() {
+    this.setState(prev => ({
+      page: prev.page + 1,
+      loadingMore: true
+    }),
+    () => {
+      this._client.feeds.frontpage(this.state.page).then(more => {
+        this.setState((prev) => ({
+          posts: prev.posts.concat(more.posts),
+          loadingMore: false
+        }))
+      })
+    })
+  }
   
   render() {
     if (this.state.posts.length > 0) {
       return (
-        <ScrollView style={Style.view}>
-          {this.state.posts.map((post, i) => <SubmissionCard key={`${i}`} post={post} />)}
-        </ScrollView>
+        <View style={{
+          ...Style.view,
+          paddingBottom: 0
+        }}>
+          <FlatList
+            data={this.state.posts}
+            renderItem={props => <SubmissionCard post={props.item}/>}
+            onEndReached={() => this.getMore()}
+            onEndReachedThreshold={0.5}
+            initialNumToRender={26}
+          />
+          {this.state.loadingMore 
+            ? <View style={{position: 'absolute', bottom: 0, width: '100%'}}>
+                <ActivityIndicator 
+                  size="large" 
+                  color={COLORS.primary}
+                />
+              </View> 
+            : null}
+        </View>
       )
     }
     else {
