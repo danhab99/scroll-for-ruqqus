@@ -225,6 +225,8 @@ export class SubmissionCard extends React.Component {
       }}>
         <Popup
           togglModal={() => this.togglModal()}
+          visible={this.state.modalVisible}
+          title="More"
         >
           <PopupButton
             label="Share"
@@ -446,18 +448,32 @@ export function Popup(props) {
       justifyContent: 'center'
     }}>
       <View style={{
-        backgroundColor: COLORS.background,
+        backgroundColor: COLORS.backgroundDark,
         padding: SPACE(2),
         width: '100%',
         borderRadius: 10
       }}>
-        <IconButton
-          icon="close"
+        <View
           style={{
-            marginBottom: SPACE(1)
+            display: 'flex',
+            flexDirection: 'row'
           }}
-          onPress={() => props.togglModal()}
-        />
+        >
+          <IconButton
+            icon="close"
+            style={{
+              marginBottom: SPACE(1)
+            }}
+            onPress={() => props.togglModal()}
+          />
+          <Text style={{
+            color: COLORS.text,
+            fontSize: FONTSIZE(1.5)
+          }}>
+            {props.title}
+          </Text>
+        </View>
+        
 
         {props.children}
       </View>
