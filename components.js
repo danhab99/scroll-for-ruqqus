@@ -96,7 +96,7 @@ function SubmissionContent({content}) {
   }
 }
 
-function SubmissionMoreButton(props) {
+export function PopupButton(props) {
   return <Pressable onPress={() => props.onPress()}>
     <View
       style={{
@@ -223,76 +223,48 @@ export class SubmissionCard extends React.Component {
         padding: 0,
         marginBottom: SPACE(1),
       }}>
-        <Modal
-          transparent={true}
-          visible={this.state.modalVisible}
-          animationType="slide"
-          onRequestClose={() => this.togglModal()}
+        <Popup
+          togglModal={() => this.togglModal()}
         >
-          <View style={{
-            margin: SPACE(3),
-            alignItems: 'center',
-            shadowColor: '#000',
-            shadowOpacity: 0.5,
-            elevation: 5,
-            flex: 1,
-            justifyContent: 'center'
-          }}>
-            <View style={{
-              backgroundColor: COLORS.background,
-              padding: SPACE(2),
-              width: '100%',
-              borderRadius: 10
-            }}>
-              <IconButton
-                icon="close"
-                style={{
-                  marginBottom: SPACE(1)
-                }}
-                onPress={() => this.togglModal()}
-              />
+          <PopupButton
+            label="Share"
+            icon="share"
+            onPress={() => Share.share({message: this.state.post.full_link})}
+          />
 
-              <SubmissionMoreButton
-                label="Share"
-                icon="share"
-                onPress={() => Share.share({message: this.state.post.full_link})}
-              />
+          <PopupButton
+            label="Comments"
+            icon="comment"
+            onPress={() => this.gotoComments()}
+          />
 
-              <SubmissionMoreButton
-                label="Comments"
-                icon="comment"
-                onPress={() => this.gotoComments()}
-              />
+          <PopupButton
+            label={`Go to ${post?.author?.username}`}
+            icon="person"
+            onPress={() => this.gotoGuild()}
+          />
 
-              <SubmissionMoreButton
-                label={`Go to ${post?.author?.username}`}
-                icon="person"
-                onPress={() => this.gotoGuild()}
-              />
+          <PopupButton
+            label={`Go to +${post?.guild?.name}`}
+            icon="add"
+          />
 
-              <SubmissionMoreButton
-                label={`Go to +${post?.guild?.name}`}
-                icon="add"
-              />
+          <PopupButton
+            label="Open In Browser"
+            icon="open-in-browser"
+            onPress={() => Linking.openURL(post?.full_link)}
+          />
 
-              <SubmissionMoreButton
-                label="Open In Browser"
-                icon="open-in-browser"
-                onPress={() => Linking.openURL(post?.full_link)}
-              />
+          <PopupButton
+            label="Report"
+            icon="flag"
+          />
 
-              <SubmissionMoreButton
-                label="Report"
-                icon="flag"
-              />
-
-              <SubmissionMoreButton
-                label="Hide"
-                icon="block"
-              />
-            </View>
-          </View>
-        </Modal>
+          <PopupButton
+            label="Hide"
+            icon="block"
+          />
+        </Popup>
 
         <View style={{padding: SPACE(1/2)}}>
           <View style={Style.horizontal}>
@@ -455,4 +427,40 @@ export function Button(props) {
       {props.text}
     </Text>
   </Pressable>)
+}
+
+export function Popup(props) {
+  return (<Modal
+    transparent={true}
+    visible={props.visible}
+    animationType="slide"
+    onRequestClose={() => props.togglModal()}
+  >
+    <View style={{
+      margin: SPACE(3),
+      alignItems: 'center',
+      shadowColor: '#000',
+      shadowOpacity: 0.5,
+      elevation: 5,
+      flex: 1,
+      justifyContent: 'center'
+    }}>
+      <View style={{
+        backgroundColor: COLORS.background,
+        padding: SPACE(2),
+        width: '100%',
+        borderRadius: 10
+      }}>
+        <IconButton
+          icon="close"
+          style={{
+            marginBottom: SPACE(1)
+          }}
+          onPress={() => props.togglModal()}
+        />
+
+        {props.children}
+      </View>
+    </View>
+  </Modal>)
 }
