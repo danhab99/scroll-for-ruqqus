@@ -1,7 +1,7 @@
 import React from 'react'
 import { FlatList, ActivityIndicator, View, TouchableHighlightBase } from 'react-native'
 import Style, { COLORS, SPACE } from '../theme'
-import { SubmissionCard } from '../components'
+import { SubmissionCard, IconButton } from '../components'
 import InitClient from '../init_client'
 
 export default class Feed extends React.Component{
@@ -18,6 +18,17 @@ export default class Feed extends React.Component{
 
   componentDidMount() {
     this.refresh()
+    this.props.navigation.setOptions({
+      headerRight: () => (
+        <IconButton
+          icon="refresh"
+          style={{
+            marginRight: SPACE(1)
+          }}
+          onPress={() => this.refresh()}
+        />
+      )
+    })
   }
 
   refresh() {
