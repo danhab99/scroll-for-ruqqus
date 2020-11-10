@@ -203,6 +203,12 @@ export class SubmissionCard extends React.Component {
     })
   }
 
+  gotoGuild() {
+    this.props.navigation.navigate('Guild', {
+      name: this.state.post.guild.name
+    })
+  }
+
   render() {
     var { post } = this.state
     return (
@@ -254,6 +260,7 @@ export class SubmissionCard extends React.Component {
               <SubmissionMoreButton
                 label={`Go to ${post?.author?.username}`}
                 icon="person"
+                onPress={() => this.gotoGuild()}
               />
 
               <SubmissionMoreButton
@@ -293,7 +300,7 @@ export class SubmissionCard extends React.Component {
             />
     
             <View>
-              <Pressable>
+              <Pressable onPress={() => this.gotoGuild()}>
                 <Text style={{
                   color: COLORS.primary
                 }}>
