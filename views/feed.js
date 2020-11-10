@@ -14,6 +14,8 @@ export default class Feed extends React.Component{
       loadingMore: false,
       refreshing: true
     }
+
+    this.flatlist = React.createRef()
   }
 
   componentDidMount() {
@@ -34,6 +36,13 @@ export default class Feed extends React.Component{
   refresh() {
     if (this._client) {
       this._client.feeds.frontpage().then(frontpage => {
+        try {
+          this.flatlist.current.scrollToIndex({
+            animated: true,
+            index: 0
+          })
+        }
+        catch (e) {}
         this.setState({
           posts: frontpage.posts,
           refreshing: false
@@ -75,6 +84,7 @@ export default class Feed extends React.Component{
         paddingTop: 0
       }}>
         <FlatList
+          ref={this.flatlist}
           data={this.state.posts}
           renderItem={props => <SubmissionCard post={props.item}/>}
           onEndReached={() => this.getMore()}
