@@ -23,7 +23,7 @@ export default class Feed extends React.Component{
   componentDidMount() {
     this.refresh()
     this.props.navigation.setOptions({
-      title: this.props.route.params.name ? `+${this.props.route.params.name}` : 'Frontpage',
+      title: this.props.route.params.name ? `${this.props.route.params.prefix}${this.props.route.params.name}` : 'Frontpage',
       headerRight: () => (
         <View style={{
           display: 'flex',

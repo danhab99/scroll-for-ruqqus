@@ -215,6 +215,12 @@ export class SubmissionCard extends React.Component {
     })
   }
 
+  gotoUser() {
+    this.props.navigation.navigate('User', {
+      name: this.state.post.author.username
+    })
+  }
+
   render() {
     var { post } = this.state
     return (
@@ -241,14 +247,15 @@ export class SubmissionCard extends React.Component {
           />
 
           <PopupButton
-            label={`Go to ${post?.author?.username}`}
+            label={`Go to @${post?.author?.username}`}
             icon="person"
-            onPress={() => this.gotoGuild()}
-          />
+            onPress={() => this.gotoUser()}
+            />
 
           <PopupButton
             label={`Go to +${post?.guild?.name}`}
             icon="add"
+            onPress={() => this.gotoGuild()}
           />
 
           <PopupButton
@@ -293,7 +300,7 @@ export class SubmissionCard extends React.Component {
             <Delimiter />
     
             <View>
-              <Pressable>
+              <Pressable onPress={() => this.gotoUser()}>
                 <Text style={{ color: COLORS.muted }}>
                   {post?.author?.username}
                 </Text>

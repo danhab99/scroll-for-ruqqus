@@ -76,7 +76,8 @@ function StackNavigator(props) {
         name="Guild"
         component={Feed}
         initialParams={{
-          fetch: (client, options) => client.feeds.guild(options.name, options.page, options.sort)
+          fetch: (client, options) => client.feeds.guild(options.name, options.page, options.sort),
+          prefix: '+'
         }}
       />
 
@@ -85,6 +86,15 @@ function StackNavigator(props) {
         component={Comments}
         initialParams={{
           fetch: (client, options) => client.feeds.guild(options.name, options.page, options.sort)
+        }}
+      />
+
+      <Stack.Screen
+        name="User"
+        component={Feed}
+        initialParams={{
+          fetch: (client, options) => client.feeds.user(options.name, options.page, options.sort),
+          prefix: '@'
         }}
       />
     </Stack.Navigator>
