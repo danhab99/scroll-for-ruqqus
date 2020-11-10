@@ -21,6 +21,7 @@ export default class Feed extends React.Component{
   componentDidMount() {
     this.refresh()
     this.props.navigation.setOptions({
+      title: this.props.route.params.name ? `+${this.props.route.params.name}` : 'Frontpage',
       headerRight: () => (
         <IconButton
           icon="refresh"
@@ -33,9 +34,16 @@ export default class Feed extends React.Component{
     })
   }
 
+  fetch() {
+    return this.props.route.params.fetch(this._client, {
+      page: this.state.page,
+      name: this.props.route.params.name
+    })
+  }
+
   refresh() {
     if (this._client) {
-      this._client.feeds.frontpage().then(frontpage => {
+      this.fetch().then(frontpage => {
         try {
           this.flatlist.current.scrollToIndex({
             animated: true,
@@ -67,7 +75,7 @@ export default class Feed extends React.Component{
       loadingMore: true
     }),
     () => {
-      this._client.feeds.frontpage(this.state.page).then(more => {
+      this.fetch(this.state.page).then(more => {
         this.setState((prev) => ({
           posts: prev.posts.concat(more.posts),
           loadingMore: false
@@ -86,7 +94,7 @@ export default class Feed extends React.Component{
         <FlatList
           ref={this.flatlist}
           data={this.state.posts}
-          renderItem={props => <SubmissionCard post={props.item}/>}
+          renderItem={props => <SubmissionCard post={props.item} navigation={this.props.navigation}/>}
           onEndReached={() => this.getMore()}
           onEndReachedThreshold={0}
           initialNumToRender={26}
