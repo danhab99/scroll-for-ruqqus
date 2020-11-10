@@ -10,6 +10,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import Feed from './views/feed'
 import Login from './views/login';
+import Comments from './views/comments'
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -70,9 +71,18 @@ function StackNavigator(props) {
           fetch: (client, options) => client.feeds.frontpage(options.page)
         }}
       />
+
       <Stack.Screen
         name="Guild"
         component={Feed}
+        initialParams={{
+          fetch: (client, options) => client.feeds.guild(options.name, options.page)
+        }}
+      />
+
+      <Stack.Screen
+        name="Comments"
+        component={Comments}
         initialParams={{
           fetch: (client, options) => client.feeds.guild(options.name, options.page)
         }}

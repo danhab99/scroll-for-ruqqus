@@ -209,6 +209,12 @@ export class SubmissionCard extends React.Component {
     })
   }
 
+  gotoComments() {
+    this.props.navigation.navigate('Comments', {
+      post: this.state.post
+    })
+  }
+
   render() {
     var { post } = this.state
     return (
@@ -255,6 +261,7 @@ export class SubmissionCard extends React.Component {
               <SubmissionMoreButton
                 label="Comments"
                 icon="comment"
+                onPress={() => this.gotoComments()}
               />
 
               <SubmissionMoreButton
@@ -388,6 +395,7 @@ export class SubmissionCard extends React.Component {
           <IconButton 
             icon="comment" 
             style={Style.bottomButtons} 
+            onPress={() => this.gotoComments()}
           />
           <IconButton 
             icon="more-vert" 
