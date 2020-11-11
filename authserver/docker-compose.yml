@@ -1,10 +1,10 @@
 version: "2"
 services:
   sfroa:
-    container_name: Scroll For Ruqqus Auth Server
+    container_name: scroll-for-ruqqus-auth-server
     restart: always
     build:
       context: ./
       dockerfile: Dockerfile
     ports:
-      - ${NPA_SFROA_DANHAB99_XYZ_PORT}:3001
+      - 3001:3001
