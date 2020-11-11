@@ -28,6 +28,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 app.use(require('./route/login'))
+app.use('/auth', require('./route/oauth'))
 app.use('/sites', require('./route/sites'))
 
 app.get('/', (req, res) => {
