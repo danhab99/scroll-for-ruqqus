@@ -17,18 +17,20 @@
 
 <br />
 
-<form action="/" method="GET">
-  <input name="name" placeholder="type name of site here" type="search" autocapitalize="none" autocomplete="none"/>
-  <input type="submit" value="Search" />
-</form>
-
-<div style="display: flex; flex-direction: row; flex-wrap: wrap; justify-content: flex-start;">
+<table>
+  <tr>
+    <th>Domain</th>
+    <th>Auth Link</th>
+    <th>ClientID</th>
+  </tr>
   <% for (let site of sites) { %>
-    <div class="card" style="margin: 10px;">
-      <h3><a href="https://<%= site.domain %>"><%= site.name %></a></h3>
-    </div>
+    <tr>
+      <td><a href="https://<%= site.domain %>"><%= site.name %></a></td>
+      <td><a href="/auth/<%= site._id %>">Example link</a></td>
+      <td><%= site.clientID %></td>
+    </tr>
   <% } %>
-</div>
+</table>
 
 
 <%- include('../templates/foot') -%>

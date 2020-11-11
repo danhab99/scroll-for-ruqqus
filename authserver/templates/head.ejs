@@ -13,12 +13,6 @@
         font-family: Arial, Helvetica, sans-serif;
       }
 
-      /* header {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-      } */
-
       a {
         color: rgb(128, 90, 213)
       }
@@ -78,6 +72,27 @@
         padding: 0.66em;
         margin-bottom: 1em;
       }
+
+      table { 
+        border-collapse: separate;
+        border-spacing: 1em;
+      }
+
+      th {
+        font-weight: bold;
+        font-size: 1.2em;
+      }
+
+      th, td {
+        background-color: rgb(32, 32, 32);
+        padding: 0.5em;
+        border-radius: 5px;
+        text-align: center;
+      }
+
+      td:last-child {
+        word-break: break-all;
+      }
     </style>
   </header>
   <body>
@@ -93,7 +108,7 @@
       <h1>Scroll-For-Ruqqus Auth Server</h1>
     </header>
 
-    <aside>
+    <div>
       <p>
         Scroll For Ruqqus is a 3rd party client app for the <a href="https://github.com/ruqqus/ruqqus">ruqqus api</a>. While the <a href="https://play.google.com/store/apps/details?id=com.ruqqus&hl=en_US&gl=US">Ruqqus (Beta)</a> is bound to the <a href="https://ruqqus.com">ruqqus.com</a> domain, Scroll For Ruqqus is free to connect to any ruqqus compatible server. Since ruqqus doesn't yet implement <a href="https://en.wikipedia.org/wiki/OAuth">Implicit OAuth</a>, an auth server is required to conduct part of the authentication procedure. This server will provide this service for free until the api will support implicit oauth.
       </p>
@@ -109,7 +124,7 @@
           <br />
         </p>
       </div>
-    </aside>
+    </div>
 
     <hr style="border: 1px solid  rgb(70, 70, 70);" />
   
