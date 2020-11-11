@@ -1,6 +1,5 @@
 const express = require('express')
 const bodyParser = require('body-parser')
-const { getAuthURL } = require('ruqqus-js')
 
 const Site = require('../schemas/site')
 const requireLogin = require('../requireLogin')
