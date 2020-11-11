@@ -4,16 +4,9 @@ This is a 3rd party [Ruqqus](https://ruqqus.com/) client for Android and iOS\* w
 
 ![initial dev screenshot](docs/readme/initialdevscreenshot.png)
 
-## secrets.js
+## Auth server security conserns
 
-Get your API keys from [here](https://ruqqus.com/settings/apps) and add them to `./secrets.js`
-
-```js
-# secrets.js
-export const ClientID = "CLIENT ID HERE"
-//export const ClientSecret = "CLIENT SECRET HERE"
-// We want to avoid that ^
-```
+This server is programmed to not record user access keys. The one consern I do have is that client secrets have to be stored in plain text. If you want to solve these conserns, please implement oauth on [ruqqus](https://github.com/ruqqus/ruqqus)
 
 ## Todo
 
