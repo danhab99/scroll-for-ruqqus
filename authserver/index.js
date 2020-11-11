@@ -32,9 +32,10 @@ app.use('/auth', require('./route/oauth'))
 app.use('/sites', require('./route/sites'))
 
 app.get('/', (req, res) => {
-  Site.find(req.query.name ? {name: RegExp(`.*${req.query.name}.*`, 'i')} : {}).then(sites => {
+  Site.find({}).then(sites => {
     res.render('index', {
       user: req.user,
+      mysite: sites.find(x => x.owner.toString() == req.user._id.toString()) || {},
       sites
     })
   })

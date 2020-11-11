@@ -3,6 +3,7 @@ const bodyParser = require('body-parser')
 
 const Site = require('../schemas/site')
 const requireLogin = require('../requireLogin')
+const { STATES } = require('mongoose')
 
 const route = express.Router()
 
@@ -22,18 +23,15 @@ route.post('/new', requireLogin, bodyParser.urlencoded(), (req, res) => {
   })
 })
 
-route.get('/authenticate', (req, res) => {
-  Site.findOne({_id: req.query.id}).then(site => {
-    let link = getAuthURL({
-      id: site.clientID,
-      redirect: site.redirect,
-      state: req.query.state,
-      scope: 'identity,create,read,update,delete,vote,guildmaster',
-      permanent: true,
-      domain: site.domain
-    })
+route.post('/edit', requireLogin, bodyParser.urlencoded(), (req, res) => {
+  Site.update({owner: req.user._id}, req.body).exec((err, site) => {
+    res.redirect('/')
+  })
+})
 
-    res.redirect(link)
+route.get('/delete', requireLogin, (req, res) => {
+  Site.remove({owner: req.user._id}).exec((err, idk) => {
+    res.redirect('/')
   })
 })
 
