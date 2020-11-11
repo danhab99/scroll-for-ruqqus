@@ -4,11 +4,11 @@
 
 <% if (user) { %>
 <div class="card" style="margin-bottom: 1em; width: min(6cm, 100%);">
-  <h4 style="margin: 1%;">Add a new site</h4>
-  <form action="/sites/new" method="POST">
-    <input type="text" placeholder="Name" name="name" required autocomplete="off"/>
-    <input type="text" placeholder="Domain (e.g. ruqqus.com)" name="domain" required autocomplete="off"/>
-    <input type="text" placeholder="Client ID" name="clientID" required autocomplete="off" autocapitalize="off"/>
+  <h4 style="margin: 1%;"><%= (mysite ? 'Edit my site' : 'Add a new site') %></h4>
+  <form action="/sites/<%= (mysite ? 'edit' : 'new') %>" method="POST">
+    <input type="text" placeholder="Name" name="name" required autocomplete="off" value="<%= mysite.name %>"/>
+    <input type="text" placeholder="Domain (e.g. ruqqus.com)" name="domain" required autocomplete="off" value="<%= mysite.domain %>"/>
+    <input type="text" placeholder="Client ID" name="clientID" required autocomplete="off" autocapitalize="off" value="<%= mysite.clientID %>"/>
     <input type="password" placeholder="Client Secret" name="clientSecret" required autocomplete="off" autocapitalize="off"/>
     <input type="submit" />
   </form>
