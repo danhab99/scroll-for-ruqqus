@@ -2,7 +2,11 @@
 
 <h1>Register</h1>
 
-<% include('../templates/error') %> 
+<% if (error) { %>
+  <p class="error">
+    <%= error %>
+  </div>
+<% } %>
 
 <form action="/register" method="POST">
   <input name="email" type="email" required placeholder="email" />
