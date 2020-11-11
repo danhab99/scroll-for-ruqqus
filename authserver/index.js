@@ -5,10 +5,16 @@ const mongoose = require("mongoose");
 const session = require('express-session')
 const MongoStore = require('connect-mongo')(session)
 const path = require('path')
+const rateLimit = require("express-rate-limit")
 
 const Site = require('./schemas/site')
 
 const app = express()
+
+app.use(rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100
+}))
 
 app.use(session({
   secret: process.env.COOKIE_SECRET,
