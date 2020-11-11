@@ -2,8 +2,8 @@ FROM node:14.5.0
 
 WORKDIR /root
 
-ADD package* .
+ADD package* ./
 RUN npm install
-ADD . .
+ADD . ./
 
 CMD npm start
