@@ -3,9 +3,12 @@ const bodyParser = require('body-parser')
 
 const Site = require('../schemas/site')
 const requireLogin = require('../requireLogin')
-const { STATES } = require('mongoose')
 
 const route = express.Router()
+
+route.get('/', (req, res) => {
+  Site.find({}).select(['domain', 'name', 'clientID']).then(list => res.json(list))
+})
 
 route.post('/new', requireLogin, bodyParser.urlencoded(), (req, res) => {
   Site.findOne({domain: req.body.domain}).then(site => {
