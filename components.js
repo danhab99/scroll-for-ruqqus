@@ -10,7 +10,7 @@ import Collection from './asyncstorage'
 export function IconButton(props) {
   return (
     <View style={props.style}>
-      <Pressable onPress={() => props.onPress && props.onPress()}>
+      <Pressable onPress={() => props.onPress && props.onPress()} onLongPress={() => props.onLongPress && props.onLongPress()}>
         <Icon name={props.icon} color={props.color || "white"} style={{
           fontSize: FONTSIZE(props.fontsize || 4)
         }} />

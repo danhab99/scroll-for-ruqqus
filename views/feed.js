@@ -35,6 +35,7 @@ export default class Feed extends React.Component{
               marginRight: SPACE(1)
             }}
             onPress={() => this.refresh()}
+            onLongPress={() => this.getMore()}
           />
 
           <IconButton
@@ -91,7 +92,11 @@ export default class Feed extends React.Component{
       loadingMore: true
     }),
     () => {
-      this.fetch(this.state.page).then(more => {
+      this.flatlist.current.scrollToEnd({
+        animated: true
+      })
+
+      this.fetch().then(more => {
         this.setState((prev) => ({
           posts: prev.posts.concat(more.posts),
           loadingMore: false
@@ -153,7 +158,7 @@ export default class Feed extends React.Component{
           data={this.state.posts}
           renderItem={props => <SubmissionCard post={props.item} navigation={this.props.navigation}/>}
           onEndReached={() => this.getMore()}
-          onEndReachedThreshold={0}
+          onEndReachedThreshold={1}
           initialNumToRender={26}
           onRefresh={() => this.refresh()}
           refreshing={this.state.refreshing}
