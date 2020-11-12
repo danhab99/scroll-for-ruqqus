@@ -102,6 +102,24 @@ export const MarkdownStyle = StyleSheet.create({
   li: {
     color: COLORS.text,
     fontSize: FONTSIZE(1),
+  },
+  h1: {
+    color: COLORS.text
+  },
+  h2: {
+    color: COLORS.text
+  },
+  h3: {
+    color: COLORS.text
+  },
+  h4: {
+    color: COLORS.text
+  },
+  h5: {
+    color: COLORS.text
+  },
+  h6: {
+    color: COLORS.text
   }
 })
 
