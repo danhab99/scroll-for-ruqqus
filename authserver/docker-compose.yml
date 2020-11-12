@@ -6,5 +6,7 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile
-    ports:
-      - 3001:3001
+    # ports:
+    #   - 3001:3001
+    volumes:
+      - /var/domains/sfroa.danhab99.xyz:/var/listen.sock

@@ -62,7 +62,7 @@ mongoose.connection.on("close", () => {
 
 mongoose.connection.on("open", () => {
   console.log("Mongo database open")
-  app.listen(3001, '0.0.0.0', () => console.log('Listening on port 3001'))
+  app.listen('/var/listen.sock', () => console.log('Listening on socket'))
 });
 
 mongoose.connect(process.env.MONGO_SRV,
