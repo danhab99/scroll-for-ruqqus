@@ -25,7 +25,7 @@ route.get('/:id', (req, res) => {
   })
 })
 
-const grantEndpoint = type => (req, res) => {
+route.get('/:id/callback', (req, res) => {
   Site.findById(req.params.id).exec((err, site) => {
     if (err || !site) {
       res.status(404).json({err: 'Site does not exist'})
@@ -33,7 +33,7 @@ const grantEndpoint = type => (req, res) => {
     else {
       let f = fetch(`https://${site.domain}/oauth/grant`, {
         method: 'POST',
-        body: `code=${req.query.code}&client_id=${site.clientID}&client_secret=${site.clientSecret}&grant_type=${type}`,
+        body: `code=${req.query.code}&client_id=${site.clientID}&client_secret=${site.clientSecret}&grant_type=code`,
         headers: { 
           'Content-Type': 'application/x-www-form-urlencoded'
         }
@@ -59,9 +59,42 @@ const grantEndpoint = type => (req, res) => {
       f.catch(e => res.status(500).json({err: e}))
     }
   })
-}
+})
 
-route.get('/:id/callback', grantEndpoint('code'))
-route.get('/:id/refresh', grantEndpoint('refresh'))
+route.get('/:id/refresh', (req, res) => {
+  Site.findById(req.params.id).exec((err, site) => {
+    if (err || !site) {
+      res.status(404).json({err: 'Site does not exist'})
+    }
+    else {
+      let f = fetch(`https://${site.domain}/oauth/grant`, {
+        method: 'POST',
+        body: `refresh_token=${req.query.refresh_token}&client_id=${site.clientID}&client_secret=${site.clientSecret}&grant_type=refresh`,
+        headers: { 
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      })
+
+      f.then(rsp => rsp.text())
+        .then(text => {
+          let r = text
+          try {
+            r = {
+              ...JSON.parse(text),
+              state: req.query.state
+            }
+          }
+          catch (e) {
+
+          }
+          finally {
+            res.send(r)
+          }
+        })
+
+      f.catch(e => res.status(500).json({err: e}))
+    }
+  })
+})
 
 module.exports = route
