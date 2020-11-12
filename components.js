@@ -65,6 +65,41 @@ class ScaledImage extends React.Component {
   }
 }
 
+export function HtmlMarkdown(props) {
+  return (<HTML 
+    html={props.html} 
+    tagsStyles={MarkdownStyle}
+    containerStyle={{
+      paddingRight: SPACE(1/2),
+      paddingLeft: SPACE(1/2),
+      paddingBottom: SPACE(1/2)
+    }}
+    listsPrefixesRenderers={{
+      ul: (htmlAttribs, children, convertedCSSStyles, passProps) => {
+        return (
+          <Text style={{ 
+            color: COLORS.primary, 
+            fontSize: FONTSIZE(1.5),
+            fontWeight: 'bold',
+            marginRight: SPACE(1/5)
+          }}>•</Text>
+        );
+      }
+    }}
+    onLinkPress={(evt, href, attr) => Linking.openURL(href)}
+    alterNode={node => {
+      if (node.name == 'img' && node.attribs.src[0] == '/') {
+        return Object.assign(node, {
+          attribs: {
+            src: `https://${props.domain || "ruqqus.com"}${node.attribs.src}`,
+          },
+        });
+      }
+      return node
+    }}
+  />)
+}
+
 function SubmissionContent({content}) {
   if (content.domain == undefined) {
     return <Text style={{color: 'red'}}>Content not supported</Text>
@@ -75,28 +110,7 @@ function SubmissionContent({content}) {
     />
   }
   else if (content.domain == 'text post') {
-    return <HTML 
-      html={content.body.html} 
-      tagsStyles={MarkdownStyle}
-      containerStyle={{
-        paddingRight: SPACE(1/2),
-        paddingLeft: SPACE(1/2),
-        paddingBottom: SPACE(1/2)
-      }}
-      listsPrefixesRenderers={{
-        ul: (htmlAttribs, children, convertedCSSStyles, passProps) => {
-          return (
-            <Text style={{ 
-              color: COLORS.primary, 
-              fontSize: FONTSIZE(1.5),
-              fontWeight: 'bold',
-              marginRight: SPACE(1/5)
-            }}>•</Text>
-          );
-        }
-      }}
-      onLinkPress={(evt, href, attr) => Linking.openURL(href)}
-    />
+    return <HtmlMarkdown html={content.body.html}/>
   }
   else if (content.domain.includes('youtu')) {
     let s = content.url.split('/')
