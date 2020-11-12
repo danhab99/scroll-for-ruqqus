@@ -9,7 +9,7 @@ import { IconButton } from './components'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import Feed from './views/feed'
-import Login from './views/roa_login';
+import Login from './views/login';
 import Comments from './views/comments'
 
 const Stack = createStackNavigator();
