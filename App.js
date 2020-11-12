@@ -77,7 +77,8 @@ function StackNavigator(props) {
         component={Feed}
         initialParams={{
           fetch: (client, options) => client.feeds.guild(options.name, options.page, options.sort),
-          prefix: '+'
+          prefix: '+',
+          guildHeader: true
         }}
       />
 
