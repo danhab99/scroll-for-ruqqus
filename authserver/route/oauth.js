@@ -15,7 +15,7 @@ route.get('/:id', (req, res) => {
       let url = new URL(`https://${site.domain}/oauth/authorize`)
       url.searchParams.append('client_id', site.clientID)
       url.searchParams.append('client_secret', site.clientSecret)
-      url.searchParams.append('redirect', `https://${process.env.DOMAIN}/auth/${req.params.id}/callback`)
+      url.searchParams.append('redirect_uri', `https://${process.env.DOMAIN}/auth/${req.params.id}/callback`)
       url.searchParams.append('scope', ["identity", "create", "read", "update", "delete", "vote", "guildmaster"].join(','))
       url.searchParams.append('permanent', 'true')
       req.query.state && url.searchParams.append('state', req.query.state)
@@ -24,8 +24,6 @@ route.get('/:id', (req, res) => {
     }
   })
 })
-
-const generateBody = (req, site, type) => `code=${req.query.code}&client_id=${site.clientID}&client_secret=${site.clientSecret}&grant_type=${type}`
 
 const grantEndpoint = type => (req, res) => {
   Site.findById(req.params.id).exec((err, site) => {
