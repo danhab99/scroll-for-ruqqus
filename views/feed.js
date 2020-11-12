@@ -1,8 +1,58 @@
 import React from 'react'
-import { FlatList, ActivityIndicator, View, Modal } from 'react-native'
-import Style, { COLORS, SPACE } from '../theme'
-import { SubmissionCard, IconButton, Popup, PopupButton } from '../components'
+import { FlatList, ActivityIndicator, View, Modal, Image, Text } from 'react-native'
+import Style, { COLORS, FONTSIZE, SPACE } from '../theme'
+import { SubmissionCard, IconButton, Popup, PopupButton, HtmlMarkdown, Button } from '../components'
 import InitClient from '../init_client'
+
+function GuildHeader(props) {
+  if (props.enabled) {
+    return (<View
+      style={{
+        backgroundColor: COLORS.background,
+        marginBottom: SPACE(1.5)
+      }}
+    >
+      <Image
+        source={{uri: props.guild.banner_url}}
+        style={{
+          width: '100%',
+          aspectRatio: 3.4092307692307693
+        }}
+      />
+      <View style={{
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'flex-start'
+      }}>
+        <Image
+          source={{uri: props.guild.icon_url}}
+          style={{
+            width: 64,
+            aspectRatio: 1,
+            borderRadius: 100,
+            margin: SPACE(1)
+          }}
+        />
+        <View style={{margin: SPACE(1)}}>
+          <Text style={{
+            color: COLORS.text,
+            fontSize: FONTSIZE(4/3),
+            fontWeight: 'bold',
+          }}>+{props.guild.name}</Text>
+          <Text style={{
+            color: COLORS.text,
+            flexShrink: 1
+          }}>{props.guild.subscribers} subscribers</Text>
+        </View>
+      </View>
+      <Button text="Subscribe"/>
+      <HtmlMarkdown html={props.guild?.description?.html} />
+    </View>)
+  }
+  else {
+    return <View></View>
+  }
+}
 
 export default class Feed extends React.Component{
   constructor(props) {
@@ -14,7 +64,18 @@ export default class Feed extends React.Component{
       loadingMore: false,
       refreshing: true,
       sortingVisible: false,
-      sorting: 'hot'
+      sorting: 'hot',
+      guildHeader: this.props.route.params.guildHeader || false,
+      guild: {
+        icon_url: '',
+        name: '',
+        color: '',
+        subscribers: -1,
+        banner_url: '',
+        description: {
+          html: ''
+        }
+      }
     }
 
     this.flatlist = React.createRef()
@@ -73,6 +134,13 @@ export default class Feed extends React.Component{
           refreshing: false
         })
       })
+
+      if (this.props.route.params.guildHeader) {
+        this._client.guilds.fetch(this.props.route.params.name).then(guild => {
+          console.log('GUILD HEADER', guild)
+          this.setState({guild})
+        })
+      }
     }
     else {
       InitClient().then(client => {
@@ -162,9 +230,7 @@ export default class Feed extends React.Component{
           initialNumToRender={26}
           onRefresh={() => this.refresh()}
           refreshing={this.state.refreshing}
-          style={{
-            paddingTop: SPACE(1)
-          }}
+          ListHeaderComponent={<GuildHeader guild={this.state.guild} enabled={this.state.guildHeader} />}
         />
         {this.state.loadingMore 
           ? <View style={{position: 'absolute', bottom: 0, width: '100%'}}>
