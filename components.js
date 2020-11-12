@@ -2,10 +2,12 @@ import React from 'react';
 import { View, Pressable, Text, Image, Linking, Modal, ActivityIndicator, Share } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import Style, { SPACE, FONTSIZE, COLORS, Lighten, Darken, FONTS } from './theme'
+import Style, { SPACE, FONTSIZE, COLORS, Lighten, Darken, MarkdownStyle, FONTS } from './theme'
 import TimeAgo from 'react-native-timeago';
 import YoutubePlayer from "react-native-youtube-iframe";
-import Collection from './asyncstorage'
+import Collection from './asyncstorage';
+import HTML from 'react-native-render-html';
+
 
 export function IconButton(props) {
   return (
@@ -70,14 +72,27 @@ function SubmissionContent({content}) {
     />
   }
   else if (content.domain == 'text post') {
-    return <Text style={{
-      color: COLORS.text,
-      backgroundColor: COLORS.background,
-      padding: SPACE(0.5),
-      borderRadius: 5
-    }}>
-      {content.body.text}
-    </Text>
+    return <HTML 
+      html={content.body.html} 
+      tagsStyles={MarkdownStyle}
+      containerStyle={{
+        paddingRight: SPACE(1/2),
+        paddingLeft: SPACE(1/2),
+        paddingBottom: SPACE(1/2)
+      }}
+      listsPrefixesRenderers={{
+        ul: (htmlAttribs, children, convertedCSSStyles, passProps) => {
+          return (
+            <Text style={{ 
+              color: COLORS.primary, 
+              fontSize: FONTSIZE(1.5),
+              fontWeight: 'bold',
+              marginRight: SPACE(1/5)
+            }}>•</Text>
+          );
+        }
+      }}
+    />
   }
   else if (content.domain.includes('youtu')) {
     let s = content.url.split('/')
