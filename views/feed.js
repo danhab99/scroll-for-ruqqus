@@ -231,18 +231,20 @@ export default class Feed extends React.Component{
           onRefresh={() => this.refresh()}
           refreshing={this.state.refreshing}
           ListHeaderComponent={<GuildHeader guild={this.state.guild} enabled={this.state.guildHeader} />}
+          ListFooterComponent={<View>
+            {this.state.loadingMore 
+            ? <View /* style={{position: 'absolute', bottom: 0, width: '100%'}} */>
+                <ActivityIndicator 
+                  size="large" 
+                  color={COLORS.primary}
+                />
+              </View> 
+            : null}
+          </View>}
           style={{
             paddingTop: this.state.guildHeader ? 0 : SPACE(1)
           }}
         />
-        {this.state.loadingMore 
-          ? <View style={{position: 'absolute', bottom: 0, width: '100%'}}>
-              <ActivityIndicator 
-                size="large" 
-                color={COLORS.primary}
-              />
-            </View> 
-          : null}
       </View>
     )
   }
