@@ -43,7 +43,10 @@ const grantEndpoint = type => (req, res) => {
         .then(text => {
           let r = text
           try {
-            r = JSON.parse(text)
+            r = {
+              ...JSON.parse(text),
+              state: req.query.state
+            }
           }
           catch (e) {
 
