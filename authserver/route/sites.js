@@ -11,23 +11,14 @@ route.get('/', (req, res) => {
 })
 
 route.post('/new', requireLogin, bodyParser.urlencoded(), (req, res) => {
-  Site.findOne({domain: req.body.domain}).then(site => {
-    if (site) {
-      res.redirect('/?error=domain already taken')
+  Site.findOneAndUpdate(
+    {owner: req.user._id}, 
+    req.body, 
+    { 
+      new: true,
+      upsert: true
     }
-    else {
-      Site.create({
-        owner: req.user.id,
-        ...req.body
-      }).then(newSite => {
-        res.redirect('/')
-      })
-    }
-  })
-})
-
-route.post('/edit', requireLogin, bodyParser.urlencoded(), (req, res) => {
-  Site.update({owner: req.user._id}, req.body).exec((err, site) => {
+  ).then(() => {
     res.redirect('/')
   })
 })

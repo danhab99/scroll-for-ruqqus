@@ -5,7 +5,7 @@
 <% if (user) { %>
 <div class="card" style="margin-bottom: 1em; width: min(6cm, 100%);">
   <h4 style="margin: 1%;"><%= (mysite ? 'Edit my site' : 'Add a new site') %></h4>
-  <form action="/sites/<%= (mysite ? 'edit' : 'new') %>" method="POST">
+  <form action="/sites/new" method="POST">
     <input type="text" placeholder="Name" name="name" required autocomplete="off" value="<%= mysite.name ? mysite.name : ''%>"/>
     <input type="text" placeholder="Domain (e.g. ruqqus.com)" name="domain" required autocomplete="off" value="<%= mysite.domain ? mysite.domain : '' %>"/>
     <input type="text" placeholder="Client ID" name="clientID" required autocomplete="off" autocapitalize="off" value="<%= mysite.clientID ? mysite.clientID : '' %>"/>
@@ -26,14 +26,12 @@
 <table>
   <tr>
     <th>Domain</th>
-    <th>Auth Link</th>
-    <th>ClientID</th>
+    <th>Redirect URL</th>
   </tr>
   <% for (let site of sites) { %>
     <tr>
       <td><a href="https://<%= site.domain %>"><%= site.name %></a></td>
-      <td><a href="/auth/<%= site._id %>">Example link</a></td>
-      <td><%= site.clientID %></td>
+      <td><a href="https://<%= domain %>/auth/<%= site._id %>/callback">https://<%= domain %>/auth/<%= site._id %>/callback</a></td>
     </tr>
   <% } %>
 </table>

@@ -25,7 +25,9 @@ route.get('/:id', (req, res) => {
   })
 })
 
-route.get('/:id/callback', (req, res) => {
+const generateBody = (req, site, type) => `code=${req.query.code}&client_id=${site.clientID}&client_secret=${site.clientSecret}&grant_type=${type}`
+
+const grantEndpoint = type => (req, res) => {
   Site.findById(req.params.id).exec((err, site) => {
     if (err || !site) {
       res.status(404).json({err: 'Site does not exist'})
@@ -33,7 +35,7 @@ route.get('/:id/callback', (req, res) => {
     else {
       let f = fetch(`https://${site.domain}/oauth/grant`, {
         method: 'POST',
-        body: `code=${req.query.code}&client_id=${site.clientID}&client_secret=${site.clientSecret}&grant_type=code`,
+        body: `code=${req.query.code}&client_id=${site.clientID}&client_secret=${site.clientSecret}&grant_type=${type}`,
         headers: { 
           'Content-Type': 'application/x-www-form-urlencoded'
         }
@@ -56,6 +58,9 @@ route.get('/:id/callback', (req, res) => {
       f.catch(e => res.status(500).json({err: e}))
     }
   })
-})
+}
+
+route.get('/:id/callback', grantEndpoint('code'))
+route.get('/:id/refresh', grantEndpoint('refresh'))
 
 module.exports = route

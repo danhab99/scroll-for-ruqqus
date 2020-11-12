@@ -42,7 +42,8 @@ app.get('/', (req, res) => {
     res.render('index', {
       user: req.user,
       mysite: sites.find(x => x.owner.toString() == req.user ?? req.user._id.toString()) || {},
-      sites
+      sites,
+      domain: process.env.DOMAIN
     })
   })
 })

@@ -11,7 +11,8 @@ const siteSchema = new mongoose.Schema({
   },
   domain: {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
   name: {
     type: String,
@@ -23,7 +24,8 @@ const siteSchema = new mongoose.Schema({
   },
   owner: {
     type: mongoose.SchemaTypes.ObjectId,
-    ref: 'users'
+    ref: 'users',
+    unique: true
   }
 })
 
