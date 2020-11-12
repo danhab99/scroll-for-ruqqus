@@ -101,7 +101,7 @@ export function HtmlMarkdown(props) {
 }
 
 function SubmissionContent({content}) {
-  if (content.domain == undefined) {
+  if (content?.domain == undefined) {
     return <Text style={{color: 'red'}}>Content not supported</Text>
   }
   else if (['i.ruqqus.com', 'i.imgur.com'].includes(content.domain)) {
