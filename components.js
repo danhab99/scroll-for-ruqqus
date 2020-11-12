@@ -453,10 +453,10 @@ export function LinkText(props) {
 }
 
 export function Button(props) {
-  return (<Pressable onPress={props.onPress}> 
+  return (<Pressable onPress={() => !props.disabled && props.onPress()}> 
     <Text
       style={{
-        backgroundColor: COLORS.primary,
+        backgroundColor: props.disabled ? COLORS.muted : COLORS.primary,
         color: COLORS.text,
         justifyContent: 'center',
         textAlign: 'center',
