@@ -11,6 +11,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import Feed from './views/feed'
 import Login from './views/login';
 import Comments from './views/comments'
+import Submit from './views/submit'
+
 import Collection from './asyncstorage';
 
 const Stack = createStackNavigator();
@@ -145,6 +147,15 @@ function SavedStackNavigator(props) {
   </StackNavigator>)
 }
 
+function SubmitStackNavigator(props) {
+  return <StackNavigator {...props}>
+    <Stack.Screen
+      name="Submit"
+      component={Submit}
+    />
+  </StackNavigator>
+}
+
 export default class App extends React.Component {
   constructor(props) {
     super(props)
@@ -183,6 +194,7 @@ export default class App extends React.Component {
             <Drawer.Screen name="Frontpage" component={FeedStackNavigator} />
             <Drawer.Screen name="Login" component={LoginStackNavigator} />
             <Drawer.Screen name="Saved" component={SavedStackNavigator} />
+            <Drawer.Screen name="Submit" component={SubmitStackNavigator} />
           </Drawer.Navigator>
         </NavigationContainer>
       </View>
