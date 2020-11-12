@@ -3,6 +3,7 @@ const { URL } = require('url')
 const fetch = require('node-fetch')
 
 const Site = require('../schemas/site')
+const bodyParser = require('body-parser')
 
 const route = express.Router()
 
@@ -61,7 +62,7 @@ route.get('/:id/callback', (req, res) => {
   })
 })
 
-route.get('/:id/refresh', (req, res) => {
+route.post('/:id/refresh', bodyParser.json(), (req, res) => {
   Site.findById(req.params.id).exec((err, site) => {
     if (err || !site) {
       res.status(404).json({err: 'Site does not exist'})
@@ -69,7 +70,7 @@ route.get('/:id/refresh', (req, res) => {
     else {
       let f = fetch(`https://${site.domain}/oauth/grant`, {
         method: 'POST',
-        body: `refresh_token=${req.query.refresh_token}&client_id=${site.clientID}&client_secret=${site.clientSecret}&grant_type=refresh`,
+        body: `refresh_token=${req.body.refresh_token}&client_id=${site.clientID}&client_secret=${site.clientSecret}&grant_type=refresh`,
         headers: { 
           'Content-Type': 'application/x-www-form-urlencoded'
         }
