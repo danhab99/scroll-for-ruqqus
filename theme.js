@@ -85,4 +85,24 @@ const Style = StyleSheet.create({
   }
 })
 
+export const MarkdownStyle = StyleSheet.create({
+  p: {
+    color: COLORS.text,
+    fontSize: FONTSIZE(1),
+    marginBottom: SPACE(1/3)
+  },
+  a: {
+    color: COLORS.primary,
+    fontSize: FONTSIZE(1)
+  },
+  ul: {
+    marginRight: SPACE(1/4),
+    color: COLORS.primary
+  },
+  li: {
+    color: COLORS.text,
+    fontSize: FONTSIZE(1),
+  }
+})
+
 export default Style
