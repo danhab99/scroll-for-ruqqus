@@ -66,7 +66,10 @@ class ScaledImage extends React.Component {
 }
 
 function SubmissionContent({content}) {
-  if (['i.ruqqus.com', 'i.imgur.com'].includes(content.domain)) {
+  if (content.domain == undefined) {
+    return <Text style={{color: 'red'}}>Content not supported</Text>
+  }
+  else if (['i.ruqqus.com', 'i.imgur.com'].includes(content.domain)) {
     return <ScaledImage
       url={content.url}
     />
@@ -92,6 +95,7 @@ function SubmissionContent({content}) {
           );
         }
       }}
+      onLinkPress={(evt, href, attr) => Linking.openURL(href)}
     />
   }
   else if (content.domain.includes('youtu')) {
