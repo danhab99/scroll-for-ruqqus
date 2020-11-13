@@ -26,7 +26,8 @@ class BackupThumbnail extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      url: 'https://media.wired.com/photos/5a0201b14834c514857a7ed7/master/pass/1217-WI-APHIST-01.jpg'
+      url: 'https://media.wired.com/photos/5a0201b14834c514857a7ed7/master/pass/1217-WI-APHIST-01.jpg',
+      loading: true
     }
   }
 
@@ -41,20 +42,41 @@ class BackupThumbnail extends React.Component {
               let l = $('meta[property="og:image"]').attr('content')
               if (l) {
                 this.setState({url: l})
+                console.log('Url has OG image', url)
               }
+              this.setState({loading: false})
             })
           }
           else if (resp.headers.get('content-type').includes('image')) {
-            this.setState({url})
+            console.log('Url already an image', url)
+            this.setState({url, loading: false})
           }
         }
       })
   }
 
   render() {
-    return <ScaledImage
-      url={this.state.url}
-    />
+    return <View>
+      <View>
+        {this.state.loading ? <ActivityIndicator 
+          size={100} 
+          color={COLORS.primary} 
+          style={{
+            position: 'absolute',
+            left: 0,
+            right: 0,
+            top: 0,
+            bottom: 0,
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 2000
+          }}
+        /> : null}
+        <ScaledImage
+          url={this.state.url}
+        />
+      </View>
+    </View>
   }
 }
 
@@ -94,10 +116,11 @@ function SubmissionContent({content}) {
             position: 'absolute',
             color: COLORS.text,
             backgroundColor: COLORS.primary,
-            fontSize: FONTSIZE(0.3),
+            fontSize: FONTSIZE(0.1),
+            fontWeight: 'bold',
             zIndex: 1000,
             padding: SPACE(0.2),
-            margin: SPACE(0.3),
+            margin: SPACE(0.4),
             borderRadius: 8,
           }}>
             Link
