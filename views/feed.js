@@ -1,6 +1,6 @@
 import React from 'react'
-import { FlatList, ActivityIndicator, View, Image, Text } from 'react-native'
-import Style, { COLORS, FONTSIZE, SPACE } from '../theme'
+import { FlatList, ActivityIndicator, View, Image, Text, Vibration, RefreshControl } from 'react-native'
+import Style, { COLORS, Darken, FONTSIZE, Lighten, SPACE } from '../theme'
 import Postcard from '../components/Postcard'
 import { IconButton, Button } from '../components/Buttons'
 import Popup, { PopupButton } from '../components/Popup'
@@ -103,6 +103,7 @@ export default class Feed extends React.Component{
             }}
             onPress={() => this.refresh()}
             onLongPress={() => this.getMore()}
+            
           />
 
           <IconButton
@@ -171,6 +172,7 @@ export default class Feed extends React.Component{
   }
 
   getMore() {
+    Vibration.vibrate(100)
     this.setState(prev => ({
       page: prev.page + 1,
       loadingMore: true
@@ -283,8 +285,6 @@ export default class Feed extends React.Component{
           onEndReached={() => this.getMore()}
           onEndReachedThreshold={1}
           initialNumToRender={26}
-          onRefresh={() => this.refresh()}
-          refreshing={this.state.refreshing}
           ListHeaderComponent={<GuildHeader guild={this.state.guild} enabled={this.state.guildHeader} />}
           ListFooterComponent={<View>
             {this.state.loadingMore 
@@ -299,6 +299,13 @@ export default class Feed extends React.Component{
           style={{
             paddingTop: this.state.guildHeader ? 0 : SPACE(1)
           }}
+          showsVerticalScrollIndicator={false}
+          refreshControl={<RefreshControl 
+            refreshing={this.state.refreshing}
+            onRefresh={() => this.refresh()}
+            title="Pull to refresh"
+            colors={[Lighten(COLORS.primary), COLORS.primary, Darken(COLORS.primary)]}
+          />}
         />
       </View>
     )
