@@ -31,17 +31,22 @@ class BackupThumbnail extends React.Component {
   }
 
   componentDidMount() {
-    let url = this.props.content.url || this.props.content.domain
+    let url = this.props.content.url
     fetch(url)
       .then(resp => {
         if (resp.ok) {
-          resp.text().then(html => {
-            var $ = cherrio.load(html)
-            let l = $('meta[property="og:image"]').attr('content')
-            if (l) {
-              this.setState({url: l})
-            }
-          })
+          if (resp.headers.get('content-type').includes('html')) {
+            resp.text().then(html => {
+              var $ = cherrio.load(html)
+              let l = $('meta[property="og:image"]').attr('content')
+              if (l) {
+                this.setState({url: l})
+              }
+            })
+          }
+          else if (resp.headers.get('content-type').includes('image')) {
+            this.setState({url})
+          }
         }
       })
   }
