@@ -26,6 +26,8 @@ export default class Submit extends React.Component {
     InitClient().then(client => {
       this._client = client
       this.setState({ready: true})
+    }).catch(() => {
+      this.props.navigation.navigate("Login")
     })
   }
 
