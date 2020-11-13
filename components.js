@@ -1,26 +1,14 @@
 import React, { useState } from 'react';
-import { View, Pressable, Text, Image, Linking, Modal, ActivityIndicator, Share } from 'react-native';
-import { TextInput } from 'react-native-gesture-handler';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import Style, { SPACE, FONTSIZE, COLORS, Lighten, Darken, MarkdownStyle, FONTS } from './theme'
+import { View, Pressable, Text, Image, Linking, ActivityIndicator, Share } from 'react-native';
+import Style, { SPACE, FONTSIZE, COLORS, Lighten, Darken, FONTS } from './theme'
 import TimeAgo from 'react-native-timeago';
 import YoutubePlayer from "react-native-youtube-iframe";
 import Collection from './asyncstorage';
-import HTML from 'react-native-render-html';
 import cherrio from 'react-native-cheerio'
-
-
-export function IconButton(props) {
-  return (
-    <View style={props.style}>
-      <Pressable onPress={() => props.onPress && props.onPress()} onLongPress={() => props.onLongPress && props.onLongPress()}>
-        <Icon name={props.icon} color={props.color || "white"} style={{
-          fontSize: FONTSIZE(props.fontsize || 4)
-        }} />
-      </Pressable>
-    </View>
-  )
-}
+import { HtmlMarkdown } from './components/HtmlMarkdown';
+import { ScaledImage } from './components/ScaledImage';
+import { IconButton } from './components/IconButton';
+import Popup, { PopupButton } from './components/Popup';
 
 function Delimiter(props) {
   return (<View>
@@ -32,73 +20,6 @@ function Delimiter(props) {
       •
     </Text>
   </View>)
-}
-
-class ScaledImage extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { 
-      source: { 
-        uri: this.props.uri 
-      },
-      aspectRatio: 1
-    };
-  }
-
-  componentDidMount() {
-    Image.getSize(this.props.url, (width, height) => {
-      this.setState({
-        aspectRatio: width / height
-      })
-    });
-  }
-
-  render() {
-    return (
-      <Image
-        source={{uri: this.props.url}}
-        style={{
-          width: '100%',
-          aspectRatio: this.state.aspectRatio
-        }}
-      />
-    );
-  }
-}
-
-export function HtmlMarkdown(props) {
-  return (<HTML 
-    html={props.html} 
-    tagsStyles={MarkdownStyle}
-    containerStyle={{
-      paddingRight: SPACE(1/2),
-      paddingLeft: SPACE(1/2),
-      paddingBottom: SPACE(1/2)
-    }}
-    listsPrefixesRenderers={{
-      ul: (htmlAttribs, children, convertedCSSStyles, passProps) => {
-        return (
-          <Text style={{ 
-            color: COLORS.primary, 
-            fontSize: FONTSIZE(1.5),
-            fontWeight: 'bold',
-            marginRight: SPACE(1/5)
-          }}>•</Text>
-        );
-      }
-    }}
-    onLinkPress={(evt, href, attr) => Linking.openURL(href)}
-    alterNode={node => {
-      if (node.name == 'img' && node.attribs.src[0] == '/') {
-        return Object.assign(node, {
-          attribs: {
-            src: `https://${props.domain || "ruqqus.com"}${node.attribs.src}`,
-          },
-        });
-      }
-      return node
-    }}
-  />)
 }
 
 class BackupThumbnail extends React.Component {
@@ -157,34 +78,6 @@ function SubmissionContent({content}) {
       <BackupThumbnail content={content} />
     </Pressable>
   }
-}
-
-export function PopupButton(props) {
-  return <Pressable onPress={() => props.onPress()}>
-    <View
-      style={{
-        display: 'flex',
-        justifyContent: "flex-start",
-        flexDirection: 'row',
-        marginBottom: SPACE(0.5)
-      }}
-    >
-      <Icon 
-        name={props.icon}
-        size={30}  
-        color={COLORS.text}
-      />
-      <Text
-        style={{
-          color: COLORS.text,
-          fontSize: FONTSIZE(2),
-          marginLeft: SPACE(1)
-        }}
-      >
-        {props.label}
-      </Text>
-    </View>
-  </Pressable>
 }
 
 class SubmissionDelayControl extends React.Component {
@@ -453,103 +346,4 @@ export class SubmissionCard extends React.Component {
       </View>
     )
   }
-}
-
-export function Input(props) {
-  return (<View>
-    <Text style={Style.inputLabel}>
-      {props.label}
-    </Text>
-    <TextInput
-      style={{
-        ...props.style, 
-        ...Style.input
-      }}
-      {...props}
-    />
-  </View>)
-}
-
-export function LinkText(props) {
-  return <Text
-    style={{
-      color: Lighten(COLORS.primary),
-      textDecorationColor: COLORS.primary,
-      textDecorationStyle: "solid",
-      textDecorationLine: 'underline',
-      ...props.style
-    }}
-    onPress={() => Linking.openURL(props.url)}
-  >
-    {props.children}
-  </Text>
-}
-
-export function Button(props) {
-  return (<Pressable onPress={() => !props.disabled && props.onPress()}> 
-    <Text
-      style={{
-        backgroundColor: props.disabled ? COLORS.muted : COLORS.primary,
-        color: COLORS.text,
-        justifyContent: 'center',
-        textAlign: 'center',
-        fontSize: FONTSIZE(1.5),
-        padding: SPACE(0.5),
-        borderRadius: 5,
-        ...props.style
-      }}
-    >
-      {props.text}
-    </Text>
-  </Pressable>)
-}
-
-export function Popup(props) {
-  return (<Modal
-    transparent={true}
-    visible={props.visible}
-    animationType="slide"
-    onRequestClose={() => props.togglModal()}
-  >
-    <View style={{
-      margin: SPACE(3),
-      alignItems: 'center',
-      shadowColor: '#000',
-      shadowOpacity: 0.5,
-      elevation: 5,
-      flex: 1,
-      justifyContent: 'center'
-    }}>
-      <View style={{
-        backgroundColor: COLORS.backgroundDark,
-        padding: SPACE(2),
-        width: '100%',
-        borderRadius: 10
-      }}>
-        <View
-          style={{
-            display: 'flex',
-            flexDirection: 'row'
-          }}
-        >
-          <IconButton
-            icon="close"
-            style={{
-              marginBottom: SPACE(1)
-            }}
-            onPress={() => props.togglModal()}
-          />
-          <Text style={{
-            color: COLORS.text,
-            fontSize: FONTSIZE(1.5)
-          }}>
-            {props.title}
-          </Text>
-        </View>
-        
-
-        {props.children}
-      </View>
-    </View>
-  </Modal>)
 }
