@@ -340,7 +340,7 @@ export default class Postcard extends React.Component {
               fontSize: FONTSIZE(2),
               color: COLORS.text,
             }}>
-              {post?.content?.title}
+              {post?.content?.title.replace('&amp;', '&')}
             </Text>
           </View>
 

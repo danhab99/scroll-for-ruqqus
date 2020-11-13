@@ -9,7 +9,8 @@
       "**/*"
     ],
     "android": {
-      "package": "com.danhab99.scrollforruqqus"
+      "package": "com.danhab99.scrollforruqqus",
+      "versionCode": 1
     }
   }
 }

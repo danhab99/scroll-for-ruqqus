@@ -304,8 +304,9 @@ export default class Feed extends React.Component{
             refreshing={this.state.refreshing}
             onRefresh={() => this.refresh()}
             title="Pull to refresh"
-            colors={[Lighten(COLORS.primary), COLORS.primary, Darken(COLORS.primary)]}
+            colors={[COLORS.primary, Lighten(COLORS.primary), Darken(COLORS.primary)]}
           />}
+          keyExtractor={(item, index) => `${index}`}
         />
       </View>
     )
