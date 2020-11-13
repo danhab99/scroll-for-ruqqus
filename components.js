@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Pressable, Text, Image, Linking, Modal, ActivityIndicator, Share } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -7,6 +7,7 @@ import TimeAgo from 'react-native-timeago';
 import YoutubePlayer from "react-native-youtube-iframe";
 import Collection from './asyncstorage';
 import HTML from 'react-native-render-html';
+import cherrio from 'react-native-cheerio'
 
 
 export function IconButton(props) {
@@ -100,6 +101,37 @@ export function HtmlMarkdown(props) {
   />)
 }
 
+class BackupThumbnail extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      url: 'https://media.wired.com/photos/5a0201b14834c514857a7ed7/master/pass/1217-WI-APHIST-01.jpg'
+    }
+  }
+
+  componentDidMount() {
+    let url = this.props.content.url || this.props.content.domain
+    fetch(url)
+      .then(resp => {
+        if (resp.ok) {
+          resp.text().then(html => {
+            var $ = cherrio.load(html)
+            let l = $('meta[property="og:image"]').attr('content')
+            if (l) {
+              this.setState({url: l})
+            }
+          })
+        }
+      })
+  }
+
+  render() {
+    return <ScaledImage
+      url={this.state.url}
+    />
+  }
+}
+
 function SubmissionContent({content}) {
   if (content?.domain == undefined) {
     return <Text style={{color: 'red'}}>Content not supported</Text>
@@ -122,9 +154,7 @@ function SubmissionContent({content}) {
   }
   else {
     return <Pressable onPress={() => Linking.openURL(content.url)}>
-      <ScaledImage
-        url={content.thumbnail}
-      />
+      <BackupThumbnail content={content} />
     </Pressable>
   }
 }
