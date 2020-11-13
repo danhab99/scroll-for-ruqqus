@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, Pressable, Text, Image, Linking, ActivityIndicator, Share } from 'react-native';
-import Style, { SPACE, FONTSIZE, COLORS, Lighten, Darken, FONTS } from './theme'
+import Style, { SPACE, FONTSIZE, COLORS, Lighten, Darken } from '../theme'
 import TimeAgo from 'react-native-timeago';
 import YoutubePlayer from "react-native-youtube-iframe";
-import Collection from './asyncstorage';
+import Collection from '../asyncstorage';
 import cherrio from 'react-native-cheerio'
-import { HtmlMarkdown } from './components/HtmlMarkdown';
-import { ScaledImage } from './components/ScaledImage';
-import { IconButton } from './components/IconButton';
-import Popup, { PopupButton } from './components/Popup';
+import HtmlMarkdown from './HtmlMarkdown';
+import ScaledImage from './ScaledImage';
+import { IconButton } from './Buttons';
+import Popup, { PopupButton } from './Popup';
 
 function Delimiter(props) {
   return (<View>
@@ -112,7 +112,7 @@ class SubmissionDelayControl extends React.Component {
   }
 }
 
-export class SubmissionCard extends React.Component {
+export default class Postcard extends React.Component {
   constructor(props) {
     super(props)
 

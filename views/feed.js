@@ -1,7 +1,11 @@
 import React from 'react'
-import { FlatList, ActivityIndicator, View, Modal, Image, Text } from 'react-native'
+import { FlatList, ActivityIndicator, View, Image, Text } from 'react-native'
 import Style, { COLORS, FONTSIZE, SPACE } from '../theme'
-import { SubmissionCard, IconButton, Popup, PopupButton, HtmlMarkdown, Button, Input } from '../components'
+import Postcard from '../components/Postcard'
+import { IconButton, Button } from '../components/Buttons'
+import Popup, { PopupButton } from '../components/Popup'
+import HtmlMarkdown from '../components/HtmlMarkdown'
+import Input from '../components/Input'
 import InitClient from '../init_client'
 
 function GuildHeader(props) {
@@ -275,7 +279,7 @@ export default class Feed extends React.Component{
         <FlatList
           ref={this.flatlist}
           data={this.state.posts}
-          renderItem={props => <SubmissionCard post={props.item} navigation={this.props.navigation}/>}
+          renderItem={props => <Postcard post={props.item} navigation={this.props.navigation}/>}
           onEndReached={() => this.getMore()}
           onEndReachedThreshold={1}
           initialNumToRender={26}

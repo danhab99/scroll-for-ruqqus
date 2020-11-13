@@ -1,6 +1,6 @@
 import React from 'react'
 import { View } from 'react-native'
-import { SubmissionCard } from '../components'
+import Postcard from '../components/Postcard'
 import Style from '../theme'
 
 export default class Comments extends React.Component {
@@ -16,7 +16,7 @@ export default class Comments extends React.Component {
   render() {
     return  (
       <View style={Style.view}>
-        <SubmissionCard post={this.props.route.params.post} />
+        <Postcard post={this.props.route.params.post} />
       </View>
     )
   }

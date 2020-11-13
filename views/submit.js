@@ -2,7 +2,8 @@ import React from 'react'
 import { View, ActivityIndicator } from 'react-native'
 import InitClient from '../init_client'
 import Style, { COLORS, SPACE } from '../theme'
-import { Input, Button } from '../components'
+import Input from '../components/Input'
+import { Button } from '../components/Buttons'
 
 export default class Submit extends React.Component {
   constructor(props) {

@@ -1,8 +1,7 @@
 import React from 'react';
 import { View, Text, Modal, Pressable } from 'react-native';
 import { SPACE, FONTSIZE, COLORS } from '../theme';
-import { IconButton } from './IconButton';
-import React from 'react';
+import { IconButton } from './Buttons';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 export default function Popup(props) {
