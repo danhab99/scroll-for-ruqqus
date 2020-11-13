@@ -66,8 +66,14 @@ function SubmissionContent({content}) {
     return <HtmlMarkdown html={content.body.html}/>
   }
   else if (content.domain.includes('youtu')) {
-    let s = content.url.split('/')
-    let id = s[s.length - 1]
+    let id
+    if (content.domain === 'youtu.be') {
+      let s = content.url.split('/')
+      id = s[s.length - 1]
+    }
+    else if (content.domain === 'youtube.com') {
+      id = /(?<=\?v=).*/.exec(content.url)[0]
+    }
     return (<YoutubePlayer
       height={180}
       videoId={id}
