@@ -1,10 +1,8 @@
 import React from 'react';
-import { View, Text } from 'react-native';
-import { TextInput } from 'react-native-gesture-handler';
+import { View, Text, TextInput } from 'react-native';
 import Style from '../theme';
 
-
-export function Input(props) {
+export default function Input(props) {
   return (<View>
     <Text style={Style.inputLabel}>
       {props.label}
