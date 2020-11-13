@@ -215,7 +215,10 @@ export class SubmissionCard extends React.Component {
           return this._savedPosts.delete(bod)
         }
         else {
-          return this._savedPosts.create(bod)
+          return this._savedPosts.create({
+            ...bod,
+            savedat: Date.now()
+          })
         }
       })
   }
