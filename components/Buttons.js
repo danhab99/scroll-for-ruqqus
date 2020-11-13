@@ -5,8 +5,19 @@ import { SPACE, FONTSIZE, COLORS } from '../theme';
 
 export function IconButton(props) {
   return (
-    <View style={props.style}>
-      <Pressable onPress={() => props.onPress && props.onPress()} onLongPress={() => props.onLongPress && props.onLongPress()}>
+    <View style={{
+      ...props.style,
+      borderRadius: 20
+    }}>
+      <Pressable 
+        onPress={() => props.onPress && props.onPress()} 
+        onLongPress={() => props.onLongPress && props.onLongPress()} 
+        delayLongPress={500}
+        android_ripple={{
+          color: COLORS.primary,
+          borderless: true
+        }}
+      >
         <Icon name={props.icon} color={props.color || "white"} style={{
           fontSize: FONTSIZE(props.fontsize || 4)
         }} />
