@@ -156,6 +156,8 @@ export default class Feed extends React.Component{
       InitClient().then(client => {
         this._client = client
         this.refresh()
+      }).catch(() => {
+        this.props.navigation.navigate("Login")
       })
     }
 
