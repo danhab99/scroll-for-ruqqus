@@ -1,7 +1,7 @@
 import React from 'react'
 import { FlatList, ActivityIndicator, View, Modal, Image, Text } from 'react-native'
 import Style, { COLORS, FONTSIZE, SPACE } from '../theme'
-import { SubmissionCard, IconButton, Popup, PopupButton, HtmlMarkdown, Button } from '../components'
+import { SubmissionCard, IconButton, Popup, PopupButton, HtmlMarkdown, Button, Input } from '../components'
 import InitClient from '../init_client'
 
 function GuildHeader(props) {
@@ -64,6 +64,7 @@ export default class Feed extends React.Component{
       loadingMore: false,
       refreshing: true,
       sortingVisible: false,
+      searchVisible: false,
       sorting: 'hot',
       guildHeader: this.props.route.params.guildHeader || false,
       guild: {
@@ -75,7 +76,8 @@ export default class Feed extends React.Component{
         description: {
           html: ''
         }
-      }
+      },
+      searchVal: ''
     }
 
     this.flatlist = React.createRef()
@@ -93,7 +95,7 @@ export default class Feed extends React.Component{
           <IconButton
             icon="refresh"
             style={{
-              marginRight: SPACE(1)
+              marginRight: SPACE(1.3)
             }}
             onPress={() => this.refresh()}
             onLongPress={() => this.getMore()}
@@ -102,9 +104,17 @@ export default class Feed extends React.Component{
           <IconButton
             icon="sort"
             style={{
-              marginRight: SPACE(1)
+              marginRight: SPACE(1.1)
             }}
             onPress={() => this.toggleSorting()}
+          />
+
+          <IconButton
+            icon="search"
+            style={{
+              marginRight: SPACE(1.1)
+            }}
+            onPress={() => this.toggleSearch()}
           />
         </View>
       )
@@ -183,6 +193,22 @@ export default class Feed extends React.Component{
       this.toggleSorting()
     })
   }
+
+  toggleSearch() {
+    this.setState(prev => ({searchVisible: !prev.searchVisible}))
+  }
+
+  search() {
+    let screen = {
+      '+': 'Guild',
+      '@': 'User'
+    }[this.state.searchVal[0]]
+    this.props.navigation.navigate(screen, {
+      name: this.state.searchVal.substring(1, this.state.searchVal.length),
+      prefix: this.state.searchVal[0]
+    })
+    this.setState({searchVisible: false})
+  }
   
   render() {
     return (
@@ -218,6 +244,29 @@ export default class Feed extends React.Component{
             label="Activity"
             icon="chat"
             onPress={() => this.setSorting('activity')}
+          />
+        </Popup>
+
+        <Popup
+          visible={this.state.searchVisible}
+          title="Go To"
+          togglModal={() => this.toggleSearch()}
+        >
+          <Input 
+            label="+guild or @user"
+            onChangeText={t => this.setState(prev => ({searchVal: t}))}
+            autoCompleteType="off"
+            autoCapitalize="none"
+            value={this.state.searchVal}
+          />
+
+          <Button
+            disabled={!(this.state.searchVal[0] == '+' || this.state.searchVal[0] == '@')}
+            text="Go to"
+            style={{
+              marginTop: SPACE(1)
+            }}
+            onPress={() => this.search()}
           />
         </Popup>
 
