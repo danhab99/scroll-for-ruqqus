@@ -80,9 +80,27 @@ function SubmissionContent({content}) {
     />)
   }
   else {
-    return <Pressable onPress={() => Linking.openURL(content.url)}>
-      <BackupThumbnail content={content} />
-    </Pressable>
+    return <View>    
+      <Pressable onPress={() => Linking.openURL(content.url)}>
+        <View style={{
+          alignSelf: 'flex-start',
+        }}>
+          <Text style={{
+            position: 'absolute',
+            color: COLORS.text,
+            backgroundColor: COLORS.primary,
+            fontSize: FONTSIZE(0.3),
+            zIndex: 1000,
+            padding: SPACE(0.2),
+            margin: SPACE(0.3),
+            borderRadius: 8,
+          }}>
+            Link
+          </Text>
+        </View>
+        <BackupThumbnail content={content} />
+      </Pressable>
+    </View>
   }
 }
 
