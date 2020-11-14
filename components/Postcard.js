@@ -81,6 +81,7 @@ class BackupThumbnail extends React.Component {
 }
 
 function SubmissionContent({content}) {
+  const YOUTUBE_VID = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/
   if (content?.domain == undefined) {
     return <Text style={{color: 'red'}}>Content not supported</Text>
   }
@@ -93,14 +94,9 @@ function SubmissionContent({content}) {
     return <HtmlMarkdown html={content.body.html}/>
   }
   else if (content.domain.includes('youtu')) {
-    let id
-    if (content.domain === 'youtu.be') {
-      let s = content.url.split('/')
-      id = s[s.length - 1]
-    }
-    else if (content.domain === 'youtube.com') {
-      id = /(?<=\?v=).*/.exec(content.url)[0]
-    }
+    let match = content.url.match(YOUTUBE_VID)
+    let id = (match && match[7].length == 11) ? match[7] : false
+
     return (<YoutubePlayer
       height={180}
       videoId={id}
