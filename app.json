@@ -11,6 +11,7 @@
     "android": {
       "package": "com.danhab99.scrollforruqqus",
       "versionCode": 1
-    }
+    },
+    "sdkVersion": "39.0.0"
   }
 }
