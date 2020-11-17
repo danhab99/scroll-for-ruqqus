@@ -2,6 +2,27 @@ import * as FileSystem from 'expo-file-system'
 import uuid from 'react-native-uuid'
 import isMatch from 'lodash.ismatch'
 
+export class Value {
+  static getValue(name) {
+    filename = `${FileSystem.documentDirectory}${name}`
+    return FileSystem.readAsStringAsync(filename)
+      .then(raw => {
+        console.log('READ FROM FILE', filename, raw)
+        return JSON.parse(raw)
+      })
+      .catch(e => {
+        console.warn('FILE NOT FOUND, CREATING...', filename, e)
+        return this._setItem({})
+          .then(() => this._getItem())
+      })
+  }
+
+  static setValue(name, data) {
+    filename = `${FileSystem.documentDirectory}${name}`
+    console.log('WRITING TO FILE', filename, data)
+    return FileSystem.writeAsStringAsync(filename, JSON.stringify(data)).then(() => this._onChange())
+  }
+}
 export default class Collection {
   constructor(collection, triggerOnChange=true) {
     this._filename = `${FileSystem.documentDirectory}${collection}`
