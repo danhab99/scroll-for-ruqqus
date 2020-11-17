@@ -86,6 +86,10 @@ export default class Login extends React.Component {
           clientSecret: '',
           domain: 'ruqqus.com'
         }
+      }, () => {
+        Linking.getInitialURL().then(url => {
+          this.displayError(`Please make sure to add this "${url}" to your authorized redirects`)
+        })
       })
     }
     else {
