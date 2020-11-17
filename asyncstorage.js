@@ -6,12 +6,8 @@ export class Value {
   static getValue(name) {
     filename = `${FileSystem.documentDirectory}${name}`
     return FileSystem.readAsStringAsync(filename)
-      .then(raw => {
-        console.log('READ FROM FILE', filename, raw)
-        return JSON.parse(raw)
-      })
+      .then(raw => JSON.parse(raw))
       .catch(e => {
-        console.warn('FILE NOT FOUND, CREATING...', filename, e)
         return this._setItem({})
           .then(() => this._getItem())
       })
@@ -19,8 +15,7 @@ export class Value {
 
   static setValue(name, data) {
     filename = `${FileSystem.documentDirectory}${name}`
-    console.log('WRITING TO FILE', filename, data)
-    return FileSystem.writeAsStringAsync(filename, JSON.stringify(data)).then(() => this._onChange())
+    return FileSystem.writeAsStringAsync(filename, JSON.stringify(data))
   }
 }
 export default class Collection {
@@ -32,18 +27,15 @@ export default class Collection {
   _getItem() {
     return FileSystem.readAsStringAsync(this._filename)
       .then(raw => {
-        console.log('READ FROM FILE', this._filename, raw)
         return JSON.parse(raw)
       })
       .catch(e => {
-        console.warn('FILE NOT FOUND, CREATING...', this._filename, e)
         return this._setItem([])
           .then(() => this._getItem())
       })
   }
 
   _setItem(data) {
-    console.log('WRITING TO FILE', this._filename, data)
     return FileSystem.writeAsStringAsync(this._filename, JSON.stringify(data)).then(() => this._onChange())
   }
 
