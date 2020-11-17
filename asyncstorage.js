@@ -1,21 +1,29 @@
-import AsyncStorage from '@react-native-community/async-storage'
+import * as FileSystem from 'expo-file-system'
 import uuid from 'react-native-uuid'
 import isMatch from 'lodash.ismatch'
 
 export default class Collection {
   constructor(collection, triggerOnChange=true) {
-    this._collection = collection
+    this._filename = `${FileSystem.documentDirectory}${collection}`
     this._trigger = triggerOnChange
   }
 
   _getItem() {
-    return AsyncStorage.getItem(this._collection)
-      .then(data => JSON.parse(data || '[]'))
+    return FileSystem.readAsStringAsync(this._filename)
+      .then(raw => {
+        console.log('READ FROM FILE', this._filename, raw)
+        return JSON.parse(raw)
+      })
+      .catch(e => {
+        console.warn('FILE NOT FOUND, CREATING...', this._filename, e)
+        return this._setItem([])
+          .then(() => this._getItem())
+      })
   }
 
   _setItem(data) {
-    return AsyncStorage.setItem(this._collection, JSON.stringify(data))
-      .then(this._onChange())
+    console.log('WRITING TO FILE', this._filename, data)
+    return FileSystem.writeAsStringAsync(this._filename, JSON.stringify(data)).then(() => this._onChange())
   }
 
   _onChange() {
