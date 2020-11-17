@@ -4,10 +4,9 @@ import Style, { COLORS, FONTS, FONTSIZE, SPACE } from '../theme'
 import Input from '../components/Input'
 import LinkText from '../components/LinkText'
 import { Button, IconButton } from '../components/Buttons'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import { getAuthURL, Client } from 'ruqqus-js'
 import * as Url from 'url'
-import Collection from '../asyncstorage'
+import Collection, { Value } from '../asyncstorage'
 
 export default class Login extends React.Component {
   constructor(props) {
@@ -167,8 +166,7 @@ export default class Login extends React.Component {
 
   useAccount(id) {
     console.log('Using account', id)
-    AsyncStorage.setItem('activeAccount', id)
-    this.props.navigation.navigate('Home')
+    Value.setValue('activeAccount', id).then(() => this.props.navigation.navigate('Home'))
   }
 
   render() {

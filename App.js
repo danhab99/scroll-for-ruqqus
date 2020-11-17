@@ -6,7 +6,6 @@ import React from 'react';
 import Style, { COLORS, FONTSIZE, SPACE } from './theme'
 import { View, Text } from 'react-native'
 import { IconButton } from './components/Buttons'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import Feed from './views/feed'
 import Login from './views/login';
@@ -162,19 +161,7 @@ export default class App extends React.Component {
   }
 
   componentDidMount() {
-    // AsyncStorage.clear()
-    AsyncStorage.getAllKeys((err, keys) => {
-      if (err) {
-        console.error('ASYNC STORAGE ERROR', err)
-      }
-      else {
-        keys.forEach(key => {
-          AsyncStorage.getItem(key, (err, value) => {
-            console.log('ASYNC STORAGE', key, value || err)
-          })
-        })
-      }
-    })
+
   }
 
   render() {

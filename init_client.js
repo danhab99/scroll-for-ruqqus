@@ -1,11 +1,10 @@
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import Collection from './asyncstorage'
+import Collection, { Value } from './asyncstorage'
 import { Client } from 'ruqqus-js'
 
 export default async function InitClient() {
   let accounts = new Collection('accounts')
   let servers = new Collection('servers')
-  let activeID = await AsyncStorage.getItem('activeAccount')
+  let activeID = await Value.getValue('activeAccount')
 
   if (!activeID) {
     throw new Error('Requires login')
