@@ -245,7 +245,7 @@ export default class Feed extends React.Component{
           <PopupButton
             label="Disputed"
             icon="announcement"
-            onPress={() => this.setSorting('dispted')}
+            onPress={() => this.setSorting('disputed')}
           />
           
           <PopupButton
