@@ -74,10 +74,22 @@ function StackNavigator(props) {
 function FeedStackNavigator(props) {
   return (<StackNavigator {...props}>
     <Stack.Screen
-      name="Home"
+      name="Frontpage"
       component={Feed}
       initialParams={{
         fetch: (client, options) => client.feeds.frontpage(options.page, options.sort)
+      }}
+    />
+
+    <Stack.Screen
+      name="All"
+      component={Feed}
+      initialParams={{
+        fetch: (client, options) => {
+          debugger
+          return client.feeds.all(options.page, options.sort)
+        },
+        name: "All"
       }}
     />
 
@@ -172,13 +184,14 @@ export default class App extends React.Component {
           <StatusBar style="light"/>
     
           <Drawer.Navigator 
-            initialRouteName="Home"
+            // initialRouteName="Home"
             drawerStyle={{
               backgroundColor: COLORS.backgroundHighlight,
             }}
             drawerContent={ps => <CustomDrawerContent {...ps} />}
           >
             <Drawer.Screen name="Frontpage" component={FeedStackNavigator} />
+            <Drawer.Screen name="All" component={FeedStackNavigator} />
             <Drawer.Screen name="Login" component={LoginStackNavigator} />
             <Drawer.Screen name="Saved" component={SavedStackNavigator} />
             <Drawer.Screen name="Submit" component={SubmitStackNavigator} />
