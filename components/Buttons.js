@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Pressable, Text } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon from '@expo/vector-icons/MaterialIcons';
 import { SPACE, FONTSIZE, COLORS } from '../theme';
 
 export function IconButton(props) {
