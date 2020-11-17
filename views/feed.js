@@ -158,12 +158,18 @@ export default class Feed extends React.Component{
       }
     }
     else {
-      InitClient().then(client => {
-        this._client = client
+      if (global.ruqqClient) {
+        this._client = global.ruqqClient
         this.refresh()
-      }).catch(() => {
-        this.props.navigation.navigate("Login")
-      })
+      }
+      else {
+        InitClient().then(client => {
+          this._client = global.ruqqClient = client
+          this.refresh()
+        }).catch(() => {
+          this.props.navigation.navigate("Login")
+        })
+      }
     }
 
     this.setState({
