@@ -6,6 +6,7 @@ import React from 'react';
 import Style, { COLORS, FONTSIZE, SPACE } from './theme'
 import { View, Text } from 'react-native'
 import { IconButton } from './components/Buttons'
+import * as FileSystem from 'expo-file-system'
 
 import Feed from './views/feed'
 import Login from './views/login';
@@ -173,7 +174,11 @@ export default class App extends React.Component {
   }
 
   componentDidMount() {
-
+    FileSystem.readDirectoryAsync(FileSystem.documentDirectory).then(directory => {
+      directory.forEach(file => {
+        FileSystem.readAsStringAsync(FileSystem.documentDirectory + file).then(data => console.log('FILE SYSTEM', file, data))
+      })
+    })
   }
 
   render() {
@@ -184,7 +189,6 @@ export default class App extends React.Component {
           <StatusBar style="light"/>
     
           <Drawer.Navigator 
-            // initialRouteName="Home"
             drawerStyle={{
               backgroundColor: COLORS.backgroundHighlight,
             }}
