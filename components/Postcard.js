@@ -245,31 +245,46 @@ export default class Postcard extends React.Component {
           <PopupButton
             label="Share"
             icon="share"
-            onPress={() => Share.share({message: this.state.post.full_link})}
+            onPress={() => {
+              Share.share({message: this.state.post.full_link})
+              this.togglModal()
+            }}
           />
 
           <PopupButton
             label="Comments"
             icon="comment"
-            onPress={() => this.gotoComments()}
+            onPress={() => {
+              this.gotoComments()
+              this.togglModal()
+            }}
           />
 
           <PopupButton
             label={`Go to @${post?.author?.username}`}
             icon="person"
-            onPress={() => this.gotoUser()}
+            onPress={() => {
+              this.gotoUser()
+              this.togglModal()
+            }}
             />
 
           <PopupButton
             label={`Go to +${post?.guild?.name}`}
             icon="add"
-            onPress={() => this.gotoGuild()}
+            onPress={() => {
+              this.gotoGuild()
+              this.togglModal()
+            }}
           />
 
           <PopupButton
             label="Open In Browser"
             icon="open-in-browser"
-            onPress={() => Linking.openURL(post?.full_link)}
+            onPress={() => {
+              Linking.openURL(post?.content?.url)
+              this.togglModal()
+            }}
           />
 
           <PopupButton
