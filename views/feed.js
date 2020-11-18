@@ -176,23 +176,25 @@ export default class Feed extends React.Component{
   }
 
   getMore() {
-    Vibration.vibrate(100)
-    this.setState(prev => ({
-      page: prev.page + 1,
-      loadingMore: true
-    }),
-    () => {
-      this.flatlist.current.scrollToEnd({
-        animated: true
+    if (this.state.posts.length > 1) {
+      Vibration.vibrate(100)
+      this.setState(prev => ({
+        page: prev.page + 1,
+        loadingMore: true
+      }),
+      () => {
+        this.flatlist.current.scrollToEnd({
+          animated: true
+        })
+  
+        this.fetch().then(more => {
+          this.setState((prev) => ({
+            posts: prev.posts.concat(more.posts),
+            loadingMore: false
+          }))
+        }).catch(e => console.error('CANNOT GET MORE', e))
       })
-
-      this.fetch().then(more => {
-        this.setState((prev) => ({
-          posts: prev.posts.concat(more.posts),
-          loadingMore: false
-        }))
-      })
-    })
+    }
   }
   
   toggleSorting() {
@@ -287,7 +289,7 @@ export default class Feed extends React.Component{
           data={this.state.posts}
           renderItem={props => <Postcard post={props.item} navigation={this.props.navigation}/>}
           onEndReached={() => this.getMore()}
-          onEndReachedThreshold={1}
+          onEndReachedThreshold={0}
           initialNumToRender={26}
           ListHeaderComponent={<GuildHeader guild={this.state.guild} enabled={this.state.guildHeader} />}
           ListFooterComponent={<View>
