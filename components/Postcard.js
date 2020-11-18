@@ -85,7 +85,8 @@ function SubmissionContent({content}) {
   if (content?.domain == undefined) {
     return <Text style={{color: 'red'}}>Content not supported</Text>
   }
-  else if (['i.ruqqus.com', 'i.imgur.com'].includes(content.domain)) {
+  else if (['i.ruqqus.com', 'imgur.com', 'i.redd.it', 'files.catbox.moe'].some(x => content.domain.includes(x))) {
+    
     return <ScaledImage
       url={content.url}
     />
