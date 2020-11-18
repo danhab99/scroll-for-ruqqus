@@ -39,10 +39,10 @@ function StackTitle(props) {
       width: '100%'
     }}>
       <Text style={{
-        color: COLORS.text,
+        color: COLORS.text, 
         fontSize: FONTSIZE(2),
-        fontWeight: 'bold',
-      }}>
+        fontWeight: 'bold'
+       }}>
         {props.children}
       </Text>    
     </View>

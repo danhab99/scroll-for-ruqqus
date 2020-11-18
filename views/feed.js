@@ -90,7 +90,7 @@ export default class Feed extends React.Component{
   componentDidMount() {
     this.refresh()
     this.props.navigation.setOptions({
-      title: this.props.route.params.name ? `${this.props.route.params.prefix}${this.props.route.params.name}` : 'Frontpage',
+      title: `${this.props.route.params.prefix || ''}${this.props.route.name}`,
       headerRight: () => (
         <View style={{
           display: 'flex',
@@ -153,7 +153,11 @@ export default class Feed extends React.Component{
       if (this.props.route.params.guildHeader) {
         this._client.guilds.fetch(this.props.route.params.name).then(guild => {
           console.log('GUILD HEADER', guild)
-          this.setState({guild})
+          this.setState({guild}, () => {
+            this.props.navigation.setOptions({
+              title: `+${this.state.guild.name}`,
+            })
+          })
         })
       }
     }
