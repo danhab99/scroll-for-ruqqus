@@ -170,7 +170,7 @@ export default class Login extends React.Component {
 
   useAccount(id) {
     console.log('Using account', id)
-    Value.setValue('activeAccount', id).then(() => this.props.navigation.navigate('Home'))
+    Value.setValue('activeAccount', id).then(() => this.props.navigation.navigate('Frontpage'))
   }
 
   render() {
