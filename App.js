@@ -12,6 +12,7 @@ import Feed from './views/feed'
 import Login from './views/login';
 import Comments from './views/comments'
 import Submit from './views/submit'
+import ROALogin from './views/roa_login'
 
 import Collection from './asyncstorage';
 
@@ -127,7 +128,7 @@ function LoginStackNavigator(props) {
   return (<StackNavigator {...props}>
     <Stack.Screen
       name="Login"
-      component={Login}
+      component={ROALogin}
     />
   </StackNavigator>)
 }
@@ -176,6 +177,7 @@ export default class App extends React.Component {
   componentDidMount() {
     FileSystem.readDirectoryAsync(FileSystem.documentDirectory).then(directory => {
       directory.forEach(file => {
+        // FileSystem.deleteAsync(FileSystem.documentDirectory + file)
         FileSystem.readAsStringAsync(FileSystem.documentDirectory + file).then(data => console.log('FILE SYSTEM', file, data))
       })
     })
