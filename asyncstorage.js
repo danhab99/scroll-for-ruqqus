@@ -53,12 +53,13 @@ export default class Collection {
   create(item) {
     return this._getItem()
       .then(items => {
-        items.push({
+        let t = {
           _id: uuid.v1(),
           ...item
-        })
+        }
+        items.push(t)
 
-        return this._setItem(items)
+        return this._setItem(items).then(() => t)
       })
   }
 
