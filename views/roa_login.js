@@ -1,6 +1,6 @@
 import React from 'react'
 import { View, Text, Linking, ScrollView, ActivityIndicator } from 'react-native'
-import Style, { COLORS, FONTSIZE, SPACE } from '../theme'
+import Style, { BODYTEXT, COLORS, FONTSIZE, SPACE } from '../theme'
 import { LinkText } from '../components/LinkText'
 import { Button, IconButton } from '../components/Buttons'
 import { WebView } from 'react-native-webview';
@@ -20,7 +20,8 @@ export default class ROALogin extends React.Component {
     this.state = {
       sites: [],
       connectTo: '',
-      connecting: false
+      connecting: false,
+      loggingIn: false
     }
 
     this.webview = React.createRef()
@@ -87,23 +88,29 @@ export default class ROALogin extends React.Component {
         if (data['access_token']) {
           console.log('TOKENS', data)
           this.tokenLock = true
+          let connecting = this.state.connecting
+
+          this.setState({
+            connecting: false,
+            loggingIn: true
+          })
   
           InitClient({
-            ...this.state.connecting,
-            id: this.state.connecting._id,
+            ...connecting,
+            id: connecting._id,
             auth_domain: `sfroa.danhab99.xyz`,
             access_token: data.access_token,
             refresh_token: data.refresh_token
           }).then(client => {
             this.accounts.create({
-              serverID: this.state.connecting._id,
+              serverID: connecting._id,
               username: client.user.username,
               keys: {
                 access: data.access_token,
                 refresh: data.refresh_token
               }
             })
-            this.setState({connecting: false})
+            this.setState({loggingIn: false})
             this.tokenLock = false
             this.componentDidMount()
           })
@@ -145,6 +152,10 @@ export default class ROALogin extends React.Component {
     }
     else {
       return (<ScrollView style={Style.view}>
+        {this.state.loggingIn ? <View>
+          <ActivityIndicator color={COLORS.primary} size="large" />
+        </View> : null}
+
         {this.state.sites.map((site, i) => <View key={`${i}`} style={Style.card}>
           <Text style={{
             color: COLORS.text,
