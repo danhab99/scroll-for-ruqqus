@@ -176,11 +176,12 @@ export default class Feed extends React.Component{
   }
 
   getMore() {
-    if (this.state.posts.length > 1) {
+    if (this.state.posts.length > 1 && !this.state.loadingMore) {
       Vibration.vibrate(100)
       this.setState(prev => ({
         page: prev.page + 1,
-        loadingMore: true
+        loadingMore: true,
+        refreshing: true
       }),
       () => {
         this.flatlist.current.scrollToEnd({
@@ -190,7 +191,8 @@ export default class Feed extends React.Component{
         this.fetch().then(more => {
           this.setState((prev) => ({
             posts: prev.posts.concat(more.posts),
-            loadingMore: false
+            loadingMore: false,
+            refreshing: false
           }))
         }).catch(e => console.error('CANNOT GET MORE', e))
       })
@@ -289,7 +291,7 @@ export default class Feed extends React.Component{
           data={this.state.posts}
           renderItem={props => <Postcard post={props.item} navigation={this.props.navigation}/>}
           onEndReached={() => this.getMore()}
-          onEndReachedThreshold={0}
+          onEndReachedThreshold={1}
           initialNumToRender={26}
           ListHeaderComponent={<GuildHeader guild={this.state.guild} enabled={this.state.guildHeader} />}
           ListFooterComponent={<View>
