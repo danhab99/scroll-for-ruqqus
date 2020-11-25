@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, Pressable, Text } from 'react-native';
-// import Icon from '@expo/vector-icons/MaterialIcons';
 import Icon from '../icons/icon'
 import { SPACE, FONTSIZE, COLORS } from '../theme';
 
