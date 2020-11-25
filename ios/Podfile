@@ -21,6 +21,8 @@ target 'scrollforruqqus' do
 
   pod 'RealmJS', :path => '../node_modules/realm'
 
+  pod 'RNSVG', :path => '../node_modules/react-native-svg'
+
   post_install do |installer|
     flipper_post_install(installer)
   end
