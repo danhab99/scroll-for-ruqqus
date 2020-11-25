@@ -12,6 +12,10 @@
       "package": "com.danhab99.scrollforruqqus",
       "versionCode": 1
     },
-    "sdkVersion": "39.0.0"
+    "sdkVersion": "39.0.0",
+    "packagerOpts": {
+      "sourceExts": ["js", "jsx", "svg", "svgx"],
+      "config": "metro.config.js"
+    }
   }
 }
