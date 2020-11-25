@@ -16,6 +16,7 @@ import Search from './search-black-24dp.svg'
 import Share from './share-black-24dp.svg'
 import Sort from './sort-black-24dp.svg'
 import Close from './close-black-24dp.svg'
+import Delete from './delete-black-24dp.svg'
 
 const ICONMAP = {
   'menu': Menu,
@@ -33,7 +34,8 @@ const ICONMAP = {
   'add': Add,
   'open-in-browser': OpenInBrowser,
   'flag': Flag,
-  'block': Block
+  'block': Block,
+  'delete': Delete
 }
 
 const DEFAULTSIZE = 28
