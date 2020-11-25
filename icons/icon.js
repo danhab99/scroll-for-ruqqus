@@ -17,6 +17,10 @@ import Share from './share-black-24dp.svg'
 import Sort from './sort-black-24dp.svg'
 import Close from './close-black-24dp.svg'
 import Delete from './delete-black-24dp.svg'
+import QuestionAnswer from './question_answer-black-24dp.svg'
+import Campaign from './campaign-black-24dp.svg'
+import Star from './star-black-24dp.svg'
+import WhatsHot from './whatshot-black-24dp.svg'
 
 const ICONMAP = {
   'menu': Menu,
@@ -35,7 +39,11 @@ const ICONMAP = {
   'open-in-browser': OpenInBrowser,
   'flag': Flag,
   'block': Block,
-  'delete': Delete
+  'delete': Delete,
+  'chat': QuestionAnswer,
+  'announcement': Campaign,
+  'star': Star,
+  'whatshot': WhatsHot
 }
 
 const DEFAULTSIZE = 28
