@@ -127,7 +127,10 @@ export default class ROALogin extends React.Component {
 
   useAccount(id) {
     console.log('Using account', id)
-    Value.setValue('activeAccount', id).then(() => this.props.navigation.navigate('Frontpage'))
+    Value.setValue('activeAccount', id).then(() => {
+      this.props.navigation.replace('Frontpage')
+      this.props.navigation.navigate('Frontpage')
+    })
   }
 
   render() {
