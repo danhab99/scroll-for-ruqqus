@@ -92,7 +92,7 @@ function SubmissionContent({content}) {
     />
   }
   else if (content.domain == 'text post') {
-    return <HtmlMarkdown html={content.body.html}/>
+    return <HtmlMarkdown html={content?.body?.html || `<h6 style="color: ${COLORS.muted};">No body</h6>`}/>
   }
   else if (content.domain.includes('youtu')) {
     let match = content.url.match(YOUTUBE_VID)
