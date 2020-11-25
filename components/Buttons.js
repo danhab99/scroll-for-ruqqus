@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Pressable, Text } from 'react-native';
-import Icon from '@expo/vector-icons/MaterialIcons';
+// import Icon from '@expo/vector-icons/MaterialIcons';
+import Icon from '../icons/icon'
 import { SPACE, FONTSIZE, COLORS } from '../theme';
 
 export function IconButton(props) {
@@ -18,9 +19,10 @@ export function IconButton(props) {
           borderless: true
         }}
       >
-        <Icon name={props.icon} color={props.color || "white"} style={{
+        <Icon name={props.icon} color={props.color || "white"} size={props.fontSize} />
+        {/* <Icon name={props.icon} color={props.color || "white"} style={{
           fontSize: FONTSIZE(props.fontsize || 4)
-        }} />
+        }} /> */}
       </Pressable>
     </View>
   );
