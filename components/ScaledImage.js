@@ -13,6 +13,10 @@ export default class ScaledImage extends React.Component {
   }
 
   componentDidMount() {
+    this.componentDidUpdate()
+  }
+
+  componentDidUpdate() {
     Image.getSize(this.props.url, (width, height) => {
       this.setState({
         aspectRatio: width / height
