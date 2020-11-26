@@ -140,18 +140,20 @@ function SavedStackNavigator(props) {
       component={Feed} 
       initialParams={{
         fetch: (client, options) => {
-          if (options.page > 1) {
-            return {posts: []}
-          }
-          else {
-            var saved = new Collection('saved')
+          const PAGESIZE = 5
+          options.page--
+          var saved = new Collection('saved')
             return saved.find({})
-              .then(items => Promise.all(items.map(item => client.posts.fetch(item.pid))))
+              .then(items => Promise.all(
+                items
+                  .sort((f, l) => f.savedat < l.savedat ? 1 : -1)
+                  .slice(options.page * PAGESIZE, (options.page * PAGESIZE) + PAGESIZE)
+                  .map(item => client.posts.fetch(item.pid))
+              ))
               .then(posts => {
                 console.log('SAVED POSTS', posts)
                 return {posts}
               })
-          }
         },
         prefix: '',
         name: "Saved"
