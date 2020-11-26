@@ -305,7 +305,11 @@ export default class Postcard extends React.Component {
           <PopupButton
             label="console.log(post)"
             icon="save"
-            onPress={() => console.log(this.state.post)}
+            onPress={() => {
+              alert(JSON.stringify(this.state.post, null, 2))
+              console.log(this.state.post)
+              this.togglModal()
+            }}
           />
         </Popup>
 
