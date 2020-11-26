@@ -203,13 +203,13 @@ export default class Postcard extends React.Component {
   }
 
   upvote() {
-    return this.state.post[this.state.post.votes.voted === 0 ? 'upvote' : 'removeVote']().then(post => {
+    return this.state.post[this.state.post.votes.voted !== 1 ? 'upvote' : 'removeVote']().then(post => {
       this.setState({post})
     })
   }
 
   downvote()  {
-    return this.state.post[this.state.post.votes.voted === 0 ? 'downvote' : 'removeVote']().then(post => {
+    return this.state.post[this.state.post.votes.voted !== -1 ? 'downvote' : 'removeVote']().then(post => {
       this.setState({post})
     })
   }

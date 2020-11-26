@@ -26,7 +26,7 @@ export default class ScaledImage extends React.Component {
         });
       },
       err => {
-        console.warn('Unable to get image size', this.props, err)
+        console.log('Unable to get image size', this.props, err)
       }
     );
   }
