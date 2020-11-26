@@ -285,10 +285,9 @@ export default class Postcard extends React.Component {
             label="Open In Browser"
             icon="open-in-browser"
             onPress={() => {
-              if (post?.content?.url) {
-                Linking.openURL(post?.content?.url)
-                this.togglModal()
-              }
+              let u = this.state.post?.content?.url || this.state.post?.full_link
+              Linking.canOpenURL(u).then(() => Linking.openURL(u))
+              this.togglModal()
             }}
           />
 
