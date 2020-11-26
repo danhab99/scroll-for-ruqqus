@@ -4,39 +4,33 @@ import isMatch from 'lodash.ismatch'
 
 export class Value {
   static getValue(name) {
-    filename = `${FileSystem.documentDirectory}${name}`
+    let filename = `${FileSystem.documentDirectory}${name}`
     return FileSystem.readAsStringAsync(filename)
       .then(raw => JSON.parse(raw))
       .catch(e => {
-        return this._setItem({})
-          .then(() => this._getItem())
+        return this.setValue(name, {})
+          .then(() => this.getValue(name))
       })
   }
 
   static setValue(name, data) {
-    filename = `${FileSystem.documentDirectory}${name}`
+    let filename = `${FileSystem.documentDirectory}${name}`
     return FileSystem.writeAsStringAsync(filename, JSON.stringify(data))
   }
 }
 export default class Collection {
   constructor(collection, triggerOnChange=true) {
-    this._filename = `${FileSystem.documentDirectory}${collection}`
+    // this._filename = `${FileSystem.documentDirectory}${collection}`
+    this.collection = collection
     this._trigger = triggerOnChange
   }
 
   _getItem() {
-    return FileSystem.readAsStringAsync(this._filename)
-      .then(raw => {
-        return JSON.parse(raw)
-      })
-      .catch(e => {
-        return this._setItem([])
-          .then(() => this._getItem())
-      })
+    return Value.getValue(this.collection)
   }
 
   _setItem(data) {
-    return FileSystem.writeAsStringAsync(this._filename, JSON.stringify(data)).then(() => this._onChange())
+    return Value.setValue(this.collection, data).then(() => this._onChange())
   }
 
   _onChange() {
