@@ -294,7 +294,7 @@ export default class Feed extends React.Component{
           ListHeaderComponent={<GuildHeader guild={this.state.guild} enabled={this.state.guildHeader} />}
           ListFooterComponent={<View>
             {this.state.loadingMore 
-            ? <View /* style={{position: 'absolute', bottom: 0, width: '100%'}} */>
+            ? <View style={{marginBottom: SPACE(2)}}>
                 <ActivityIndicator 
                   size="large" 
                   color={COLORS.primary}
