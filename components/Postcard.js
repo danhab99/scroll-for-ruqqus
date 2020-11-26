@@ -44,6 +44,9 @@ class BackupThumbnail extends React.Component {
                 this.setState({url: l})
                 console.log('Url has OG image', url)
               }
+              else {
+                console.log('Unable to get OG image', url)
+              }
               this.setState({loading: false})
             })
           }
@@ -85,7 +88,7 @@ function SubmissionContent({content}) {
   if (content?.domain == undefined) {
     return <Text style={{color: 'red'}}>Content not supported</Text>
   }
-  else if (['i.ruqqus.com', 'imgur.com', 'i.redd.it', 'files.catbox.moe'].some(x => content.domain.includes(x))) {
+  else if (['i.ruqqus.com', 'imgur.com', 'i.redd.it'].some(x => content.domain.includes(x))) {
     
     return <ScaledImage
       url={content.url}
@@ -297,6 +300,12 @@ export default class Postcard extends React.Component {
           <PopupButton
             label="Hide"
             icon="block"
+          />
+
+          <PopupButton
+            label="console.log(post)"
+            icon="save"
+            onPress={() => console.log(this.state.post)}
           />
         </Popup>
 
