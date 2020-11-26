@@ -1,4 +1,4 @@
-package com.scrollforruqqus;
+package com.danhab99.scrollforruqqus;
 
 import android.os.Bundle;
 
