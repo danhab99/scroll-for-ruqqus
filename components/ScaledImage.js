@@ -5,9 +5,6 @@ export default class ScaledImage extends React.Component {
   constructor (props) {
     super(props);
     this.state = {
-      source: {
-        uri: this.props.uri
-      },
       aspectRatio: 1
     };
   }
@@ -16,12 +13,22 @@ export default class ScaledImage extends React.Component {
     this.componentDidUpdate()
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    return this.props.url !== nextProps.url || this.state.aspectRatio !== nextState.aspectRatio
+  }
+
   componentDidUpdate() {
-    Image.getSize(this.props.url, (width, height) => {
-      this.setState({
-        aspectRatio: width / height
-      });
-    });
+    Image.getSize(
+      this.props.url, 
+      (width, height) => {
+        this.setState({
+          aspectRatio: width / height
+        });
+      },
+      err => {
+        console.warn('Unable to get image size', this.props, err)
+      }
+    );
   }
 
   render() {
@@ -31,7 +38,9 @@ export default class ScaledImage extends React.Component {
         style={{
           width: '100%',
           aspectRatio: this.state.aspectRatio
-        }} />
+        }} 
+        onLoad={() => {}}
+      />
     );
   }
 }
