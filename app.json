@@ -14,8 +14,17 @@
     },
     "sdkVersion": "39.0.0",
     "packagerOpts": {
-      "sourceExts": ["js", "jsx", "svg", "svgx"],
+      "sourceExts": [
+        "js",
+        "jsx",
+        "svg",
+        "svgx"
+      ],
       "config": "metro.config.js"
-    }
+    },
+    "ios": {
+      "bundleIdentifier": "com.danhab99.scrollforruqqus"
+    },
+    "entryPoint": "node_modules/expo/AppEntry.js"
   }
 }
