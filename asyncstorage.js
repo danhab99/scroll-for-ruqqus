@@ -8,7 +8,7 @@ export class Value {
     return FileSystem.readAsStringAsync(filename)
       .then(raw => JSON.parse(raw))
       .catch(e => {
-        return this.setValue(name, {})
+        return this.setValue(name, null)
           .then(() => this.getValue(name))
       })
   }
@@ -51,6 +51,7 @@ export default class Collection {
           _id: uuid.v1(),
           ...item
         }
+        items = items || []
         items.push(t)
 
         return this._setItem(items).then(() => t)
@@ -59,11 +60,11 @@ export default class Collection {
 
   find(pattern={}) {
     return this._getItem()
-      .then((items=[]) => items.filter(x => isMatch(x, pattern)))
+      .then((items) => [].concat(items).filter(x => isMatch(x, pattern)))
   }
 
   findOne(pattern) {
-    return this.find(pattern).then(d => d[0])
+    return this.find(pattern).then(d => d[0] || null)
   }
 
   findById(id) {
