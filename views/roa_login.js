@@ -153,6 +153,18 @@ export default class ROALogin extends React.Component {
         <ActivityIndicator size="large" color={COLORS.primary} />
       </View>
     }
+    else if (!this.state.fetchingServers && this.state.site.length <= 0) {
+      return <View>
+        <Text style={{...BODYTEXT, fontSize: FONTSIZE(2)}}>
+          Error: No sites have been retrieved
+        </Text>
+
+        <Button
+          text="Try again"
+          onPress={() => this.componentDidMount()}
+        />
+      </View>
+    }
     else {
       return (<ScrollView style={Style.view}>
         {this.state.loggingIn ? <View>
