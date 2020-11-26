@@ -25,7 +25,11 @@ export default function HtmlMarkdown(props) {
         );
       }
     }}
-    onLinkPress={(evt, href, attr) => Linking.openURL(href)}
+    onLinkPress={(evt, href, attr) => {
+      Linking.canOpenURL(href)
+        .then(() => Linking.openURL(href))
+        .catch(err => console.log('Cannot open markdown link', err))
+    }}
     alterNode={node => {
       if (node.name == 'img' && node.attribs.src[0] == '/') {
         return Object.assign(node, {
