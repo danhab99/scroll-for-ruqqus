@@ -12,16 +12,13 @@ export function IconButton(props) {
       <Pressable 
         onPress={() => props.onPress && props.onPress()} 
         onLongPress={() => props.onLongPress && props.onLongPress()} 
-        delayLongPress={100}
+        delayLongPress={5}
         android_ripple={{
           color: COLORS.primary,
           borderless: true
         }}
       >
         <Icon name={props.icon} color={props.color || "white"} size={props.fontSize} />
-        {/* <Icon name={props.icon} color={props.color || "white"} style={{
-          fontSize: FONTSIZE(props.fontsize || 4)
-        }} /> */}
       </Pressable>
     </View>
   );

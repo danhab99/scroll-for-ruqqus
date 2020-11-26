@@ -1,5 +1,5 @@
 import React from 'react'
-import { View } from 'react-native'
+import { ScrollView } from 'react-native'
 import Postcard from '../components/Postcard'
 import Style from '../theme'
 
@@ -15,9 +15,9 @@ export default class Comments extends React.Component {
 
   render() {
     return  (
-      <View style={Style.view}>
+      <ScrollView style={Style.view}>
         <Postcard post={this.props.route.params.post} />
-      </View>
+      </ScrollView>
     )
   }
 }
