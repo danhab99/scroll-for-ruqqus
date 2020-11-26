@@ -310,11 +310,12 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.name.scrollforruqqus;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.danhab99.scrollforruqqus";
 				PRODUCT_NAME = scrollforruqqus;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
+				CODE_SIGN_ENTITLEMENTS = scrollforruqqus/scrollforruqqus.entitlements;
 			};
 			name = Debug;
 		};
@@ -334,10 +335,11 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.name.scrollforruqqus;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.danhab99.scrollforruqqus";
 				PRODUCT_NAME = scrollforruqqus;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
+				CODE_SIGN_ENTITLEMENTS = scrollforruqqus/scrollforruqqus.entitlements;
 			};
 			name = Release;
 		};
@@ -398,6 +400,9 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.danhab99.scrollforruqqus";
+				PRODUCT_NAME = scrollforruqqus;
+				CODE_SIGN_ENTITLEMENTS = scrollforruqqus/scrollforruqqus.entitlements;
 			};
 			name = Debug;
 		};
@@ -451,6 +456,9 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.danhab99.scrollforruqqus";
+				PRODUCT_NAME = scrollforruqqus;
+				CODE_SIGN_ENTITLEMENTS = scrollforruqqus/scrollforruqqus.entitlements;
 			};
 			name = Release;
 		};
