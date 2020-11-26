@@ -102,8 +102,13 @@ export default class Feed extends React.Component{
               marginRight: SPACE(1.3)
             }}
             onPress={() => this.refresh()}
-            onLongPress={() => this.getMore()}
-            
+            onLongPress={() => {
+              Vibration.vibrate(200)
+              this.getMore()
+              this.flatlist.current.scrollToEnd({
+                animated: true
+              })
+            }}
           />
 
           <IconButton
@@ -177,22 +182,15 @@ export default class Feed extends React.Component{
 
   getMore() {
     if (this.state.posts.length > 1 && !this.state.loadingMore) {
-      Vibration.vibrate(100)
       this.setState(prev => ({
         page: prev.page + 1,
-        loadingMore: true,
-        refreshing: true
+        loadingMore: true
       }),
-      () => {
-        this.flatlist.current.scrollToEnd({
-          animated: true
-        })
-  
+      () => {  
         this.fetch().then(more => {
           this.setState((prev) => ({
             posts: prev.posts.concat(more.posts),
-            loadingMore: false,
-            refreshing: false
+            loadingMore: false
           }))
         }).catch(e => console.error('CANNOT GET MORE', e))
       })
@@ -291,8 +289,8 @@ export default class Feed extends React.Component{
           data={this.state.posts}
           renderItem={props => <Postcard post={props.item} navigation={this.props.navigation}/>}
           onEndReached={() => this.getMore()}
-          onEndReachedThreshold={1}
-          initialNumToRender={26}
+          onEndReachedThreshold={5}
+          initialNumToRender={20}
           ListHeaderComponent={<GuildHeader guild={this.state.guild} enabled={this.state.guildHeader} />}
           ListFooterComponent={<View>
             {this.state.loadingMore 
