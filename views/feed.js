@@ -217,7 +217,8 @@ export default class Feed extends React.Component{
       '+': 'Guild',
       '@': 'User'
     }[this.state.searchVal[0]]
-    this.props.navigation.navigate(screen, {
+    
+    this.props.navigation[this.state.guildHeader ? 'replace' : 'navigate'](screen, {
       name: this.state.searchVal.substring(1, this.state.searchVal.length),
       prefix: this.state.searchVal[0]
     })
