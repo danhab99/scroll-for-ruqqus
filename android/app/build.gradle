@@ -82,7 +82,7 @@ project.ext.react = [
 ]
 
 apply from: '../../node_modules/react-native-unimodules/gradle.groovy'
-apply from: "../../node_modules/react-native/react.gradle"
+// apply from: "../../node_modules/react-native/react.gradle"
 apply from: "../../node_modules/expo-updates/scripts/create-manifest-android.gradle"
 
 /**
@@ -148,9 +148,12 @@ android {
     signingConfigs {
         debug {
             storeFile file('debug.keystore')
-            storePassword 'android'
-            keyAlias 'androiddebugkey'
-            keyPassword 'android'
+            println "\nKeystore password:"
+            storePassword System.in.newReader().readLine()
+            println "\nAlias: "
+            keyAlias System.in.newReader().readLine()
+            println "\nAlias password: "
+            keyPassword System.in.newReader().readLine()
         }
     }
     buildTypes {

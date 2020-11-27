@@ -201,3 +201,8 @@ buck-out/
 # Expo
 .expo/*
 web-build/
+android/app/debug.keystore
+android/app/src/main/res/
+android/app/src/main/assets/index.android.bundle
+android/app/debug.keystore
+android/app/debug.keystore
