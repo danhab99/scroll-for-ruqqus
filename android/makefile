@@ -1,4 +1,7 @@
 include ../.env
 
+export DEBUG_PASSWORD
+export DEBUG_ALIAS
+
 compile:
-	DEBUG_PASSWORD=$(DEBUG_PASSWORD) DEBUG_ALIAS=$(DEBUG_ALIAS) ./gradlew assembleRelease --no-daemon
+	./gradlew assembleRelease --no-daemon

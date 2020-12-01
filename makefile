@@ -4,8 +4,13 @@ build:
 	rm -rf android/app/build
 	rm -rf android/build
 	rm -rf android/app/src/main/res/drawable-*
+	mkdir -p android/app/src/main/assets
 	react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res/
 	$(MAKE) --directory=android compile
+
+keystore:
+	keytool -genkey -v -keystore $(name).keystore -alias $(name) -keyalg RSA -keysize 2048 -validity 10000
+	mv $(name).keystore android/app
 
 install:
 	adb devices
