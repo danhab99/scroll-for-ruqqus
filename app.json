@@ -1,29 +1,4 @@
 {
-  "name": "scroll-for-ruqqus",
-  "displayName": "scroll-for-ruqqus",
-  "expo": {
-    "name": "scroll-for-ruqqus",
-    "slug": "scroll-for-ruqqus",
-    "version": "1.0.0",
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "android": {
-      "package": "com.danhab99.scrollforruqqus",
-      "versionCode": 1
-    },
-    "packagerOpts": {
-      "sourceExts": [
-        "js",
-        "jsx",
-        "svg",
-        "svgx"
-      ],
-      "config": "metro.config.js"
-    },
-    "ios": {
-      "bundleIdentifier": "com.danhab99.scrollforruqqus"
-    },
-    "entryPoint": "node_modules/expo/AppEntry.js"
-  }
+  "name": "scrollforruqqus",
+  "displayName": "scrollforruqqus"
 }

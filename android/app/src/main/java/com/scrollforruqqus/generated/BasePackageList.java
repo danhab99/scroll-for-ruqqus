@@ -1,4 +1,4 @@
-package com.danhab99.scrollforruqqus.generated;
+package com.scrollforruqqus.generated;
 
 import java.util.Arrays;
 import java.util.List;
