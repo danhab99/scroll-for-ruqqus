@@ -228,7 +228,7 @@ export default class Postcard extends React.Component {
 
   gotoUser() {
     this.props.navigation.navigate('User', {
-      name: this.state.post.author.username
+      name: this.state.post.author_username
     })
   }
 
@@ -264,7 +264,7 @@ export default class Postcard extends React.Component {
           />
 
           <PopupButton
-            label={`Go to @${post?.author?.username}`}
+            label={`Go to @${post?.author_username}`}
             icon="person"
             onPress={() => {
               this.gotoUser()
@@ -339,7 +339,7 @@ export default class Postcard extends React.Component {
             <View>
               <Pressable onPress={() => this.gotoUser()}>
                 <Text style={{ color: COLORS.muted }}>
-                  {post?.author?.username}
+                  {post?.author_username}
                 </Text>
               </Pressable>
             </View>
