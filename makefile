@@ -10,8 +10,8 @@ build:
 	$(MAKE) --directory=android compile
 
 keystore:
-	keytool -genkey -v -keystore $(name).keystore -alias $(name) -keyalg RSA -keysize 2048 -validity 10000
-	mv $(name).keystore android/app
+	keytool -genkey -v -keystore debug.keystore -alias androiddebugkey -keyalg RSA -keysize 2048 -validity 10000
+	mv debug.keystore android/app
 
 install:
 	adb devices
