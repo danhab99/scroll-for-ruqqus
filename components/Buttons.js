@@ -17,6 +17,7 @@ export function IconButton(props) {
           color: COLORS.primary,
           borderless: true
         }}
+        hitSlop={SPACE(1.5)}
       >
         <Icon name={props.icon} color={props.color || "white"} size={props.fontSize} />
       </Pressable>
