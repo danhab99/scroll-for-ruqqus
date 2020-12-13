@@ -314,7 +314,7 @@ export default class Postcard extends React.Component {
 
         <View style={{padding: SPACE(1/2)}}>
           <View style={Style.horizontal}>
-            <Image 
+            {/* <Image 
               source={{ uri: post?.guild?.icon_url }}
               style={{
                 width: 20,
@@ -322,14 +322,14 @@ export default class Postcard extends React.Component {
                 marginRight: SPACE(0.5),
                 borderRadius: 4
               }}
-            />
+            /> */}
     
             <View>
               <Pressable onPress={() => this.gotoGuild()}>
                 <Text style={{
                   color: COLORS.primary
                 }}>
-                  +{post?.guild?.name}
+                  +{post?.guild_name}
                 </Text>
               </Pressable>
             </View>
