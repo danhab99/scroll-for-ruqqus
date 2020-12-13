@@ -17,3 +17,6 @@ install:
 	adb push android/app/build/outputs/apk/release/app-release.apk /data/local/tmp
 	adb shell pm install /data/local/tmp/app-release.apk
 	adb shell rm /data/local/tmp/app-release.apk
+
+relink:
+	jq ".dependencies" package.json | jq -r "keys[]" | xargs -L 1 react-native link
