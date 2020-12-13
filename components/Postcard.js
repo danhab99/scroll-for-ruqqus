@@ -359,6 +359,14 @@ export default class Postcard extends React.Component {
                 <TimeAgo time={post?.created_at * 1000}/> {post?.edited > 0 ? "(edited)" : ""}
               </Text>
             </View>
+
+            <Delimiter />
+
+            <View>
+              <Text style={{ color: COLORS.muted }}>
+                {post?.id}
+              </Text>
+            </View>
           </View>
 
           <View>
