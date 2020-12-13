@@ -1,11 +1,12 @@
-import * as FileSystem from 'expo-file-system'
+import * as RNFS from 'react-native-fs'
 import uuid from 'react-native-uuid'
 import isMatch from 'lodash.ismatch'
 
 export class Value {
   static getValue(name) {
-    let filename = `${FileSystem.documentDirectory}${name}`
-    return FileSystem.readAsStringAsync(filename)
+    let filename = `${RNFS.DocumentDirectoryPath}${name}`
+    
+    return RNFS.readFile(filename, 'utf8')
       .then(raw => JSON.parse(raw))
       .catch(e => {
         return this.setValue(name, null)
@@ -14,13 +15,12 @@ export class Value {
   }
 
   static setValue(name, data) {
-    let filename = `${FileSystem.documentDirectory}${name}`
-    return FileSystem.writeAsStringAsync(filename, JSON.stringify(data))
+    let filename = `${RNFS.DocumentDirectoryPath}${name}`
+    return RNFS.writeFile(filename, JSON.stringify(data), 'utf8')
   }
 }
 export default class Collection {
   constructor(collection, triggerOnChange=true) {
-    // this._filename = `${FileSystem.documentDirectory}${collection}`
     this.collection = collection
     this._trigger = triggerOnChange
   }

@@ -22,6 +22,8 @@ target 'scrollforruqqus' do
 
   pod 'react-native-webview', :path => '../node_modules/react-native-webview'
 
+  pod 'RNFS', :path => '../node_modules/react-native-fs'
+
   target 'scrollforruqqusTests' do
     inherit! :complete
     # Pods for testing
