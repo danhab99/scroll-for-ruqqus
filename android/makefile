@@ -1,2 +1,2 @@
 compile:
-	./gradlew assembleRelease --no-daemon
+	./gradlew app:assembleRelease --no-daemon
