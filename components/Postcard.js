@@ -216,7 +216,7 @@ export default class Postcard extends React.Component {
 
   gotoGuild() {
     this.props.navigation.navigate('Guild', {
-      name: this.state.post.guild.name
+      name: this.state.post.guild_name
     })
   }
 
@@ -273,7 +273,7 @@ export default class Postcard extends React.Component {
             />
 
           <PopupButton
-            label={`Go to +${post?.guild?.name}`}
+            label={`Go to +${post?.guild_name}`}
             icon="add"
             onPress={() => {
               this.gotoGuild()
