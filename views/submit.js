@@ -62,7 +62,8 @@ export default class Submit extends React.Component {
   }
 
   get disabled() {
-    return !(this.state.ready && this.state.form.board !== '' && this.state.form.title !== '' && (this.state.form.body !== '' || this.state.form.url !== ''))
+    // return !(this.state.ready && this.state.form.board !== '' && this.state.form.title !== '' && (this.state.form.body !== '' || this.state.form.url !== ''))
+    return !(this.state.ready && Object.values(this.state.form).every(x => x !== ''))
   }
 
   render() {
