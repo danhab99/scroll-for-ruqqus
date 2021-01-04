@@ -233,7 +233,6 @@ export default class Postcard extends React.Component {
   }
 
   render() {
-    var { post } = this.state
     return (
       <View style={{
         ...Style.card,
@@ -264,7 +263,7 @@ export default class Postcard extends React.Component {
           />
 
           <PopupButton
-            label={`Go to @${post?.author_username}`}
+            label={`Go to @${this.state.post?.author_username}`}
             icon="person"
             onPress={() => {
               this.gotoUser()
@@ -273,7 +272,7 @@ export default class Postcard extends React.Component {
             />
 
           <PopupButton
-            label={`Go to +${post?.guild_name}`}
+            label={`Go to +${this.state.post?.guild_name}`}
             icon="add"
             onPress={() => {
               this.gotoGuild()
@@ -314,22 +313,22 @@ export default class Postcard extends React.Component {
 
         <View style={{padding: SPACE(1/2)}}>
           <View style={Style.horizontal}>
-            {/* <Image 
-              source={{ uri: post?.guild?.icon_url }}
+            <Image 
+              source={{ uri: this.state.post?.guild?.profile_url }}
               style={{
                 width: 20,
                 height: 20,
                 marginRight: SPACE(0.5),
                 borderRadius: 4
               }}
-            /> */}
+            />
     
             <View>
               <Pressable onPress={() => this.gotoGuild()}>
                 <Text style={{
                   color: COLORS.primary
                 }}>
-                  +{post?.guild_name}
+                  +{this.state.post?.guild_name}
                 </Text>
               </Pressable>
             </View>
@@ -339,7 +338,7 @@ export default class Postcard extends React.Component {
             <View>
               <Pressable onPress={() => this.gotoUser()}>
                 <Text style={{ color: COLORS.muted }}>
-                  {post?.author_username}
+                  {this.state.post?.author_username}
                 </Text>
               </Pressable>
             </View>
@@ -348,7 +347,7 @@ export default class Postcard extends React.Component {
 
             <View>
               <Text style={{ color: COLORS.muted }}>
-                {post?.content?.domain}
+                {this.state.post?.content?.domain}
               </Text>
             </View>
 
@@ -356,7 +355,7 @@ export default class Postcard extends React.Component {
 
             <View>
               <Text style={{ color: COLORS.muted }}>
-                <TimeAgo time={post?.created_at * 1000}/> {post?.edited > 0 ? "(edited)" : ""}
+                <TimeAgo time={this.state.post?.created_at * 1000}/> {this.state.post?.edited > 0 ? "(edited)" : ""}
               </Text>
             </View>
 
@@ -364,7 +363,7 @@ export default class Postcard extends React.Component {
 
             <View>
               <Text style={{ color: COLORS.muted }}>
-                {post?.id}
+                {this.state.post?.id}
               </Text>
             </View>
           </View>
@@ -374,7 +373,7 @@ export default class Postcard extends React.Component {
               fontSize: FONTSIZE(2),
               color: COLORS.text,
             }}>
-              {post?.content?.title.replace('&amp;', '&')}
+              {this.state.post?.content?.title.replace('&amp;', '&')}
             </Text>
           </View>
 
@@ -383,7 +382,7 @@ export default class Postcard extends React.Component {
               color: COLORS.text,
               fontSize: FONTSIZE(1.2)
             }}>
-              <Text style={{color: Lighten(COLORS.primary)}}>{post?.votes?.upvotes}↑</Text> <Text style={{color: Darken(COLORS.primary, 1/10)}}>{post?.votes?.downvotes}↓</Text>  <Text style={{color: COLORS.muted}}>({post?.votes?.score})</Text>
+              <Text style={{color: Lighten(COLORS.primary)}}>{this.state.post?.votes?.upvotes}↑</Text> <Text style={{color: Darken(COLORS.primary, 1/10)}}>{this.state.post?.votes?.downvotes}↓</Text>  <Text style={{color: COLORS.muted}}>({this.state.post?.votes?.score})</Text>
             </Text>
 
             {/* <Text style={{
@@ -396,7 +395,7 @@ export default class Postcard extends React.Component {
         </View>
 
         <View>
-          <SubmissionContent content={post?.content} />
+          <SubmissionContent content={this.state.post?.content} />
         </View>
 
         <View style={{
