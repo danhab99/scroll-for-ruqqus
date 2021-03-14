@@ -1,12 +1,12 @@
 import React, {useState, useEffect, useRef} from 'react';
 import {View, Text, Linking, ScrollView, ActivityIndicator} from 'react-native';
 import Style, {BODYTEXT, COLORS, FONTSIZE, SPACE} from '../theme';
-import {LinkText} from '../components/LinkText';
 import {Button, IconButton} from '../components/Buttons';
 import {WebView} from 'react-native-webview';
 import Collection, {Value} from '../asyncstorage';
 import InitClient from '../init_client';
 import {useNavigation} from '@react-navigation/core';
+import {useSetValue} from '../contexts/storage-context';
 
 const CAPTURE_TOKENS = `
 window.ReactNativeWebView.postMessage(document.body.innerText)
@@ -14,6 +14,7 @@ window.ReactNativeWebView.postMessage(document.body.innerText)
 
 export default function ROALogin(props) {
   const navigation = useNavigation();
+  const setValue = useSetValue();
 
   const [sites, setSites] = useState([]);
   const [connectTo, setConnectTo] = useState();
@@ -113,9 +114,8 @@ export default function ROALogin(props) {
     accounts.delete({_id: id}).then(() => fetchSites());
 
   const pickAccount = (id) => {
-    Value.setValue('activeAccount', id).then(() => {
-      navigation.navigate('Frontpage');
-    });
+    setValue(id, 'activeID');
+    navigation.navigate('Frontpage');
   };
 
   if (connecting) {
