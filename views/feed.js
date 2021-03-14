@@ -1,20 +1,13 @@
-import React from 'react';
-import {
-  FlatList,
-  ActivityIndicator,
-  View,
-  Image,
-  Text,
-  Vibration,
-  RefreshControl,
-} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {FlatList, View, Image, Text, RefreshControl} from 'react-native';
 import Style, {COLORS, Darken, FONTSIZE, Lighten, SPACE} from '../theme';
 import Postcard from '../components/Postcard';
 import {IconButton, Button} from '../components/Buttons';
 import Popup, {PopupButton} from '../components/Popup';
 import HtmlMarkdown from '../components/HtmlMarkdown';
 import Input from '../components/Input';
-import InitClient from '../init_client';
+import {useNavigation, useRoute} from '@react-navigation/core';
+import {useRuqqusClient} from '../components/ruqqus-client';
 
 function GuildHeader(props) {
   if (props.enabled) {
@@ -73,289 +66,161 @@ function GuildHeader(props) {
   }
 }
 
-export default class Feed extends React.Component {
-  constructor(props) {
-    super(props);
+export default function Feed(props) {
+  const navigation = useNavigation();
+  const route = useRoute();
+  const client = useRuqqusClient();
 
-    this.state = {
-      posts: [],
-      page: 1,
-      loadingMore: false,
-      refreshing: true,
-      sortingVisible: false,
-      searchVisible: false,
-      sorting: 'hot',
-      guildHeader: this.props.route.params.guildHeader || false,
-      guild: {
-        icon_url: '',
-        name: '',
-        color: '',
-        subscribers: -1,
-        banner_url: '',
-        description: {
-          html: '',
-        },
-      },
-      searchVal: '',
-    };
+  const [posts, setPosts] = useState();
+  const [page, setPage] = useState(1);
+  const [refreshing, setRefreshing] = useState(false);
+  const [showSorting, setShowSorting] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
+  const [sorting, setSorting] = useState('');
+  const [guildHeader, setGuildHeader] = useState(false);
+  const [guildHeader, setGuildHeader] = useState(
+    route.params.guildHeader || false,
+  );
+  const [searchVal, setSearchVal] = useState('');
+  const [guild, setGuild] = useState({});
 
-    this.flatlist = React.createRef();
-  }
-
-  componentDidMount() {
-    this.refresh();
-    this.props.navigation.setOptions({
-      title: `${this.props.route.params.prefix || ''}${this.props.route.name}`,
-      headerRight: () => (
-        <View
-          style={{
-            display: 'flex',
-            flexDirection: 'row-reverse',
-          }}>
-          <IconButton
-            icon="refresh"
-            style={{
-              marginRight: SPACE(1.3),
-            }}
-            onPress={() => this.refresh()}
-            onLongPress={() => {
-              Vibration.vibrate(200);
-              this.getMore();
-              this.flatlist.current.scrollToEnd({
-                animated: true,
-              });
-            }}
-          />
-
-          <IconButton
-            icon="sort"
-            style={{
-              marginRight: SPACE(1.1),
-            }}
-            onPress={() => this.toggleSorting()}
-          />
-
-          <IconButton
-            icon="search"
-            style={{
-              marginRight: SPACE(1.1),
-            }}
-            onPress={() => this.toggleSearch()}
-          />
-        </View>
-      ),
-    });
-  }
-
-  fetch() {
-    return this.props.route.params.fetch(this._client, {
-      page: this.state.page,
-      name: this.props.route.params.name,
-      sort: this.state.sorting,
-    });
-  }
-
-  refresh() {
-    if (this._client) {
-      this.fetch().then((frontpage) => {
-        try {
-          this.flatlist.current.scrollToIndex({
-            animated: true,
-            index: 0,
-          });
-        } catch (e) {}
-        this.setState({
-          posts: frontpage.posts,
-          refreshing: false,
-        });
+  const fetch = () => {
+    setRefreshing(true);
+    return route.params
+      .fetch(client, {
+        page,
+        name: route.params.name,
+        sort: sorting,
+      })
+      .then((posts) => {
+        setRefreshing(false);
+        setPosts(page > 0 ? (oldposts) => oldposts.concat(posts) : posts);
       });
+  };
 
-      if (this.props.route.params.guildHeader) {
-        this._client.guilds
-          .fetch(this.props.route.params.name)
-          .then((guild) => {
-            console.log('GUILD HEADER', guild);
-            this.setState({guild}, () => {
-              this.props.navigation.setOptions({
-                title: `+${this.state.guild.name}`,
-              });
-            });
-          });
-      }
-    } else {
-      InitClient()
-        .then((client) => {
-          this._client = client;
-          this.refresh();
-        })
-        .catch(() => {
-          this.props.navigation.navigate('Login');
-        });
-    }
+  useEffect(() => fetch(), [page, sorting]);
 
-    this.setState({
-      refreshing: true,
+  const refresh = () => {
+    fetch().then(() => {
+      setRefreshing(false);
     });
-  }
 
-  getMore() {
-    if (this.state.posts.length > 1 && !this.state.loadingMore) {
-      this.setState(
-        (prev) => ({
-          page: prev.page + 1,
-          loadingMore: true,
-        }),
-        () => {
-          this.fetch()
-            .then((more) => {
-              this.setState((prev) => ({
-                posts: prev.posts.concat(more.posts),
-                loadingMore: false,
-              }));
-            })
-            .catch((e) => console.error('CANNOT GET MORE', e));
-        },
-      );
+    if (route.params.guildHeader) {
+      client.guilds.fetch(route.params.name).then((guild) => {
+        setGuild(guild, () =>
+          navigation.setOptions({
+            title: `+${guild.name}`,
+          }),
+        );
+      });
     }
-  }
+  };
 
-  toggleSorting() {
-    this.setState((prev) => ({sortingVisible: !prev.sortingVisible}));
-  }
+  const getMore = () => {
+    if (posts.length > 1 && !refreshing) {
+      setPage((x) => x + 1);
+    }
+  };
 
-  setSorting(sorting) {
-    this.setState({sorting}, () => {
-      this.refresh();
-      this.toggleSorting();
-    });
-  }
-
-  toggleSearch() {
-    this.setState((prev) => ({searchVisible: !prev.searchVisible}));
-  }
-
-  search() {
+  const search = () => {
     let screen = {
       '+': 'Guild',
       '@': 'User',
-    }[this.state.searchVal[0]];
+    }[searchVal];
 
-    this.props.navigation[this.state.guildHeader ? 'replace' : 'navigate'](
-      screen,
-      {
-        name: this.state.searchVal.substring(1, this.state.searchVal.length),
-        prefix: this.state.searchVal[0],
-      },
-    );
-    this.setState({searchVisible: false});
-  }
+    navigation.navigate(screen, {
+      name: searchVal.substring(1),
+      prefix: searchVal[0],
+    });
+    showSearch(false);
+  };
 
-  render() {
-    return (
-      <View
-        style={{
-          ...Style.view,
-          paddingBottom: 0,
-          paddingTop: 0,
-        }}>
-        <Popup
-          title="Sort"
-          visible={this.state.sortingVisible}
-          togglModal={() => this.toggleSorting()}>
-          <PopupButton
-            label="Hot"
-            icon="whatshot"
-            onPress={() => this.setSorting('hot')}
-          />
-
-          <PopupButton
-            label="New"
-            icon="star"
-            onPress={() => this.setSorting('new')}
-          />
-
-          <PopupButton
-            label="Disputed"
-            icon="announcement"
-            onPress={() => this.setSorting('disputed')}
-          />
-
-          <PopupButton
-            label="Activity"
-            icon="chat"
-            onPress={() => this.setSorting('activity')}
-          />
-        </Popup>
-
-        <Popup
-          visible={this.state.searchVisible}
-          title="Go To"
-          togglModal={() => this.toggleSearch()}>
-          <Input
-            label="+guild or @user"
-            onChangeText={(t) => this.setState((prev) => ({searchVal: t}))}
-            autoCompleteType="off"
-            autoCapitalize="none"
-            value={this.state.searchVal}
-          />
-
-          <Button
-            disabled={
-              !(
-                this.state.searchVal[0] == '+' || this.state.searchVal[0] == '@'
-              )
-            }
-            text="Go to"
-            style={{
-              marginTop: SPACE(1),
-            }}
-            onPress={() => this.search()}
-          />
-        </Popup>
-
-        <FlatList
-          ref={this.flatlist}
-          data={this.state.posts}
-          renderItem={(props) => (
-            <Postcard post={props.item} navigation={this.props.navigation} />
-          )}
-          onEndReached={() => this.getMore()}
-          onEndReachedThreshold={5}
-          initialNumToRender={20}
-          ListHeaderComponent={
-            <GuildHeader
-              guild={this.state.guild}
-              enabled={this.state.guildHeader}
-            />
-          }
-          ListFooterComponent={
-            <View>
-              {this.state.loadingMore ? (
-                <View style={{marginBottom: SPACE(2)}}>
-                  <ActivityIndicator size="large" color={COLORS.primary} />
-                </View>
-              ) : null}
-            </View>
-          }
-          style={{
-            paddingTop: this.state.guildHeader ? 0 : SPACE(1),
-          }}
-          showsVerticalScrollIndicator={false}
-          refreshControl={
-            <RefreshControl
-              refreshing={this.state.refreshing}
-              onRefresh={() => this.refresh()}
-              title="Pull to refresh"
-              colors={[
-                COLORS.primary,
-                Lighten(COLORS.primary),
-                Darken(COLORS.primary),
-              ]}
-            />
-          }
-          keyExtractor={(item, index) => `${index}`}
+  return (
+    <View
+      style={{
+        ...Style.view,
+        paddingBottom: 0,
+        paddingTop: 0,
+      }}>
+      <Popup
+        title="Sort"
+        visible={showSorting}
+        togglModal={() => setShowSorting((x) => !x)}>
+        <PopupButton
+          label="Hot"
+          icon="whatshot"
+          onPress={() => setSorting('hot')}
         />
-      </View>
-    );
-  }
+
+        <PopupButton
+          label="New"
+          icon="star"
+          onPress={() => setSorting('new')}
+        />
+
+        <PopupButton
+          label="Disputed"
+          icon="announcement"
+          onPress={() => setSorting('disputed')}
+        />
+
+        <PopupButton
+          label="Activity"
+          icon="chat"
+          onPress={() => setSorting('activity')}
+        />
+      </Popup>
+
+      <Popup
+        visible={showSearch}
+        title="Go To"
+        togglModal={() => setShowSearch((x) => !x)}>
+        <Input
+          label="+guild or @user"
+          onChangeText={(t) => setSearchVal(t)}
+          autoCompleteType="off"
+          autoCapitalize="none"
+          value={searchVal}
+        />
+
+        <Button
+          disabled={!(searchVal[0] == '+' || searchVal[0] == '@')}
+          text="Go to"
+          style={{
+            marginTop: SPACE(1),
+          }}
+          onPress={() => search()}
+        />
+      </Popup>
+
+      <FlatList
+        ref={this.flatlist}
+        data={posts}
+        renderItem={(props) => <Postcard post={props.item} />}
+        onEndReached={() => getMore()}
+        onEndReachedThreshold={5}
+        initialNumToRender={20}
+        ListHeaderComponent={
+          <GuildHeader guild={guild} enabled={guildHeader} />
+        }
+        style={{
+          paddingTop: guildHeader ? 0 : SPACE(1),
+        }}
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={() => refresh()}
+            title="Pull to refresh"
+            colors={[
+              COLORS.primary,
+              Lighten(COLORS.primary),
+              Darken(COLORS.primary),
+            ]}
+          />
+        }
+        keyExtractor={(item, index) => `${index}`}
+      />
+    </View>
+  );
 }
