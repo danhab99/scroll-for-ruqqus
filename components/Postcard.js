@@ -1,183 +1,199 @@
 import React from 'react';
-import { View, Pressable, Text, Image, Linking, ActivityIndicator, Share } from 'react-native';
-import Style, { SPACE, FONTSIZE, COLORS, Lighten, Darken } from '../theme'
+import {
+  View,
+  Pressable,
+  Text,
+  Image,
+  Linking,
+  ActivityIndicator,
+  Share,
+} from 'react-native';
+import Style, {SPACE, FONTSIZE, COLORS, Lighten, Darken} from '../theme';
 import TimeAgo from 'react-native-timeago';
-import YoutubePlayer from "react-native-youtube-iframe";
+import YoutubePlayer from 'react-native-youtube-iframe';
 import Collection from '../asyncstorage';
-import cherrio from 'react-native-cheerio'
+import cherrio from 'react-native-cheerio';
 import HtmlMarkdown from './HtmlMarkdown';
 import ScaledImage from './ScaledImage';
-import { IconButton } from './Buttons';
-import Popup, { PopupButton } from './Popup';
-
+import {IconButton} from './Buttons';
+import Popup, {PopupButton} from './Popup';
 
 function SubmissionContent({content}) {
-  const YOUTUBE_VID = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/
+  const YOUTUBE_VID = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
   if (content?.domain == undefined) {
-    return <Text style={{color: 'red'}}>Content not supported</Text>
-  }
-  else if (['i.ruqqus.com', 'i.imgur.com', 'i.redd.it'].some(x => content.domain.includes(x))) {
-    
-    return <ScaledImage
-      url={content.url}
-    />
-  }
-  else if (content.domain == 'text post') {
-    return <HtmlMarkdown html={content?.body?.html || `<p style="color: ${COLORS.muted};">No body</p>`}/>
-  }
-  else if (content.domain.includes('youtu')) {
-    let match = content.url.match(YOUTUBE_VID)
-    let id = (match && match[7].length == 11) ? match[7] : false
+    return <Text style={{color: 'red'}}>Content not supported</Text>;
+  } else if (
+    ['i.ruqqus.com', 'i.imgur.com', 'i.redd.it'].some((x) =>
+      content.domain.includes(x),
+    )
+  ) {
+    return <ScaledImage url={content.url} />;
+  } else if (content.domain == 'text post') {
+    return (
+      <HtmlMarkdown
+        html={
+          content?.body?.html ||
+          `<p style="color: ${COLORS.muted};">No body</p>`
+        }
+      />
+    );
+  } else if (content.domain.includes('youtu')) {
+    let match = content.url.match(YOUTUBE_VID);
+    let id = match && match[7].length == 11 ? match[7] : false;
 
-    return (<YoutubePlayer
-      height={180}
-      videoId={id}
-    />)
-  }
-  else {
-    return <View>    
-      <Pressable onPress={() => Linking.openURL(content.url)}>
-        <View style={{
-          alignSelf: 'flex-start',
-        }}>
-          <Text style={{
-            position: 'absolute',
-            color: COLORS.text,
-            backgroundColor: COLORS.primary,
-            fontSize: FONTSIZE(0.1),
-            fontWeight: 'bold',
-            zIndex: 1000,
-            padding: SPACE(0.2),
-            margin: SPACE(0.4),
-            borderRadius: 8,
-          }}>
-            Link
-          </Text>
-        </View>
-        <BackupThumbnail content={content} />
-      </Pressable>
-    </View>
+    return <YoutubePlayer height={180} videoId={id} />;
+  } else {
+    return (
+      <View>
+        <Pressable onPress={() => Linking.openURL(content.url)}>
+          <View
+            style={{
+              alignSelf: 'flex-start',
+            }}>
+            <Text
+              style={{
+                position: 'absolute',
+                color: COLORS.text,
+                backgroundColor: COLORS.primary,
+                fontSize: FONTSIZE(0.1),
+                fontWeight: 'bold',
+                zIndex: 1000,
+                padding: SPACE(0.2),
+                margin: SPACE(0.4),
+                borderRadius: 8,
+              }}>
+              Link
+            </Text>
+          </View>
+          <BackupThumbnail content={content} />
+        </Pressable>
+      </View>
+    );
   }
 }
 
 class SubmissionDelayControl extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
 
     this.state = {
-      waiting: false
-    }
+      waiting: false,
+    };
   }
 
   onPress() {
     this.setState({waiting: true}, () => {
       Promise.resolve(this.props.onPress()).then(() => {
-        this.setState({waiting: false})
-      })
-    })
+        this.setState({waiting: false});
+      });
+    });
   }
 
   render() {
     if (this.state.waiting) {
-      return <ActivityIndicator size="small" color={COLORS.primary} />
-    }
-    else {
-      return <IconButton 
-        icon={this.props.icon}
-        style={Style.bottomButtons}
-        color={this.props.active ? COLORS.primary : 'white'}
-        onPress={() => this.onPress()}
-      />
+      return <ActivityIndicator size="small" color={COLORS.primary} />;
+    } else {
+      return (
+        <IconButton
+          icon={this.props.icon}
+          style={Style.bottomButtons}
+          color={this.props.active ? COLORS.primary : 'white'}
+          onPress={() => this.onPress()}
+        />
+      );
     }
   }
 }
 
 export default class Postcard extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
 
     this.state = {
       post: this.props.post,
       id: props.pid,
       modalVisible: false,
-      saved: false
-    }
+      saved: false,
+    };
 
-    this._savedPosts = new Collection('saved')
+    this._savedPosts = new Collection('saved');
     this._savedPosts.onChange(() => {
-      this._savedPosts.findOne({pid: this.state.post.id}).then(saved => this.setState({saved}))
-    })
+      this._savedPosts
+        .findOne({pid: this.state.post.id})
+        .then((saved) => this.setState({saved}));
+    });
   }
 
   toggleSaved() {
-    let bod = {pid: this.state.post.id}
-    return this._savedPosts
-      .findOne(bod)
-      .then(saved => {
-        if (saved) {
-          return this._savedPosts.delete(bod)
-        }
-        else {
-          return this._savedPosts.create({
-            ...bod,
-            savedat: Date.now()
-          })
-        }
-      })
+    let bod = {pid: this.state.post.id};
+    return this._savedPosts.findOne(bod).then((saved) => {
+      if (saved) {
+        return this._savedPosts.delete(bod);
+      } else {
+        return this._savedPosts.create({
+          ...bod,
+          savedat: Date.now(),
+        });
+      }
+    });
   }
 
   togglModal() {
-    this.setState(prev => ({modalVisible: !prev.modalVisible}))
+    this.setState((prev) => ({modalVisible: !prev.modalVisible}));
   }
 
   upvote() {
-    return this.state.post[this.state.post.votes.voted !== 1 ? 'upvote' : 'removeVote']().then(post => {
-      this.setState({post})
-    })
+    return this.state.post[
+      this.state.post.votes.voted !== 1 ? 'upvote' : 'removeVote'
+    ]().then((post) => {
+      this.setState({post});
+    });
   }
 
-  downvote()  {
-    return this.state.post[this.state.post.votes.voted !== -1 ? 'downvote' : 'removeVote']().then(post => {
-      this.setState({post})
-    })
+  downvote() {
+    return this.state.post[
+      this.state.post.votes.voted !== -1 ? 'downvote' : 'removeVote'
+    ]().then((post) => {
+      this.setState({post});
+    });
   }
 
   gotoGuild() {
     this.props.navigation.navigate('Guild', {
-      name: this.state.post.guild_name
-    })
+      name: this.state.post.guild_name,
+    });
   }
 
   gotoComments() {
     this.props.navigation.navigate('Comments', {
-      post: this.state.post
-    })
+      post: this.state.post,
+    });
   }
 
   gotoUser() {
     this.props.navigation.navigate('User', {
-      name: this.state.post.author_username
-    })
+      name: this.state.post.author_username,
+    });
   }
 
   render() {
     return (
-      <View style={{
-        ...Style.card,
-        padding: 0,
-        marginBottom: SPACE(1),
-      }}>
+      <View
+        style={{
+          ...Style.card,
+          padding: 0,
+          marginBottom: SPACE(1),
+        }}>
         <Popup
           togglModal={() => this.togglModal()}
           visible={this.state.modalVisible}
-          title="More"
-        >
+          title="More">
           <PopupButton
             label="Share"
             icon="share"
             onPress={() => {
-              Share.share({message: this.state.post.full_link})
-              this.togglModal()
+              Share.share({message: this.state.post.full_link});
+              this.togglModal();
             }}
           />
 
@@ -185,8 +201,8 @@ export default class Postcard extends React.Component {
             label="Comments"
             icon="comment"
             onPress={() => {
-              this.gotoComments()
-              this.togglModal()
+              this.gotoComments();
+              this.togglModal();
             }}
           />
 
@@ -194,17 +210,17 @@ export default class Postcard extends React.Component {
             label={`Go to @${this.state.post?.author_username}`}
             icon="person"
             onPress={() => {
-              this.gotoUser()
-              this.togglModal()
+              this.gotoUser();
+              this.togglModal();
             }}
-            />
+          />
 
           <PopupButton
             label={`Go to +${this.state.post?.guild_name}`}
             icon="add"
             onPress={() => {
-              this.gotoGuild()
-              this.togglModal()
+              this.gotoGuild();
+              this.togglModal();
             }}
           />
 
@@ -212,60 +228,56 @@ export default class Postcard extends React.Component {
             label="Open In Browser"
             icon="open-in-browser"
             onPress={() => {
-              let u = this.state.post?.content?.url || this.state.post?.full_link
-              Linking.canOpenURL(u).then(() => Linking.openURL(u))
-              this.togglModal()
+              let u =
+                this.state.post?.content?.url || this.state.post?.full_link;
+              Linking.canOpenURL(u).then(() => Linking.openURL(u));
+              this.togglModal();
             }}
           />
 
-          <PopupButton
-            label="Report"
-            icon="flag"
-          />
+          <PopupButton label="Report" icon="flag" />
 
-          <PopupButton
-            label="Hide"
-            icon="block"
-          />
+          <PopupButton label="Hide" icon="block" />
 
           <PopupButton
             label="console.log(post)"
             icon="save"
             onPress={() => {
-              alert(JSON.stringify(this.state.post, null, 2))
-              console.log(this.state.post)
-              this.togglModal()
+              alert(JSON.stringify(this.state.post, null, 2));
+              console.log(this.state.post);
+              this.togglModal();
             }}
           />
         </Popup>
 
-        <View style={{padding: SPACE(1/2)}}>
+        <View style={{padding: SPACE(1 / 2)}}>
           <View style={Style.horizontal}>
-            <Image 
-              source={{ uri: this.state.post?.guild?.profile_url }}
+            <Image
+              source={{uri: this.state.post?.guild?.profile_url}}
               style={{
                 width: 20,
                 height: 20,
                 marginRight: SPACE(0.5),
-                borderRadius: 4
+                borderRadius: 4,
               }}
             />
-    
+
             <View>
               <Pressable onPress={() => this.gotoGuild()}>
-                <Text style={{
-                  color: COLORS.primary
-                }}>
+                <Text
+                  style={{
+                    color: COLORS.primary,
+                  }}>
                   +{this.state.post?.guild_name}
                 </Text>
               </Pressable>
             </View>
-            
+
             <Delimiter />
-    
+
             <View>
               <Pressable onPress={() => this.gotoUser()}>
-                <Text style={{ color: COLORS.muted }}>
+                <Text style={{color: COLORS.muted}}>
                   {this.state.post?.author_username}
                 </Text>
               </Pressable>
@@ -274,7 +286,7 @@ export default class Postcard extends React.Component {
             <Delimiter />
 
             <View>
-              <Text style={{ color: COLORS.muted }}>
+              <Text style={{color: COLORS.muted}}>
                 {this.state.post?.content?.domain}
               </Text>
             </View>
@@ -282,35 +294,44 @@ export default class Postcard extends React.Component {
             <Delimiter />
 
             <View>
-              <Text style={{ color: COLORS.muted }}>
-                <TimeAgo time={this.state.post?.created_at * 1000}/> {this.state.post?.edited > 0 ? "(edited)" : ""}
+              <Text style={{color: COLORS.muted}}>
+                <TimeAgo time={this.state.post?.created_at * 1000} />{' '}
+                {this.state.post?.edited > 0 ? '(edited)' : ''}
               </Text>
             </View>
 
             <Delimiter />
 
             <View>
-              <Text style={{ color: COLORS.muted }}>
-                {this.state.post?.id}
-              </Text>
+              <Text style={{color: COLORS.muted}}>{this.state.post?.id}</Text>
             </View>
           </View>
 
           <View>
-            <Text style={{
-              fontSize: FONTSIZE(2),
-              color: COLORS.text,
-            }}>
+            <Text
+              style={{
+                fontSize: FONTSIZE(2),
+                color: COLORS.text,
+              }}>
               {this.state.post?.content?.title.replace('&amp;', '&')}
             </Text>
           </View>
 
           <View style={Style.horizontal}>
-            <Text style={{
-              color: COLORS.text,
-              fontSize: FONTSIZE(1.2)
-            }}>
-              <Text style={{color: Lighten(COLORS.primary)}}>{this.state.post?.votes?.upvotes}↑</Text> <Text style={{color: Darken(COLORS.primary, 1/10)}}>{this.state.post?.votes?.downvotes}↓</Text>  <Text style={{color: COLORS.muted}}>({this.state.post?.votes?.score})</Text>
+            <Text
+              style={{
+                color: COLORS.text,
+                fontSize: FONTSIZE(1.2),
+              }}>
+              <Text style={{color: Lighten(COLORS.primary)}}>
+                {this.state.post?.votes?.upvotes}↑
+              </Text>{' '}
+              <Text style={{color: Darken(COLORS.primary, 1 / 10)}}>
+                {this.state.post?.votes?.downvotes}↓
+              </Text>{' '}
+              <Text style={{color: COLORS.muted}}>
+                ({this.state.post?.votes?.score})
+              </Text>
             </Text>
 
             {/* <Text style={{
@@ -326,37 +347,38 @@ export default class Postcard extends React.Component {
           <SubmissionContent content={this.state.post?.content} />
         </View>
 
-        <View style={{
-          ...Style.horizontal,
-          justifyContent: 'space-around',
-        }}>
-          <SubmissionDelayControl 
+        <View
+          style={{
+            ...Style.horizontal,
+            justifyContent: 'space-around',
+          }}>
+          <SubmissionDelayControl
             icon="arrow-upward"
             active={this.state?.post?.votes?.voted === 1}
             onPress={() => this.upvote()}
           />
-          <SubmissionDelayControl 
+          <SubmissionDelayControl
             icon="arrow-downward"
             active={this.state?.post?.votes?.voted === -1}
             onPress={() => this.downvote()}
           />
-          <SubmissionDelayControl 
+          <SubmissionDelayControl
             icon="save"
             active={this.state.saved}
             onPress={() => this.toggleSaved()}
           />
-          <IconButton 
-            icon="comment" 
-            style={Style.bottomButtons} 
+          <IconButton
+            icon="comment"
+            style={Style.bottomButtons}
             onPress={() => this.gotoComments()}
           />
-          <IconButton 
-            icon="more-vert" 
-            style={Style.bottomButtons} 
-            onPress={() => this.togglModal()} 
+          <IconButton
+            icon="more-vert"
+            style={Style.bottomButtons}
+            onPress={() => this.togglModal()}
           />
         </View>
       </View>
-    )
+    );
   }
 }

@@ -1,16 +1,16 @@
-import React from 'react'
-import { ActivityIndicator, RefreshControl, View } from 'react-native'
-import WebView from 'react-native-webview'
-import Style, { COLORS, SPACE } from '../theme'
+import React from 'react';
+import {ActivityIndicator, RefreshControl, View} from 'react-native';
+import WebView from 'react-native-webview';
+import Style, {COLORS, SPACE} from '../theme';
 // import Postcard from '../components/Postcard'
 // import Style from '../theme'
 
 export default class Comments extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
-      loading: true
-    }
+      loading: true,
+    };
   }
 
   // componentDidMount() {
@@ -19,29 +19,30 @@ export default class Comments extends React.Component {
   // }
 
   render() {
-    return (<WebView
-      style={Style.view}
-      source={{uri: `https://${this.props.route.params.post.client.domain}/post/${this.props.route.params.post.id}`}}
-      renderLoading={() => <View
-        style={{
-          position: 'absolute',
-          top: 0,
-          alignContent: 'center',
-          alignItems: 'center',
-          alignSelf: 'center',
-          padding: SPACE(1)
+    return (
+      <WebView
+        style={Style.view}
+        source={{
+          uri: `https://${this.props.route.params.post.client.domain}/post/${this.props.route.params.post.id}`,
         }}
-      >
-        <ActivityIndicator
-          color={COLORS.primary}
-          size="large"
-          />
-      </View>}
-
-      javaScriptEnabled
-      startInLoadingState
-      domStorageEnabled
-    />)
+        renderLoading={() => (
+          <View
+            style={{
+              position: 'absolute',
+              top: 0,
+              alignContent: 'center',
+              alignItems: 'center',
+              alignSelf: 'center',
+              padding: SPACE(1),
+            }}>
+            <ActivityIndicator color={COLORS.primary} size="large" />
+          </View>
+        )}
+        javaScriptEnabled
+        startInLoadingState
+        domStorageEnabled
+      />
+    );
     // return  (
     //   <ScrollView style={Style.view}>
     //     <Postcard post={this.props.route.params.post} />
