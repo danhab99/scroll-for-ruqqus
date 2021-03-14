@@ -10,15 +10,14 @@ import React from 'react';
 import Style, {COLORS, FONTSIZE, SPACE} from './theme';
 import {View, Text} from 'react-native';
 import {IconButton} from './components/Buttons';
-import * as FileSystem from 'expo-file-system';
 
 import Feed from './views/feed';
-import Login from './views/login';
 import Comments from './views/comments';
 import Submit from './views/submit';
 import ROALogin from './views/roa_login';
 
 import Collection from './asyncstorage';
+import {RuqqusClientProvider} from './components/ruqqus-client';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -190,27 +189,10 @@ function SubmitStackNavigator(props) {
   );
 }
 
-export default class App extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
-  componentDidMount() {
-    FileSystem.readDirectoryAsync(FileSystem.documentDirectory).then(
-      (directory) => {
-        directory.forEach((file) => {
-          // FileSystem.deleteAsync(FileSystem.documentDirectory + file)
-          FileSystem.readAsStringAsync(
-            FileSystem.documentDirectory + file,
-          ).then((data) => console.log('FILE SYSTEM', file, data));
-        });
-      },
-    );
-  }
-
-  render() {
-    return (
-      <View style={Style.root}>
+export default function App(props) {
+  return (
+    <View style={Style.root}>
+      <RuqqusClientProvider>
         <StatusBar />
         <NavigationContainer>
           <StatusBar style="light" />
@@ -227,7 +209,7 @@ export default class App extends React.Component {
             <Drawer.Screen name="Submit" component={SubmitStackNavigator} />
           </Drawer.Navigator>
         </NavigationContainer>
-      </View>
-    );
-  }
+      </RuqqusClientProvider>
+    </View>
+  );
 }
