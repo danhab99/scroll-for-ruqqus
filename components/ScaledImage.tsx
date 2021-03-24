@@ -1,49 +1,46 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {Image} from 'react-native';
+import {writeFile} from 'react-native-fs';
 
-export default class ScaledImage extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      aspectRatio: 1,
-    };
-  }
+interface ScaledImageProps {
+  url: string;
+}
 
-  componentDidMount() {
-    this.componentDidUpdate();
-  }
+export default function ScaledImage(props: ScaledImageProps) {
+  const [aspectRatio, setAspectRatio] = useState(1);
 
-  shouldComponentUpdate(nextProps, nextState) {
-    return (
-      this.props.url !== nextProps.url ||
-      this.state.aspectRatio !== nextState.aspectRatio
-    );
-  }
-
-  componentDidUpdate() {
+  const getImageSize = () => {
     Image.getSize(
-      this.props.url,
+      props.url,
       (width, height) => {
-        this.setState({
-          aspectRatio: width / height,
-        });
+        setAspectRatio(width / height);
       },
       (err) => {
-        console.log('Unable to get image size', this.props, err);
+        console.log('Unable to get image size', props, err);
       },
     );
-  }
+  };
 
-  render() {
-    return (
-      <Image
-        source={{uri: this.props.url}}
-        style={{
-          width: '100%',
-          aspectRatio: this.state.aspectRatio,
-        }}
-        onLoad={() => {}}
-      />
-    );
-  }
+  useEffect(() => {
+    getImageSize();
+  }, []);
+
+  // TODO: Determine if this logic is necessesary
+  // shouldComponentUpdate(nextProps, nextState) {
+  //   return (
+  //     this.props.url !== nextProps.url ||
+  //     this.state.aspectRatio !== nextState.aspectRatio
+  //   );
+  // }
+
+  return (
+    <Image
+      source={{uri: props.url}}
+      style={{
+        width: '100%',
+        aspectRatio: aspectRatio,
+      }}
+      onLoad={() => {}}
+    />
+  );
 }

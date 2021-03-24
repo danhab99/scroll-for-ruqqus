@@ -2,7 +2,13 @@ import React from 'react';
 import {Text, Linking} from 'react-native';
 import {COLORS, Lighten} from '../theme';
 
-export default function LinkText(props) {
+interface LinkTextProps {
+  style?: object;
+  url: string;
+  children: string;
+}
+
+export default function LinkText(props: LinkTextProps) {
   return (
     <Text
       style={{

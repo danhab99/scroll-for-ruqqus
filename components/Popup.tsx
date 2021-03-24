@@ -3,14 +3,22 @@ import {View, Text, Modal, Pressable} from 'react-native';
 import {SPACE, FONTSIZE, COLORS} from '../theme';
 import {IconButton} from './Buttons';
 import Icon from '../icons/icon';
+import {OptionalEventHandler} from './OptionalEventHandler';
 
-export default function Popup(props) {
+interface PopupProps {
+  visible: boolean;
+  toggleModal: (() => void) | undefined;
+  title: string;
+  children: React.ReactNode[];
+}
+
+export default function Popup(props: PopupProps) {
   return (
     <Modal
       transparent={true}
       visible={props.visible}
       animationType="slide"
-      onRequestClose={() => props.togglModal()}>
+      onRequestClose={() => props.toggleModal?.()}>
       <View
         style={{
           margin: SPACE(3),
@@ -38,7 +46,7 @@ export default function Popup(props) {
               style={{
                 marginBottom: SPACE(1),
               }}
-              onPress={() => props.togglModal()}
+              onPress={() => props.toggleModal?.()}
             />
             <Text
               style={{
@@ -56,9 +64,15 @@ export default function Popup(props) {
   );
 }
 
-export function PopupButton(props) {
+interface PopupButtonProps {
+  onPress: OptionalEventHandler;
+  icon: string;
+  label: string;
+}
+
+export function PopupButton(props: PopupButtonProps) {
   return (
-    <Pressable onPress={() => props.onPress()}>
+    <Pressable onPress={() => props.onPress?.()}>
       <View
         style={{
           display: 'flex',

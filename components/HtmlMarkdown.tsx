@@ -3,7 +3,12 @@ import {Text, Linking} from 'react-native';
 import {SPACE, FONTSIZE, COLORS, MarkdownStyle} from '../theme';
 import HTML from 'react-native-render-html';
 
-export default function HtmlMarkdown(props) {
+interface HtmlMarkdownProps {
+  html: string;
+  domain: string;
+}
+
+export default function HtmlMarkdown(props: HtmlMarkdownProps) {
   return (
     <HTML
       html={props.html}
@@ -34,7 +39,7 @@ export default function HtmlMarkdown(props) {
           .catch((err) => console.log('Cannot open markdown link', err));
       }}
       alterNode={(node) => {
-        if (node.name == 'img' && node.attribs.src[0] == '/') {
+        if (node.attribs.src == '/') {
           return Object.assign(node, {
             attribs: {
               src: `https://${props.domain || 'ruqqus.com'}${node.attribs.src}`,

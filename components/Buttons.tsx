@@ -1,9 +1,26 @@
 import React from 'react';
-import {View, Pressable, Text} from 'react-native';
+import {
+  View,
+  Pressable,
+  Text,
+  GestureResponderEvent,
+  StyleProp,
+  ViewStyle,
+} from 'react-native';
 import Icon from '../icons/icon';
 import {SPACE, FONTSIZE, COLORS} from '../theme';
+import {OptionalEventHandler} from './OptionalEventHandler';
 
-export function IconButton(props) {
+interface IconButtonProps {
+  onPress: OptionalEventHandler;
+  style: object;
+  onLongPress?: OptionalEventHandler;
+  icon: string | undefined;
+  color?: string;
+  fontSize?: number;
+}
+
+export function IconButton(props: IconButtonProps) {
   return (
     <View
       style={{
@@ -29,9 +46,16 @@ export function IconButton(props) {
   );
 }
 
-export function Button(props) {
+interface ButtonProps {
+  disabled: boolean;
+  onPress: OptionalEventHandler;
+  text?: string;
+  style?: object;
+}
+
+export function Button(props: ButtonProps) {
   return (
-    <Pressable onPress={() => !props.disabled && props.onPress()}>
+    <Pressable onPress={() => !props.disabled && props?.onPress?.()}>
       <Text
         style={{
           backgroundColor: props.disabled ? COLORS.muted : COLORS.primary,
