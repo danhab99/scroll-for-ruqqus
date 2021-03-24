@@ -1,30 +1,31 @@
 import React, {useContext, useRef} from 'react';
 import {ActivityIndicator} from 'react-native';
-import {WebView} from 'react-native-webview';
+import {WebView, WebViewMessageEvent} from 'react-native-webview';
+import {COLORS} from '../theme';
 import {UserContext, WebAuthContext} from './ClientContext';
 
 const CAPTURE_TOKENS = `
 window.ReactNativeWebView.postMessage(document.body.innerText)
 `;
 
-export function AuthSiteWebview(props) {
+export function AuthSiteWebview() {
   const {authSite} = useContext(WebAuthContext);
-  const {setTokens} = useContext(UserContext);
+  const setTokens = useContext(UserContext);
 
-  const webViewRef = useRef();
+  const webViewRef = useRef<any>();
   const tokenLock = useRef(false);
 
-  const catchTokens = (msg) => {
+  const catchTokens = (msg: WebViewMessageEvent) => {
     console.log('WEBVIEW', msg);
     let data = msg.nativeEvent.data;
 
     if (!tokenLock.current) {
       try {
-        data = JSON.parse(data);
+        let parsed: any = JSON.parse(data);
 
-        if (data['access_token']) {
-          console.log('TOKENS', data);
-          setTokens(data);
+        if (parsed['access_token']) {
+          console.log('TOKENS', parsed);
+          setTokens(parsed);
         }
       } catch (e) {
         console.warn('UNABLE TO CATCH TOKEN', e);
@@ -34,7 +35,7 @@ export function AuthSiteWebview(props) {
   return (
     <WebView
       ref={webViewRef}
-      source={{uri: authSite}}
+      source={{uri: authSite || ''}}
       injectedJavaScript={CAPTURE_TOKENS}
       injectJavaScript={CAPTURE_TOKENS}
       onMessage={(msg) => catchTokens(msg)}
@@ -42,10 +43,7 @@ export function AuthSiteWebview(props) {
         webViewRef.current.injectJavaScript(CAPTURE_TOKENS);
       }}
       renderLoading={() => (
-        <ActivityIndicator
-          size={props.loadingSize || 'large'}
-          color={props.loadingColor}
-        />
+        <ActivityIndicator size="large" color={COLORS.primary} />
       )}
       startInLoadingState={true}
       javaScriptEnabled={true}

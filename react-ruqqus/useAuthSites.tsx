@@ -7,10 +7,10 @@ import {useRuqqusClient} from './useRuqqusClient';
 export function useAuthSites() {
   const client = useRuqqusClient();
   const {setAuthSite} = useContext(WebAuthContext);
-  const {loading, body} = useFetch(client.authserver, 'sites');
+  const {loading, body} = useFetch(client?.authserver || '', 'sites');
 
-  const getAuthURL = (id) => {
-    return fetcher(client.authserver, `auth/${id}`).then((resp) => {
+  const getAuthURL = (id: string) => {
+    return fetcher(client?.authserver || '', `auth/${id}`).then((resp) => {
       setAuthSite(resp.url);
       return resp.url;
     });

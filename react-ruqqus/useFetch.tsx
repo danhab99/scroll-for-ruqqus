@@ -1,9 +1,11 @@
 import {useState, useEffect} from 'react';
-import {fetcher} from './fetcher';
+import {fetcher, fetcherOpts} from './fetcher';
 
-export function useFetch(host, edge, opts) {
+export type UseFetchOpts = fetcherOpts & {initial?: any};
+
+export function useFetch(host: string, edge: string, opts?: UseFetchOpts) {
   const [loading, setLoading] = useState(false);
-  const [resp, setResp] = useState();
+  const [resp, setResp] = useState<object>();
   const [body, setBody] = useState(opts?.initial);
 
   useEffect(() => {
