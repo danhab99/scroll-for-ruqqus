@@ -1,49 +1,17 @@
 import React from 'react';
-import {
-  View,
-  Pressable,
-  Text,
-  GestureResponderEvent,
-  StyleProp,
-  ViewStyle,
-} from 'react-native';
-import Icon from '../icons/icon';
+import {View, Pressable, Text} from 'react-native';
 import {SPACE, FONTSIZE, COLORS} from '../theme';
 import {OptionalEventHandler} from './OptionalEventHandler';
-
-interface IconButtonProps {
-  onPress: OptionalEventHandler;
-  style?: object;
-  onLongPress?: OptionalEventHandler;
-  icon: string | undefined;
-  color?: string;
-  fontSize?: number;
-}
+import Icon from 'react-native-vector-icons/FontAwesome';
+import {IconButtonProps} from 'react-native-vector-icons/Icon';
+import {useStyle} from '@contexts';
 
 export function IconButton(props: IconButtonProps) {
-  return (
-    <View
-      style={{
-        ...props.style,
-        borderRadius: 20,
-      }}>
-      <Pressable
-        onPress={() => props.onPress && props.onPress()}
-        onLongPress={() => props.onLongPress && props.onLongPress()}
-        delayLongPress={500}
-        android_ripple={{
-          color: COLORS.primary,
-          borderless: true,
-        }}
-        hitSlop={SPACE(1.5)}>
-        <Icon
-          name={props.icon}
-          color={props.color || 'white'}
-          size={props.fontSize}
-        />
-      </Pressable>
-    </View>
-  );
+  const style = useStyle();
+
+  if (style) {
+    return <Icon.Button style={style.iconButton as any} {...props} />;
+  }
 }
 
 interface ButtonProps {

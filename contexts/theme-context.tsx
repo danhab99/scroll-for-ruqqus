@@ -44,6 +44,7 @@ interface Styles {
   inputLabel: TextStyle;
   card: ViewStyle;
   root: ViewStyle;
+  iconButton: TextStyle;
 }
 
 export type ThemeContextType =
@@ -100,6 +101,9 @@ function generateStyles(theme: ThemeInterface): Styles {
     root: {
       backgroundColor: theme.Colors.background,
       height: '100%',
+    },
+    iconButton: {
+      backgroundColor: theme.Colors.background,
     },
   });
 }
