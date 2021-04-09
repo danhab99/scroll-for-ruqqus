@@ -18,6 +18,7 @@ module.exports = {
         ],
         alias: {
           '@react-ruqqus': './react-ruqqus',
+          '@contexts': './contexts',
         },
       },
     ],

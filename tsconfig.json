@@ -12,7 +12,8 @@
     "target": "esnext",
     "baseUrl": "./",
     "paths": {
-      "@react-ruqqus": ["./react-ruqqus/index.ts"]
+      "@react-ruqqus": ["./react-ruqqus/index.ts"],
+      "@contexts": ["./contexts/index.ts"]
     },
     "resolveJsonModule": true,
     "module": "CommonJS"
