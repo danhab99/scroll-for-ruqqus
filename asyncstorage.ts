@@ -3,7 +3,7 @@ import uuid from 'react-native-uuid';
 import isMatch from 'lodash.ismatch';
 
 export class Value {
-  static getValue(name) {
+  static getValue(name: string): Promise<any> {
     let filename = `${RNFS.DocumentDirectoryPath}${name}`;
 
     return RNFS.readFile(filename, 'utf8')
@@ -13,22 +13,27 @@ export class Value {
       });
   }
 
-  static setValue(name, data) {
+  static setValue(name: string, data: any): Promise<void> {
     let filename = `${RNFS.DocumentDirectoryPath}${name}`;
     return RNFS.writeFile(filename, JSON.stringify(data), 'utf8');
   }
 }
-export default class Collection {
-  constructor(collection, triggerOnChange = true) {
+
+type ChangeHandler = (() => void) | undefined;
+export default class Collection<T> {
+  collection: string;
+  _changeHandler: ChangeHandler;
+
+  constructor(collection: string) {
     this.collection = collection;
-    this._trigger = triggerOnChange;
+    this._changeHandler = undefined;
   }
 
   _getItem() {
     return Value.getValue(this.collection);
   }
 
-  _setItem(data) {
+  _setItem(data: any) {
     return Value.setValue(this.collection, data).then(() => this._onChange());
   }
 
@@ -36,15 +41,15 @@ export default class Collection {
     this._changeHandler && this._changeHandler();
   }
 
-  onChange(handler) {
+  onChange(handler: ChangeHandler, trigger = false) {
     this._changeHandler = handler;
-    if (this._trigger) {
+    if (trigger) {
       this._onChange();
     }
   }
 
-  create(item) {
-    return this._getItem().then((items) => {
+  create(item: T): Promise<T> {
+    return this._getItem().then((items: T[]) => {
       let t = {
         _id: uuid.v1(),
         ...item,
@@ -56,32 +61,32 @@ export default class Collection {
     });
   }
 
-  find(pattern = {}) {
-    return this._getItem().then((items) =>
+  find(pattern = {}): Promise<T[]> {
+    return this._getItem().then((items: any) =>
       [].concat(items).filter((x) => isMatch(x, pattern)),
     );
   }
 
-  findOne(pattern) {
+  findOne(pattern: Object) {
     return this.find(pattern).then((d) => d[0] || null);
   }
 
-  findById(id) {
+  findById(id: string) {
     return this.findOne({_id: id});
   }
 
-  update(pattern, change) {
+  update(pattern: Object, change: T) {
     return this.find(pattern).then((items) => {
       items = items.map((x) => Object.assign(x, change));
       return this._getItem()
-        .then((original) => Object.assign(original, items))
+        .then((original: T[]) => Object.assign(original, items))
         .then(this._setItem);
     });
   }
 
-  delete(pattern) {
-    return this._getItem().then((all) => {
-      let clensed = all.filter((i) => !isMatch(i, pattern));
+  delete(pattern: Object) {
+    return this._getItem().then((all: T[]) => {
+      let clensed = all.filter((i: any) => !isMatch(i, pattern));
       return this._setItem(clensed);
     });
   }
