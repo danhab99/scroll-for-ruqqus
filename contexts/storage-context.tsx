@@ -1,25 +1,61 @@
 import React, {createContext, useContext, useState, useEffect} from 'react';
-import {DocumentDirectoryPath, writeFile, readFile} from 'react-native-fs';
+import {ContextChildrenProps} from './ContextChildrenProps';
+import {
+  DocumentDirectoryPath,
+  writeFile,
+  readFile,
+  readdir,
+} from 'react-native-fs';
+import * as _ from 'lodash';
 
-const ValueContext = createContext();
+type UnboundObject = {
+  [key: string]: any;
+};
 
-const ValuesFile = DocumentDirectoryPath + 'values.json';
+interface ValueContextProps {
+  value: UnboundObject;
+  setValue: React.Dispatch<React.SetStateAction<UnboundObject>>;
+}
 
-export function ValueProvider(props) {
-  const [value, setValue] = useState({});
+const ValueContext = createContext<ValueContextProps>({
+  value: {},
+  setValue: (x) => {},
+});
 
-  const write = () => {
-    writeFile(ValuesFile, JSON.stringify(value));
+export function ValueProvider(props: ContextChildrenProps) {
+  const [value, setValue] = useState<UnboundObject>({});
+
+  const write = async () => {
+    for (let [file, content] of Object.entries(value)) {
+      await writeFile(
+        `${DocumentDirectoryPath}/${file}.json`,
+        JSON.stringify(content),
+      );
+    }
   };
 
-  useEffect(() => write(), [value]);
+  const read = async () => {
+    let files = await readdir(DocumentDirectoryPath);
+    let v: UnboundObject = {};
+    for (const file of files) {
+      let d = await readFile(file);
+      let p = JSON.parse(d);
+      v[file] = p;
+    }
+
+    setValue(v);
+  };
 
   useEffect(() => {
-    readFile(ValuesFile, 'utf8')
-      .then((raw) => JSON.parse(raw))
-      .then((data) => setValue(data));
+    write();
+  }, [value]);
 
-    return write;
+  useEffect(() => {
+    read();
+
+    return () => {
+      write();
+    };
   }, []);
 
   return (
@@ -29,12 +65,16 @@ export function ValueProvider(props) {
   );
 }
 
-export function useSetValue() {
-  const sv = useContext(ValueContext).setValue;
-  return (value, ...path) => sv({[path.join('.')]: value});
+export function useSetValue<T>(...path: string[]) {
+  const {value, setValue} = useContext(ValueContext);
+
+  return (v: T) => {
+    let o = _.set(value, path, v);
+    setValue(o);
+  };
 }
 
-export function useValue(...path) {
-  const v = useContext(ValueContext).value;
-  return v[path.join('.')];
+export function useValue(...path: string[]) {
+  const {value} = useContext(ValueContext);
+  return _.get(value, path);
 }
