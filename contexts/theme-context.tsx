@@ -1,4 +1,4 @@
-import React, {useState, createContext, useEffect} from 'react';
+import React, {useState, createContext, useEffect, useContext} from 'react';
 import {StyleSheet, TextStyle, ViewStyle} from 'react-native';
 import * as RNFS from 'react-native-fs';
 
@@ -146,4 +146,14 @@ export function ThemeConsumer(props: ThemeConsumerChildren) {
       }
     </ThemeContext.Consumer>
   );
+}
+
+export function useTheme() {
+  const t = useContext(ThemeContext);
+  return t?.theme;
+}
+
+export function useStyle() {
+  const t = useContext(ThemeContext);
+  return t?.style;
 }
