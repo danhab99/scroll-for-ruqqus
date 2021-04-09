@@ -1,6 +1,5 @@
 import React, {useState, useEffect} from 'react';
 import {View, ActivityIndicator} from 'react-native';
-import InitClient from '../init_client';
 import Style, {COLORS, SPACE} from '../theme';
 import Input from '../components/Input';
 import {Button} from '../components/Buttons';

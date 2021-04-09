@@ -4,7 +4,6 @@ import Style, {BODYTEXT, COLORS, FONTSIZE, SPACE} from '../theme';
 import {Button, IconButton} from '../components/Buttons';
 import {WebView} from 'react-native-webview';
 import Collection, {Value} from '../asyncstorage';
-import InitClient from '../init_client';
 import {useNavigation} from '@react-navigation/core';
 import {useSetValue} from '../contexts/storage-context';
 
@@ -12,18 +11,18 @@ const CAPTURE_TOKENS = `
 window.ReactNativeWebView.postMessage(document.body.innerText)
 `;
 
-export default function ROALogin(props) {
+export default function ROALogin() {
   const navigation = useNavigation();
   const setValue = useSetValue();
 
-  const [sites, setSites] = useState([]);
-  const [connectTo, setConnectTo] = useState();
+  const [sites, setSites] = useState<Object[]>([]);
+  const [connectTo, setConnectTo] = useState<string>();
   const [connecting, setConnecting] = useState(false);
   const [logginIn, setLoggingIn] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const webViewRef = useRef();
-  const tokenLock = useRef();
+  const webViewRef = useRef<any>();
+  const tokenLock = useRef<boolean>();
 
   const accounts = new Collection('accounts');
   const servers = new Collection('servers');
@@ -35,17 +34,17 @@ export default function ROALogin(props) {
       .then((d) => d.json())
       .then((sites) =>
         Promise.all(
-          sites.map((site) =>
+          sites.map((site: any) =>
             servers
               .findOne({_id: site._id})
-              .then((server) => (server ? server : servers.create(site))),
+              .then((server: any) => (server ? server : servers.create(site))),
           ),
         ),
       )
       .then((servers) =>
         Promise.all(
-          servers.map((server) =>
-            accounts.find({serverID: server._id}).then((accounts) => {
+          servers.map((server: any) =>
+            accounts.find({serverID: server._id}).then((accounts: any) => {
               server.accounts = accounts;
               return server;
             }),
@@ -60,12 +59,10 @@ export default function ROALogin(props) {
 
   useEffect(() => fetchSites(), []);
 
-  const connectAccount = (id) => {
-    fetch(`https://sfroa.danhab99.xyz/auth/${id}?state=${id}`, {
-      redirect: 'manual',
-    }).then(({url}) => {
+  const connectAccount = (id: string) => {
+    fetch(`https://sfroa.danhab99.xyz/auth/${id}?state=${id}`).then(({url}) => {
       setConnectTo(url);
-      setConnecting(sites.find((x) => x._id == id));
+      setConnecting(sites.find((x: any) => x._id == id) ? true : false);
     });
   };
 
@@ -83,26 +80,26 @@ export default function ROALogin(props) {
 
           setLoggingIn(true);
 
-          InitClient({
-            ...connecting,
-            id: connecting._id,
-            auth_domain: `sfroa.danhab99.xyz`,
-            access_token: data.access_token,
-            refresh_token: data.refresh_token,
-          }).then((client) => {
-            accounts.create({
-              serverID: connecting._id,
-              username: client.user.username,
-              keys: {
-                access: data.access_token,
-                refresh: data.refresh_token,
-              },
-            });
-            setLoggingIn(false);
-            setConnecting(false);
-            tokenLock.current = false;
-            fetchSites();
-          });
+          // InitClient({
+          //   ...connecting,
+          //   id: connecting._id,
+          //   auth_domain: `sfroa.danhab99.xyz`,
+          //   access_token: data.access_token,
+          //   refresh_token: data.refresh_token,
+          // }).then((client) => {
+          //   accounts.create({
+          //     serverID: connecting._id,
+          //     username: client.user.username,
+          //     keys: {
+          //       access: data.access_token,
+          //       refresh: data.refresh_token,
+          //     },
+          //   });
+          //   setLoggingIn(false);
+          //   setConnecting(false);
+          //   tokenLock.current = false;
+          //   fetchSites();
+          // });
         }
       } catch (e) {
         console.error('UNABLE TO CATCH TOKEN', e);
@@ -110,10 +107,10 @@ export default function ROALogin(props) {
     }
   };
 
-  const deleteAccount = (id) =>
+  const deleteAccount = (id: any) =>
     accounts.delete({_id: id}).then(() => fetchSites());
 
-  const pickAccount = (id) => {
+  const pickAccount = (id: any) => {
     setValue(id, 'activeID');
     navigation.navigate('Frontpage');
   };
@@ -121,13 +118,15 @@ export default function ROALogin(props) {
   if (connecting) {
     return (
       <WebView
-        ref={webViewRef.current}
-        source={{uri: connectTo}}
+        ref={webViewRef}
+        source={{
+          uri: connectTo || '',
+        }}
         injectedJavaScript={CAPTURE_TOKENS}
         injectJavaScript={CAPTURE_TOKENS}
         onMessage={(msg) => catchTokens(msg)}
         onNavigationStateChange={() => {
-          webViewRef.current.injectJavaScript(CAPTURE_TOKENS);
+          webViewRef.current?.injectJavaScript(CAPTURE_TOKENS);
         }}
         renderLoading={() => (
           <ActivityIndicator size="large" color={COLORS.primary} />
@@ -141,7 +140,7 @@ export default function ROALogin(props) {
         <ActivityIndicator size="large" color={COLORS.primary} />
       </View>
     );
-  } else if (!loading && site?.length <= 0) {
+  } else if (!loading && sites?.length <= 0) {
     return (
       <View>
         <Text style={{...BODYTEXT, fontSize: FONTSIZE(2)}}>
