@@ -31,6 +31,7 @@ import {
   ThemeContextType,
   ThemeProvider,
 } from './contexts/theme-context';
+import {ValueProvider} from './contexts/storage-context';
 
 type ChildrenOnly = {
   children: React.ReactNode;
@@ -215,6 +216,7 @@ function SubmitStackNavigator(props: ChildrenOnly) {
 export default function App(props: ChildrenOnly) {
   return (
     <ThemeProvider>
+      <ValueProvider>
       <ThemeConsumer>
         {(themeState: ThemeContextType) => (
           <View style={themeState?.style?.root}>
@@ -237,6 +239,7 @@ export default function App(props: ChildrenOnly) {
     </View>
         )}
       </ThemeConsumer>
+      </ValueProvider>
     </ThemeProvider>
   );
 }
