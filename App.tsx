@@ -17,7 +17,6 @@ import {
 } from '@react-navigation/drawer';
 import {StatusBar} from 'expo-status-bar';
 import React from 'react';
-import Style, {COLORS, FONTSIZE, SPACE} from './theme';
 import {View, Text} from 'react-native';
 import {IconButton} from './components/Buttons';
 
@@ -27,6 +26,11 @@ import Submit from './views/submit';
 import ROALogin from './views/roa_login';
 
 import Collection from './asyncstorage';
+import {
+  ThemeConsumer,
+  ThemeContextType,
+  ThemeProvider,
+} from './contexts/theme-context';
 
 type ChildrenOnly = {
   children: React.ReactNode;
@@ -210,7 +214,10 @@ function SubmitStackNavigator(props: ChildrenOnly) {
 
 export default function App(props: ChildrenOnly) {
   return (
-    <View style={Style.root}>
+    <ThemeProvider>
+      <ThemeConsumer>
+        {(themeState: ThemeContextType) => (
+          <View style={themeState?.style?.root}>
       <StatusBar />
       <NavigationContainer>
         <StatusBar style="light" />
@@ -228,5 +235,8 @@ export default function App(props: ChildrenOnly) {
         </Drawer.Navigator>
       </NavigationContainer>
     </View>
+        )}
+      </ThemeConsumer>
+    </ThemeProvider>
   );
 }
