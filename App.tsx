@@ -17,7 +17,6 @@ import Submit from './views/submit';
 import ROALogin from './views/roa_login';
 
 import Collection from './asyncstorage';
-import {RuqqusClientProvider} from './components/ruqqus-client';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -192,24 +191,22 @@ function SubmitStackNavigator(props) {
 export default function App(props) {
   return (
     <View style={Style.root}>
-      <RuqqusClientProvider>
-        <StatusBar />
-        <NavigationContainer>
-          <StatusBar style="light" />
+      <StatusBar />
+      <NavigationContainer>
+        <StatusBar style="light" />
 
-          <Drawer.Navigator
-            drawerStyle={{
-              backgroundColor: COLORS.backgroundHighlight,
-            }}
-            drawerContent={(ps) => <CustomDrawerContent {...ps} />}>
-            <Drawer.Screen name="Frontpage" component={FeedStackNavigator} />
-            <Drawer.Screen name="All" component={FeedStackNavigator} />
-            <Drawer.Screen name="Login" component={LoginStackNavigator} />
-            <Drawer.Screen name="Saved" component={SavedStackNavigator} />
-            <Drawer.Screen name="Submit" component={SubmitStackNavigator} />
-          </Drawer.Navigator>
-        </NavigationContainer>
-      </RuqqusClientProvider>
+        <Drawer.Navigator
+          drawerStyle={{
+            backgroundColor: COLORS.backgroundHighlight,
+          }}
+          drawerContent={(ps) => <CustomDrawerContent {...ps} />}>
+          <Drawer.Screen name="Frontpage" component={FeedStackNavigator} />
+          <Drawer.Screen name="All" component={FeedStackNavigator} />
+          <Drawer.Screen name="Login" component={LoginStackNavigator} />
+          <Drawer.Screen name="Saved" component={SavedStackNavigator} />
+          <Drawer.Screen name="Submit" component={SubmitStackNavigator} />
+        </Drawer.Navigator>
+      </NavigationContainer>
     </View>
   );
 }

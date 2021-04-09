@@ -1,29 +1,25 @@
 import React, {useState, useEffect} from 'react';
-import {FlatList, View, Image, Text, RefreshControl} from 'react-native';
-import Style, {COLORS, Darken, FONTSIZE, Lighten, SPACE} from '../theme';
+import {FlatList, View, RefreshControl} from 'react-native';
+import Style, {COLORS, Darken, Lighten, SPACE} from '../theme';
 import Postcard from '../components/Postcard';
 import {IconButton, Button} from '../components/Buttons';
 import Popup, {PopupButton} from '../components/Popup';
-import HtmlMarkdown from '../components/HtmlMarkdown';
 import Input from '../components/Input';
-import {useNavigation, useRoute} from '@react-navigation/core';
-import {useRuqqusClient} from '../components/ruqqus-client';
-
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/core';
+import {GuildHeader} from '../components/GuildHeader';
 
 export default function Feed(props) {
   const navigation = useNavigation();
-  const route = useRoute();
-  const client = useRuqqusClient();
+  // const route = useRoute<RouteProp<FeedRouteProps, 'Detail'>>();
+  const route = useRoute<?any>();
 
-  const [posts, setPosts] = useState();
   const [page, setPage] = useState(1);
   const [refreshing, setRefreshing] = useState(false);
   const [showSorting, setShowSorting] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const [sorting, setSorting] = useState('');
-  const [guildHeader, setGuildHeader] = useState(false);
   const [guildHeader, setGuildHeader] = useState(
-    route.params.guildHeader || false,
+    route?.params?.['guildHeader'] || false,
   );
   const [searchVal, setSearchVal] = useState('');
   const [guild, setGuild] = useState({});
@@ -33,7 +29,7 @@ export default function Feed(props) {
     return route.params
       .fetch(client, {
         page,
-        name: route.params.name,
+        name: route.params?.name,
         sort: sorting,
       })
       .then((posts) => {
