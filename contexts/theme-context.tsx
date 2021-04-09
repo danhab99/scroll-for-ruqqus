@@ -125,3 +125,20 @@ export function ThemeProvider(props: ThemeProviderProps) {
     </ThemeSetterContext.Provider>
   );
 }
+
+type ThemeConsumerChildren = {
+  children: (themeState: ThemeContextType) => Element;
+};
+
+export function ThemeConsumer(props: ThemeConsumerChildren) {
+  return (
+    <ThemeContext.Consumer>
+      {(value) =>
+        props.children({
+          style: value?.style,
+          theme: value?.theme,
+        })
+      }
+    </ThemeContext.Consumer>
+  );
+}
