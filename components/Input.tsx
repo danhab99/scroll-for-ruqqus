@@ -1,24 +1,16 @@
 import React from 'react';
-import {View, Text, TextInput} from 'react-native';
+import {View, Text, TextInput, TextInputProps} from 'react-native';
 import Style from '../theme';
 
-interface InputProps {
+type InputProps = {
   label: string;
-  style: any;
-}
+} & TextInputProps;
 
 export default function Input(props: InputProps) {
   return (
     <View style={props.style}>
       <Text style={Style.inputLabel}>{props.label}</Text>
-      <TextInput
-        style={Style.input}
-        {...(() => {
-          let p: any = Object.assign(props, {});
-          delete p.style;
-          return p;
-        })()}
-      />
+      <TextInput style={Style.input} {...props} />
     </View>
   );
 }

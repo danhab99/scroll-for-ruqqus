@@ -4,15 +4,13 @@ import InitClient from '../init_client';
 import Style, {COLORS, SPACE} from '../theme';
 import Input from '../components/Input';
 import {Button} from '../components/Buttons';
-import {useRuqqusClient} from '../components/ruqqus-client';
 import {useNavigation} from '@react-navigation/core';
 
 export default function Submit(props) {
-  const client = useRuqqusClient();
   const navigation = useNavigation();
 
   const [ready, setReady] = useState(false);
-  const [submitting, setSubmitting] = useState();
+  const [submitting, setSubmitting] = useState(false);
   const [board, setBoard] = useState('');
   const [url, setUrl] = useState('');
   const [title, setTitle] = useState('');
@@ -21,57 +19,46 @@ export default function Submit(props) {
   const submit = () => {
     setSubmitting(true);
 
-    client.submitPost(board, title, url, body).then((post) => {
-      setSubmitting(false);
-      navigation.navigate('Comments', {post});
-    });
+    // client.submitPost(board, title, url, body).then((post) => {
+    //   setSubmitting(false);
+    //   navigation.navigate('Comments', {post});
+    // });
   };
 
-  const disabled = !(
-    this.state.ready && Object.values(this.state.form).every((x) => x !== '')
-  );
+  const disabled = !(ready && [board, url, title, body].every((x) => x !== ''));
 
   return (
     <View style={Style.view}>
       <Input
         label="Board"
-        onChangeText={this.onChange('board')}
+        onChangeText={(x: string) => setBoard(x)}
         autoCompleteType="off"
         autoCapitalize="none"
-        value={this.state.form.board}
+        value={board}
       />
 
-      <Input
-        label="Title"
-        onChangeText={this.onChange('title')}
-        value={this.state.form.title}
-      />
+      <Input label="Title" onChangeText={setTitle} value={title} />
 
       <Input
         label="URL"
-        onChangeText={this.onChange('url')}
+        onChangeText={setUrl}
         autoCompleteType="off"
         autoCapitalize="none"
-        value={this.state.form.url}
+        value={url}
       />
 
-      <Input
-        label="Body"
-        onChangeText={this.onChange('body')}
-        value={this.state.form.body}
-        multiline
-      />
+      <Input label="Body" onChangeText={setBody} value={body} multiline />
 
       <Button
-        disabled={this.disabled}
+        disabled={disabled}
         text="Submit"
         style={{
           marginTop: SPACE(1),
         }}
-        onPress={() => this.submit()}
+        onPress={() => submit()}
       />
 
-      {this.state.submitting ? (
+      {submitting ? (
         <ActivityIndicator size="large" color={COLORS.primary} />
       ) : null}
     </View>
