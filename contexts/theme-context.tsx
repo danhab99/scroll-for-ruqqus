@@ -1,6 +1,7 @@
 import React, {useState, createContext, useEffect, useContext} from 'react';
 import {StyleSheet, TextStyle, ViewStyle} from 'react-native';
 import * as RNFS from 'react-native-fs';
+import {ContextChildrenProps} from './ContextChildrenProps';
 
 type ThemeValue = string | number;
 
@@ -57,11 +58,6 @@ const ThemeSetterContext = createContext<
   throw new Error();
 });
 
-interface ThemeProviderProps {
-  children: React.ReactNode;
-  // theme: ThemeInterface;
-}
-
 const gen = (start: number, skip: number) => (x: number) => start + x * skip;
 
 function generateStyles(theme: ThemeInterface): Styles {
@@ -108,7 +104,7 @@ function generateStyles(theme: ThemeInterface): Styles {
   });
 }
 
-export function ThemeProvider(props: ThemeProviderProps) {
+export function ThemeProvider(props: ContextChildrenProps) {
   const [theme, setTheme] = useState<ThemeInterface | undefined>();
 
   useEffect(() => {
