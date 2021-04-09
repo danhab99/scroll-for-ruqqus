@@ -5,7 +5,7 @@ import HTML from 'react-native-render-html';
 
 interface HtmlMarkdownProps {
   html: string;
-  domain: string;
+  domain?: string;
 }
 
 export default function HtmlMarkdown(props: HtmlMarkdownProps) {

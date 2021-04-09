@@ -47,8 +47,8 @@ export function IconButton(props: IconButtonProps) {
 }
 
 interface ButtonProps {
-  disabled: boolean;
-  onPress: OptionalEventHandler;
+  disabled?: boolean;
+  onPress?: OptionalEventHandler;
   text?: string;
   style?: object;
 }
