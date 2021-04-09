@@ -2,6 +2,7 @@ import React, {useState, createContext, useEffect, useContext} from 'react';
 import {StyleSheet, TextStyle, ViewStyle} from 'react-native';
 import * as RNFS from 'react-native-fs';
 import {ContextChildrenProps} from './ContextChildrenProps';
+import {useValue} from './storage-context';
 
 type ThemeValue = string | number;
 
@@ -52,11 +53,6 @@ export type ThemeContextType =
   | {theme?: ThemeInterface; style?: Styles}
   | undefined;
 const ThemeContext = createContext<ThemeContextType>(undefined);
-const ThemeSetterContext = createContext<
-  React.Dispatch<React.SetStateAction<ThemeInterface | undefined>>
->((v) => {
-  throw new Error();
-});
 
 const gen = (start: number, skip: number) => (x: number) => start + x * skip;
 
@@ -105,13 +101,7 @@ function generateStyles(theme: ThemeInterface): Styles {
 }
 
 export function ThemeProvider(props: ContextChildrenProps) {
-  const [theme, setTheme] = useState<ThemeInterface | undefined>();
-
-  useEffect(() => {
-    RNFS.readFile(RNFS.DocumentDirectoryPath + '/theme.json').then((raw) => {
-      setTheme(JSON.parse(raw));
-    });
-  }, []);
+  const theme = useValue('theme');
 
   useEffect(() => {
     RNFS.writeFile(
@@ -123,11 +113,9 @@ export function ThemeProvider(props: ContextChildrenProps) {
   let style = theme ? generateStyles(theme) : undefined;
 
   return (
-    <ThemeSetterContext.Provider value={setTheme}>
-      <ThemeContext.Provider value={{theme, style}}>
-        {props.children}
-      </ThemeContext.Provider>
-    </ThemeSetterContext.Provider>
+    <ThemeContext.Provider value={{theme, style}}>
+      {props.children}
+    </ThemeContext.Provider>
   );
 }
 

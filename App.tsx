@@ -215,8 +215,8 @@ function SubmitStackNavigator(props: ChildrenOnly) {
 
 export default function App(props: ChildrenOnly) {
   return (
+    <ValueProvider>
     <ThemeProvider>
-      <ValueProvider>
       <ThemeConsumer>
         {(themeState: ThemeContextType) => (
           <View style={themeState?.style?.root}>
@@ -239,7 +239,7 @@ export default function App(props: ChildrenOnly) {
     </View>
         )}
       </ThemeConsumer>
+      </ThemeProvider>
       </ValueProvider>
-    </ThemeProvider>
   );
 }
