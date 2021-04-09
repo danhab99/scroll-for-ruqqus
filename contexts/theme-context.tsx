@@ -3,8 +3,15 @@ import {StyleSheet, TextStyle, ViewStyle} from 'react-native';
 import * as RNFS from 'react-native-fs';
 import {ContextChildrenProps} from './ContextChildrenProps';
 import {useValue} from './storage-context';
+import * as _ from 'lodash';
 
 type ThemeValue = string | number;
+
+type ThemeRange = {
+  start: number;
+  step: number;
+  get?: (x: number) => number;
+};
 
 interface ThemeInterface {
   Colors: {
@@ -28,14 +35,8 @@ interface ThemeInterface {
     heading: ThemeValue;
     bold: ThemeValue;
   };
-  Space: {
-    start: number;
-    step: number;
-  };
-  FontSize: {
-    start: number;
-    step: number;
-  };
+  Space: ThemeRange;
+  FontSize: ThemeRange;
 }
 
 interface Styles {
@@ -101,7 +102,7 @@ function generateStyles(theme: ThemeInterface): Styles {
 }
 
 export function ThemeProvider(props: ContextChildrenProps) {
-  const theme = useValue('theme');
+  var theme = useValue<ThemeInterface>('theme');
 
   useEffect(() => {
     RNFS.writeFile(
@@ -111,6 +112,17 @@ export function ThemeProvider(props: ContextChildrenProps) {
   }, [theme]);
 
   let style = theme ? generateStyles(theme) : undefined;
+
+  theme = _.set(
+    theme,
+    ['Space', 'get'],
+    gen(theme?.Space?.start, theme?.Space?.step),
+  );
+  theme = _.set(
+    theme,
+    ['FontSize', 'get'],
+    gen(theme?.FontSize?.start, theme?.FontSize?.step),
+  );
 
   return (
     <ThemeContext.Provider value={{theme, style}}>
