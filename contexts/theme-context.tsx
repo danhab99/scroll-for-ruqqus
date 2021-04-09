@@ -1,5 +1,5 @@
 import React, {useState, createContext, useEffect} from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, TextStyle, ViewStyle} from 'react-native';
 import * as RNFS from 'react-native-fs';
 
 type ThemeValue = string | number;
@@ -36,9 +36,18 @@ interface ThemeInterface {
   };
 }
 
-type ThemeContextType =
-  | {theme: ThemeInterface | undefined}
-  | {style: Object | undefined}
+interface Styles {
+  view: ViewStyle;
+  horizontal: ViewStyle;
+  bottomButtons: ViewStyle;
+  input: TextStyle;
+  inputLabel: TextStyle;
+  card: ViewStyle;
+  root: ViewStyle;
+}
+
+export type ThemeContextType =
+  | {theme?: ThemeInterface; style?: Styles}
   | undefined;
 const ThemeContext = createContext<ThemeContextType>(undefined);
 const ThemeSetterContext = createContext<
@@ -48,16 +57,16 @@ const ThemeSetterContext = createContext<
 });
 
 interface ThemeProviderProps {
-  children: React.ReactNode[];
+  children: React.ReactNode;
   // theme: ThemeInterface;
 }
 
 const gen = (start: number, skip: number) => (x: number) => start + x * skip;
 
-function generateStyles(theme: ThemeInterface) {
+function generateStyles(theme: ThemeInterface): Styles {
   const Space = gen(theme.Space.start, theme.Space.step);
   const FontSize = gen(theme.FontSize.start, theme?.FontSize.step);
-  return StyleSheet.create({
+  return StyleSheet.create<Styles>({
     view: {
       padding: Space(1),
       backgroundColor: theme.Colors.background,
@@ -97,7 +106,6 @@ function generateStyles(theme: ThemeInterface) {
 
 export function ThemeProvider(props: ThemeProviderProps) {
   const [theme, setTheme] = useState<ThemeInterface | undefined>();
-  const [style, setStyle] = useState<Object | undefined>();
 
   useEffect(() => {
     RNFS.readFile(RNFS.DocumentDirectoryPath + '/theme.json').then((raw) => {
@@ -112,10 +120,7 @@ export function ThemeProvider(props: ThemeProviderProps) {
     );
   }, [theme]);
 
-  if (theme) {
-    let style = generateStyles(theme);
-    setStyle(style);
-  }
+  let style = theme ? generateStyles(theme) : undefined;
 
   return (
     <ThemeSetterContext.Provider value={setTheme}>
