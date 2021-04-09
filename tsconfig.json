@@ -12,7 +12,7 @@
     "target": "esnext",
     "baseUrl": "./",
     "paths": {
-      "@react-ruqqus/*": ["./react-ruqqus/*"]
+      "@react-ruqqus": ["./react-ruqqus/index.ts"]
     },
     "resolveJsonModule": true,
     "module": "CommonJS"
