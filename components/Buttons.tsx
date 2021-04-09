@@ -13,7 +13,7 @@ import {OptionalEventHandler} from './OptionalEventHandler';
 
 interface IconButtonProps {
   onPress: OptionalEventHandler;
-  style: object;
+  style?: object;
   onLongPress?: OptionalEventHandler;
   icon: string | undefined;
   color?: string;

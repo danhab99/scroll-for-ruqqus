@@ -1,7 +1,17 @@
-import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator, HeaderBackButton} from '@react-navigation/stack';
+import {
+  DrawerActions,
+  NavigationContainer,
+  useNavigation,
+} from '@react-navigation/native';
+import {
+  createStackNavigator,
+  HeaderBackButton,
+  StackHeaderTitleProps,
+} from '@react-navigation/stack';
 import {
   createDrawerNavigator,
+  DrawerContentComponentProps,
+  DrawerContentOptions,
   DrawerContentScrollView,
   DrawerItemList,
 } from '@react-navigation/drawer';
@@ -18,10 +28,16 @@ import ROALogin from './views/roa_login';
 
 import Collection from './asyncstorage';
 
+type ChildrenOnly = {
+  children: React.ReactNode;
+};
+
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
-function CustomDrawerContent(props) {
+function CustomDrawerContent(
+  props: DrawerContentComponentProps<DrawerContentOptions>,
+) {
   return (
     <DrawerContentScrollView {...props}>
       <DrawerItemList
@@ -34,7 +50,7 @@ function CustomDrawerContent(props) {
   );
 }
 
-function StackTitle(props) {
+function StackTitle(props: StackHeaderTitleProps) {
   return (
     <View
       style={{
@@ -54,7 +70,11 @@ function StackTitle(props) {
   );
 }
 
-function StackNavigator(props) {
+function StackNavigator(props: ChildrenOnly) {
+  const navigation = useNavigation();
+
+  const toggle = () => navigation.dispatch(DrawerActions.toggleDrawer());
+
   return (
     <Stack.Navigator
       screenOptions={{
@@ -65,8 +85,8 @@ function StackNavigator(props) {
         headerLeft: () => (
           <IconButton
             icon="menu"
-            fontsize={4}
-            onPress={() => props.navigation.toggleDrawer()}
+            fontSize={4}
+            onPress={() => toggle()}
             style={{
               marginLeft: SPACE(1),
             }}
@@ -78,7 +98,7 @@ function StackNavigator(props) {
   );
 }
 
-function FeedStackNavigator(props) {
+function FeedStackNavigator(props: ChildrenOnly) {
   return (
     <StackNavigator {...props}>
       <Stack.Screen
@@ -135,7 +155,7 @@ function FeedStackNavigator(props) {
   );
 }
 
-function LoginStackNavigator(props) {
+function LoginStackNavigator(props: ChildrenOnly) {
   return (
     <StackNavigator {...props}>
       <Stack.Screen name="Login" component={ROALogin} />
@@ -143,7 +163,7 @@ function LoginStackNavigator(props) {
   );
 }
 
-function SavedStackNavigator(props) {
+function SavedStackNavigator(props: ChildrenOnly) {
   return (
     <StackNavigator {...props}>
       <Stack.Screen
@@ -180,7 +200,7 @@ function SavedStackNavigator(props) {
   );
 }
 
-function SubmitStackNavigator(props) {
+function SubmitStackNavigator(props: ChildrenOnly) {
   return (
     <StackNavigator {...props}>
       <Stack.Screen name="Submit" component={Submit} />
@@ -188,7 +208,7 @@ function SubmitStackNavigator(props) {
   );
 }
 
-export default function App(props) {
+export default function App(props: ChildrenOnly) {
   return (
     <View style={Style.root}>
       <StatusBar />

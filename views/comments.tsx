@@ -1,14 +1,17 @@
+import {useRoute} from '@react-navigation/native';
 import React from 'react';
 import {ActivityIndicator, View} from 'react-native';
 import WebView from 'react-native-webview';
 import Style, {COLORS, SPACE} from '../theme';
 
-export default function Comments(props) {
+export default function Comments() {
+  const route = useRoute<any>();
+
   return (
     <WebView
       style={Style.view}
       source={{
-        uri: `https://${this.props.route.params.post.client.domain}/post/${this.props.route.params.post.id}`,
+        uri: `https://${route?.params?.post?.client?.domain}/post/${route?.params?.post?.id}`,
       }}
       renderLoading={() => (
         <View
