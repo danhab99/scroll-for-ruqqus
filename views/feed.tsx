@@ -9,62 +9,6 @@ import Input from '../components/Input';
 import {useNavigation, useRoute} from '@react-navigation/core';
 import {useRuqqusClient} from '../components/ruqqus-client';
 
-function GuildHeader(props) {
-  if (props.enabled) {
-    return (
-      <View
-        style={{
-          backgroundColor: COLORS.background,
-          marginBottom: SPACE(1.5),
-        }}>
-        <Image
-          source={{uri: props.guild.banner_url}}
-          style={{
-            width: '100%',
-            aspectRatio: 3.4092307692307693,
-          }}
-        />
-        <View
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'flex-start',
-          }}>
-          <Image
-            source={{uri: props.guild.icon_url}}
-            style={{
-              width: 64,
-              aspectRatio: 1,
-              borderRadius: 100,
-              margin: SPACE(1),
-            }}
-          />
-          <View style={{margin: SPACE(1)}}>
-            <Text
-              style={{
-                color: COLORS.text,
-                fontSize: FONTSIZE(4 / 3),
-                fontWeight: 'bold',
-              }}>
-              +{props.guild.name}
-            </Text>
-            <Text
-              style={{
-                color: COLORS.text,
-                flexShrink: 1,
-              }}>
-              {props.guild.subscribers} subscribers
-            </Text>
-          </View>
-        </View>
-        <Button text="Subscribe" />
-        <HtmlMarkdown html={props.guild?.description?.html} />
-      </View>
-    );
-  } else {
-    return <View></View>;
-  }
-}
 
 export default function Feed(props) {
   const navigation = useNavigation();
