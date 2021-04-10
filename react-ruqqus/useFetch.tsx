@@ -5,7 +5,7 @@ export type UseFetchOpts = fetcherOpts & {initial?: any};
 
 export function useFetch(host: string, edge: string, opts?: UseFetchOpts) {
   const [loading, setLoading] = useState(false);
-  const [resp, setResp] = useState<object>();
+  const [resp, setResp] = useState<any>();
   const [body, setBody] = useState(opts?.initial);
 
   useEffect(() => {

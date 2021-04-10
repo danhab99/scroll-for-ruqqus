@@ -13,7 +13,7 @@ interface RuqqusClientProviderProps {
     authserver: string;
   };
   onLoginError?: () => void;
-  children: React.ReactNode[];
+  children: React.ReactNode;
 }
 
 export interface TokenInterface {

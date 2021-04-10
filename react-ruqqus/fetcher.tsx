@@ -27,15 +27,16 @@ export function fetcher(host: string, edge: string, opts: fetcherOpts = {}) {
     },
     // redirect: 'manual',
   })
-    .then(async (r) => {
+    .then((r) => {
       let isObject: boolean = (r.headers.get('content-type') || '').includes(
         'json',
       );
-      let b: any = await r[isObject ? 'json' : 'text'];
-      return {
+      let b: Promise<any> = isObject ? r.json() : r.text();
+
+      return b.then((body) => ({
         ...r,
-        body: b,
-      };
+        body,
+      }));
     })
     .then((r) => {
       if (r.ok) {
