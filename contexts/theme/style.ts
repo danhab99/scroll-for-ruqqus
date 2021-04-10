@@ -8,7 +8,6 @@ export interface Styles {
   inputLabel: TextStyle;
   card: ViewStyle;
   root: ViewStyle;
-  iconButton: TextStyle;
 }
 
 export const gen = (start: number, skip: number) => (x: number) =>
@@ -52,9 +51,6 @@ export function generateStyles(theme: ThemeInterface): Styles {
     root: {
       backgroundColor: theme.Colors.background,
       height: '100%',
-    },
-    iconButton: {
-      backgroundColor: theme.Colors.background,
     },
   });
 }

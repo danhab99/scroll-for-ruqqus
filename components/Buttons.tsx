@@ -1,17 +1,22 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {View, Pressable, Text} from 'react-native';
 import {SPACE, FONTSIZE, COLORS} from '../theme';
 import {OptionalEventHandler} from './OptionalEventHandler';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {IconButtonProps} from 'react-native-vector-icons/Icon';
 import {useStyle} from '@contexts';
+import {useTheme} from '@contexts';
 
 export function IconButton(props: IconButtonProps) {
-  const style = useStyle();
+  const theme = useTheme();
 
-  if (style) {
-    return <Icon.Button style={style.iconButton as any} {...props} />;
-  }
+  return (
+    <Icon.Button
+      backgroundColor={theme?.Colors.backgroundHighlight}
+      size={theme?.FontSize?.get?.(4)}
+      {...props}
+    />
+  );
 }
 
 interface ButtonProps {

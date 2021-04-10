@@ -8,7 +8,7 @@ import {Styles} from './theme/style';
 export type ThemeValue = string | number;
 
 export type ThemeContextType =
-  | {theme?: ThemeInterface; style?: Styles}
+  | {theme: ThemeInterface; style: Styles}
   | undefined;
 const ThemeContext = createContext<ThemeContextType>(undefined);
 
