@@ -14,8 +14,8 @@ interface ClientContextProps {
   username: string;
 }
 
-export const ClientContext = createContext<ClientContextProps | undefined>(
-  undefined,
+export const ClientContext = createContext<ClientContextProps>(
+  {} as ClientContextProps,
 );
 
 interface UserContextProps {
@@ -34,9 +34,9 @@ export const UserContext = createContext<UserContextType>(
 
 interface AuthErrorContextProps {}
 
-export const AuthErrorContext = createContext<
-  AuthErrorContextProps | undefined
->(undefined);
+export const AuthErrorContext = createContext<AuthErrorContextProps>(
+  {} as AuthErrorContextProps,
+);
 
 interface WebAuthContextProps {
   authSite: string | undefined;
