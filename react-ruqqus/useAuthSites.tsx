@@ -10,10 +10,14 @@ export function useAuthSites() {
   const {loading, body} = useFetch(client?.authserver || '', 'sites');
 
   const getAuthURL = (id: string) => {
-    return fetcher(client?.authserver || '', `auth/${id}`).then((resp) => {
-      setAuthSite(resp.url);
-      return resp.url;
-    });
+    if (client?.authserver) {
+      return fetcher(client.authserver, `auth/${id}`).then((resp) => {
+        setAuthSite(resp.url);
+        return resp.url;
+      });
+    } else {
+      throw new Error('No auth server specified');
+    }
   };
 
   return {loading, sites: body, getAuthURL};
