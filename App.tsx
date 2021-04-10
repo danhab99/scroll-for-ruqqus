@@ -26,13 +26,8 @@ import Submit from './views/submit';
 import ROALogin from './views/roa_login';
 
 import Collection from './asyncstorage';
-import {
-  ThemeConsumer,
-  ThemeContextType,
-  ThemeProvider,
-  useTheme,
-} from './contexts/theme-context';
-import {ValueProvider} from './contexts/storage-context';
+import {ThemeContextType, useTheme} from './contexts/theme-context';
+import {useStyle} from '@contexts';
 
 type ChildrenOnly = {
   children: React.ReactNode;
@@ -218,40 +213,30 @@ function SubmitStackNavigator(props: ChildrenOnly) {
   );
 }
 
-export default function App(props: ChildrenOnly) {
-  return (
-    <ValueProvider>
-      <ThemeProvider>
-        <ThemeConsumer>
-          {(themeState: ThemeContextType) => (
-            <View style={themeState?.style?.root}>
-              <StatusBar />
-              <NavigationContainer>
-                <StatusBar style="light" />
+export default function App() {
+  const theme = useTheme();
+  const style = useStyle();
 
-                <Drawer.Navigator
-                  drawerStyle={{
-                    backgroundColor:
-                      themeState?.theme?.Colors?.backgroundHighlight,
-                  }}
-                  drawerContent={(ps) => <CustomDrawerContent {...ps} />}>
-                  <Drawer.Screen
-                    name="Frontpage"
-                    component={FeedStackNavigator}
-                  />
-                  <Drawer.Screen name="All" component={FeedStackNavigator} />
-                  <Drawer.Screen name="Login" component={LoginStackNavigator} />
-                  <Drawer.Screen name="Saved" component={SavedStackNavigator} />
-                  <Drawer.Screen
-                    name="Submit"
-                    component={SubmitStackNavigator}
-                  />
-                </Drawer.Navigator>
-              </NavigationContainer>
-            </View>
-          )}
-        </ThemeConsumer>
-      </ThemeProvider>
-    </ValueProvider>
+  return (
+    <View>
+      <View style={style?.root}>
+        <StatusBar />
+        <NavigationContainer>
+          <StatusBar style="light" />
+
+          <Drawer.Navigator
+            drawerStyle={{
+              backgroundColor: theme?.Colors?.backgroundHighlight,
+            }}
+            drawerContent={(ps) => <CustomDrawerContent {...ps} />}>
+            <Drawer.Screen name="Frontpage" component={FeedStackNavigator} />
+            <Drawer.Screen name="All" component={FeedStackNavigator} />
+            <Drawer.Screen name="Login" component={LoginStackNavigator} />
+            <Drawer.Screen name="Saved" component={SavedStackNavigator} />
+            <Drawer.Screen name="Submit" component={SubmitStackNavigator} />
+          </Drawer.Navigator>
+        </NavigationContainer>
+      </View>
+    </View>
   );
 }
