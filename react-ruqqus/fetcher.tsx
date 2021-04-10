@@ -4,19 +4,19 @@ export interface fetcherOpts {
   access_token?: string;
 }
 
-export function fetcher(host: string, edge: string, opts: fetcherOpts = {}) {
-  var a = Object.entries(opts.args || {})
+function seralize(obj: any): string {
+  return Object.entries(obj || {})
     .map(([key, value]) => `${key}=${value}`)
     .join('&');
+}
 
-  let reqbody = Object.entries(opts.body || {}).map(
-    ([key, value]) => `${key}=${value}`,
-  );
-  let reqBodySerialized = reqbody.join('&');
+export function fetcher(host: string, edge: string, opts: fetcherOpts = {}) {
+  let args = seralize(opts.args);
+  let reqbody = seralize(opts.body);
 
-  return fetch(`https://${host}/${edge}${a ? '?' : ''}${a}`, {
+  let options = {
     method: opts.body ? 'POST' : 'GET',
-    body: reqBodySerialized,
+    body: reqbody,
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
       'X-User-Type': 'App',
@@ -26,7 +26,11 @@ export function fetcher(host: string, edge: string, opts: fetcherOpts = {}) {
       Authorization: `Bearer ${opts.access_token}`,
     },
     // redirect: 'manual',
-  })
+  };
+
+  console.log('RUQQUS FETCH', {host, edge, opts, options});
+
+  return fetch(`https://${host}/${edge}${args ? '?' : ''}${args}`, options)
     .then((r) => {
       let isObject: boolean = (r.headers.get('content-type') || '').includes(
         'json',
@@ -39,6 +43,7 @@ export function fetcher(host: string, edge: string, opts: fetcherOpts = {}) {
       }));
     })
     .then((r) => {
+      console.log('RUQQUS FETCH DONE', {host, edge, opts, options, r});
       if (r.ok) {
         return r;
       } else if (
