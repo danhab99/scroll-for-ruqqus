@@ -25,25 +25,40 @@ const ValueContext = createContext<ValueContextProps>({
 export function ValueProvider(props: ContextChildrenProps) {
   const [value, setValue] = useState<UnboundObject>({});
 
-  const write = async () => {
-    for (let [file, content] of Object.entries(value)) {
-      await writeFile(
+  const write = () => {
+    console.log('VALUE WRITE', value);
+    Object.entries(value).forEach(([file, content]) =>
+      writeFile(
         `${DocumentDirectoryPath}/${file}.json`,
         JSON.stringify(content),
-      );
-    }
+      ),
+    );
   };
 
-  const read = async () => {
-    let files = await readdir(DocumentDirectoryPath);
-    let v: UnboundObject = {};
-    for (const file of files) {
-      let d = await readFile(file);
-      let p = JSON.parse(d);
-      v[file] = p;
-    }
+  const read = () => {
+    readdir(DocumentDirectoryPath)
+      .then((files: string[]) => files.filter((x) => x.includes('json')))
+      .then((files: string[]) => {
+        console.log('VALUE READ', files);
+        return Promise.all(
+          files.map((file) =>
+            readFile(DocumentDirectoryPath + '/' + file).then((data) => ({
+              file,
+              data: JSON.parse(data),
+            })),
+          ),
+        );
+      })
+      .then((files: {file: string; data: any}[]) => {
+        console.log('VALUE READ FILES', files);
+        let o = files.reduce(
+          (prev, curr) =>
+            Object.assign(prev, {[curr.file.slice(0, -5)]: curr.data}),
+          {},
+        );
 
-    setValue(v);
+        setValue(o);
+      });
   };
 
   useEffect(() => {
@@ -74,7 +89,7 @@ export function useSetValue<T>(...path: string[]) {
   };
 }
 
-export function useValue(...path: string[]) {
+export function useValue<T>(...path: string[]): T {
   const {value} = useContext(ValueContext);
-  return _.get(value, path);
+  return _.get(value, path, {});
 }
