@@ -10,6 +10,8 @@ interface ClientContextProps {
   client_id: string;
   expires_at: number;
   domain: string;
+  siteID: string;
+  username: string;
 }
 
 export const ClientContext = createContext<ClientContextProps | undefined>(
