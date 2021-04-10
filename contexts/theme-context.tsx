@@ -2,7 +2,7 @@ import React, {useState, createContext, useEffect, useContext} from 'react';
 import {StyleSheet, TextStyle, ViewStyle} from 'react-native';
 import * as RNFS from 'react-native-fs';
 import {ContextChildrenProps} from './ContextChildrenProps';
-import {useValue} from './storage-context';
+import {useSetValue, useValue} from './storage-context';
 import * as _ from 'lodash';
 
 type ThemeValue = string | number;
@@ -35,9 +35,51 @@ interface ThemeInterface {
     heading: ThemeValue;
     bold: ThemeValue;
   };
+  Fonts: {
+    body: string;
+    heading: string;
+    monospace: string;
+  };
   Space: ThemeRange;
   FontSize: ThemeRange;
 }
+
+const DEFAULT_THEME: ThemeInterface = {
+  Colors: {
+    text: '#fff',
+    background: '#181818',
+    backgroundHighlight: '#1f2023',
+    backgroundDark: '#0f0f0f',
+    primary: '#693ccd',
+    muted: '#aaa',
+  },
+  Fonts: {
+    body: '',
+    heading: '"Avenir Next", sans-serif',
+    monospace: 'Menlo, monospace',
+  },
+  FontSize: {
+    start: 12,
+    step: 4,
+  },
+  Space: {
+    start: 0,
+    step: 14,
+  },
+  LetterSpace: {
+    body: 'normal',
+    caps: '0.2em',
+  },
+  FontWeight: {
+    body: 'normal',
+    heading: 700,
+    bold: 700,
+  },
+  LineHeight: {
+    body: 1.5,
+    heading: 1.125,
+  },
+};
 
 interface Styles {
   view: ViewStyle;
@@ -58,8 +100,8 @@ const ThemeContext = createContext<ThemeContextType>(undefined);
 const gen = (start: number, skip: number) => (x: number) => start + x * skip;
 
 function generateStyles(theme: ThemeInterface): Styles {
-  const Space = gen(theme.Space.start, theme.Space.step);
-  const FontSize = gen(theme.FontSize.start, theme?.FontSize.step);
+  const Space = gen(theme?.Space?.start, theme?.Space?.step);
+  const FontSize = gen(theme?.FontSize?.start, theme?.FontSize?.step);
   return StyleSheet.create<Styles>({
     view: {
       padding: Space(1),
@@ -103,14 +145,7 @@ function generateStyles(theme: ThemeInterface): Styles {
 
 export function ThemeProvider(props: ContextChildrenProps) {
   var theme = useValue<ThemeInterface>('theme');
-
-  useEffect(() => {
-    RNFS.writeFile(
-      RNFS.DocumentDirectoryPath + '/theme.json',
-      JSON.stringify(theme),
-    );
-  }, [theme]);
-
+  theme = _.defaultsDeep(theme, DEFAULT_THEME);
   let style = theme ? generateStyles(theme) : undefined;
 
   theme = _.set(
