@@ -80,11 +80,18 @@ export function ValueProvider(props: ContextChildrenProps) {
   );
 }
 
+type ValueSetter<T> = (prev: T) => T | T;
+
 export function useSetValue<T>(...path: string[]) {
   const {value, setValue} = useContext(ValueContext);
 
-  return (v: T) => {
-    let o = _.set(value, path, v);
+  return (incoming: ValueSetter<T>) => {
+    let next =
+      typeof incoming === 'function'
+        ? incoming(_.get(value, path) as T)
+        : incoming;
+    let o = _.set(value, path, next);
+    o = Object.assign({}, o);
     setValue(o);
   };
 }
