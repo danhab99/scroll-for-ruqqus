@@ -30,6 +30,7 @@ import {
   ThemeConsumer,
   ThemeContextType,
   ThemeProvider,
+  useTheme,
 } from './contexts/theme-context';
 import {ValueProvider} from './contexts/storage-context';
 
@@ -43,12 +44,14 @@ const Drawer = createDrawerNavigator();
 function CustomDrawerContent(
   props: DrawerContentComponentProps<DrawerContentOptions>,
 ) {
+  const theme = useTheme();
+
   return (
     <DrawerContentScrollView {...props}>
       <DrawerItemList
         activeTintColor="white"
         inactiveTintColor="lightgray"
-        activeBackgroundColor={COLORS.primary}
+        activeBackgroundColor={theme?.Colors?.primary}
         {...props}
       />
     </DrawerContentScrollView>
@@ -56,6 +59,7 @@ function CustomDrawerContent(
 }
 
 function StackTitle(props: StackHeaderTitleProps) {
+  const theme = useTheme();
   return (
     <View
       style={{
@@ -65,8 +69,8 @@ function StackTitle(props: StackHeaderTitleProps) {
       }}>
       <Text
         style={{
-          color: COLORS.text,
-          fontSize: FONTSIZE(2),
+          color: theme?.Colors?.text,
+          fontSize: theme?.FontSize?.get?.(2),
           fontWeight: 'bold',
         }}>
         {props.children}
@@ -77,6 +81,7 @@ function StackTitle(props: StackHeaderTitleProps) {
 
 function StackNavigator(props: ChildrenOnly) {
   const navigation = useNavigation();
+  const theme = useTheme();
 
   const toggle = () => navigation.dispatch(DrawerActions.toggleDrawer());
 
@@ -84,16 +89,16 @@ function StackNavigator(props: ChildrenOnly) {
     <Stack.Navigator
       screenOptions={{
         headerStyle: {
-          backgroundColor: COLORS.backgroundHighlight,
+          backgroundColor: theme?.Colors?.backgroundHighlight,
         },
         headerTitle: (ps) => <StackTitle {...ps} />,
         headerLeft: () => (
           <IconButton
-            icon="menu"
-            fontSize={4}
+            // icon="menu"
+            name="bars"
             onPress={() => toggle()}
             style={{
-              marginLeft: SPACE(1),
+              marginLeft: theme?.Space.get?.(1) || 1,
             }}
           />
         ),
@@ -216,30 +221,37 @@ function SubmitStackNavigator(props: ChildrenOnly) {
 export default function App(props: ChildrenOnly) {
   return (
     <ValueProvider>
-    <ThemeProvider>
-      <ThemeConsumer>
-        {(themeState: ThemeContextType) => (
-          <View style={themeState?.style?.root}>
-      <StatusBar />
-      <NavigationContainer>
-        <StatusBar style="light" />
+      <ThemeProvider>
+        <ThemeConsumer>
+          {(themeState: ThemeContextType) => (
+            <View style={themeState?.style?.root}>
+              <StatusBar />
+              <NavigationContainer>
+                <StatusBar style="light" />
 
-        <Drawer.Navigator
-          drawerStyle={{
-            backgroundColor: COLORS.backgroundHighlight,
-          }}
-          drawerContent={(ps) => <CustomDrawerContent {...ps} />}>
-          <Drawer.Screen name="Frontpage" component={FeedStackNavigator} />
-          <Drawer.Screen name="All" component={FeedStackNavigator} />
-          <Drawer.Screen name="Login" component={LoginStackNavigator} />
-          <Drawer.Screen name="Saved" component={SavedStackNavigator} />
-          <Drawer.Screen name="Submit" component={SubmitStackNavigator} />
-        </Drawer.Navigator>
-      </NavigationContainer>
-    </View>
-        )}
-      </ThemeConsumer>
+                <Drawer.Navigator
+                  drawerStyle={{
+                    backgroundColor:
+                      themeState?.theme?.Colors?.backgroundHighlight,
+                  }}
+                  drawerContent={(ps) => <CustomDrawerContent {...ps} />}>
+                  <Drawer.Screen
+                    name="Frontpage"
+                    component={FeedStackNavigator}
+                  />
+                  <Drawer.Screen name="All" component={FeedStackNavigator} />
+                  <Drawer.Screen name="Login" component={LoginStackNavigator} />
+                  <Drawer.Screen name="Saved" component={SavedStackNavigator} />
+                  <Drawer.Screen
+                    name="Submit"
+                    component={SubmitStackNavigator}
+                  />
+                </Drawer.Navigator>
+              </NavigationContainer>
+            </View>
+          )}
+        </ThemeConsumer>
       </ThemeProvider>
-      </ValueProvider>
+    </ValueProvider>
   );
 }
