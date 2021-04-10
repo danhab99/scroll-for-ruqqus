@@ -1,12 +1,5 @@
 import {StyleSheet, TextStyle, ViewStyle} from 'react-native';
 import {ThemeInterface} from './default-theme';
-
-export type ThemeRange = {
-  start: number;
-  step: number;
-  get?: (x: number) => number;
-};
-
 export interface Styles {
   view: ViewStyle;
   horizontal: ViewStyle;

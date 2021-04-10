@@ -1,5 +1,10 @@
 import {ThemeValue} from '../theme-context';
-import {ThemeRange} from './style';
+
+export type ThemeRange = {
+  start: number;
+  step: number;
+  get?: (x: number) => number;
+};
 
 export interface ThemeInterface {
   Colors: {
