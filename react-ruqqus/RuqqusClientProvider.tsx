@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {
   UserContext,
   WebAuthContext,
@@ -80,4 +80,12 @@ export function RuqqusClientProvider(props: RuqqusClientProviderProps) {
       </WebAuthContext.Provider>
     </UserContext.Provider>
   );
+}
+
+export function useLogin() {
+  const setTokens = useContext(UserContext);
+
+  return (t: TokenInterface) => {
+    setTokens(t);
+  };
 }

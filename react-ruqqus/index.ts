@@ -6,7 +6,11 @@ import {
   WebAuthContext,
 } from './ClientContext';
 import {fetcher} from './fetcher';
-import {RuqqusClientProvider} from './RuqqusClientProvider';
+import {
+  RuqqusClientProvider,
+  useLogin,
+  TokenInterface,
+} from './RuqqusClientProvider';
 import {useAuthSites} from './useAuthSites';
 import {useFeed} from './useFeed';
 import {useFetch} from './useFetch';
@@ -30,4 +34,5 @@ export {
   useRuqqusFetch,
   useRuqqusClient,
   useIdentity,
+  useLogin,
 };
