@@ -24,17 +24,15 @@ interface Account {
   siteID: string;
 }
 
-export default function ROALogin() {
-  const style = useStyle();
-  const theme = useTheme();
-  const accounts = useValue<Account[]>('accounts');
-  const setAccounts = useSetValue<Account[]>('accounts');
-  const {loading, sites, getAuthURL} = useAuthSites();
-  const {body: identity, resp} = useIdentity();
-
+export default function ROALogin(props: any) {
   const [connecting, setConnecting] = useState(false);
   const [siteID, setSiteID] = useState<string>();
   const [newTokens, setNewTokens] = useState<any>();
+
+  const style = useStyle();
+  const theme = useTheme();
+  const [accounts, setAccounts] = useValue<Account[]>('accounts');
+  const {loading, sites, getAuthURL} = useAuthSites();
 
   const connectAccount = (id: string) => {
     setConnecting(true);
@@ -42,29 +40,22 @@ export default function ROALogin() {
     setSiteID(id);
   };
 
-  useOnWebviewClear((user) => {
-    console.log(user);
+  useOnWebviewClear((results) => {
+    console.log(results);
     setConnecting(false);
-    setNewTokens(user);
-  });
 
-  useEffect(() => {
-    if (newTokens && identity && siteID && resp) {
-      if (resp.ok) {
-        debugger;
-        setAccounts((accounts = []) => [
-          ...accounts,
-          {
-            ...newTokens,
-            siteID,
-            username: identity.username,
-          },
-        ]);
-      }
+    if (siteID) {
+      setAccounts((accounts = []) => [
+        ...accounts,
+        {
+          siteID,
+          access_token: results.access_token,
+          refresh_token: results.refresh_token,
+          username: results.user.username,
+        },
+      ]);
     }
-  }, [newTokens, identity, siteID, resp]);
-
-  useEffect(() => console.log('ACCOUNTS', accounts), [accounts]);
+  });
 
   if (loading) {
     <View style={style?.view}>
@@ -122,7 +113,7 @@ export default function ROALogin() {
                     />
 
                     <IconButton
-                      name="delete"
+                      name="trash"
                       // onPress={() => deleteAccount(account._id)}
                     />
                   </View>
