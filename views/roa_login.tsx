@@ -13,6 +13,8 @@ import {
   useAuthSites,
   useIdentity,
   useOnWebviewClear,
+  useLogin,
+  TokenInterface,
 } from '@react-ruqqus';
 import {v4} from 'react-native-uuid';
 import {useNavigation} from '@react-navigation/core';
@@ -25,11 +27,9 @@ interface Site {
   name: string;
 }
 
-interface Account {
+interface Account extends TokenInterface {
   id: string;
   username: string;
-  access_token: string;
-  refresh_token: string;
   siteID: string;
 }
 
@@ -42,9 +42,9 @@ export default function ROALogin(props: any) {
   const [activeAccount, setActiveAccount] = useValue<string>('active-account');
   const {loading, sites, getAuthURL, refresh} = useAuthSites();
   const navigation = useNavigation();
+  const login = useLogin();
 
   useOnWebviewClear((results) => {
-    console.log(results);
     setConnecting(false);
 
     if (siteID) {
@@ -56,6 +56,8 @@ export default function ROALogin(props: any) {
           access_token: results.access_token,
           refresh_token: results.refresh_token,
           username: results.user.username,
+          client_id: '',
+          expires_at: 0,
         },
       ]);
     }
@@ -90,6 +92,8 @@ export default function ROALogin(props: any) {
 
   const pickAccount = (id: string) => {
     setActiveAccount(id);
+    login(accounts.filter((x) => x.id === id)[0]);
+    navigation.navigate('Frontpage');
   };
 
   if (connecting) {
@@ -137,7 +141,7 @@ export default function ROALogin(props: any) {
                         marginRight: theme?.Space.get?.(1),
                       }}>
                       {activeAccount === account.id ? (
-                        <Icon name="star" />
+                        <Icon name="star" size={theme?.FontSize?.get?.(2)} />
                       ) : null}{' '}
                       @{account.username}
                     </Text>
