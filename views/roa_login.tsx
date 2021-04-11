@@ -1,7 +1,13 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {View, Text, Linking, ScrollView, ActivityIndicator} from 'react-native';
+import {
+  View,
+  Text,
+  ScrollView,
+  RefreshControl,
+  BackHandler,
+} from 'react-native';
 import {Button, IconButton} from '../components/Buttons';
-import {useSetValue, useStyle, useTheme} from '@contexts';
+import {useValue, useStyle, useTheme} from '@contexts';
 import {
   AuthSiteWebview,
   useAuthSites,
@@ -34,13 +40,7 @@ export default function ROALogin(props: any) {
   const style = useStyle();
   const theme = useTheme();
   const [accounts, setAccounts] = useValue<Account[]>('accounts');
-  const {loading, sites, getAuthURL} = useAuthSites();
-
-  const connectAccount = (id: string) => {
-    setConnecting(true);
-    getAuthURL(id);
-    setSiteID(id);
-  };
+  const {loading, sites, getAuthURL, refresh} = useAuthSites();
 
   useOnWebviewClear((results) => {
     console.log(results);
@@ -63,10 +63,16 @@ export default function ROALogin(props: any) {
   const deleteAccount = (id: string) => {
     setAccounts((prev) => prev.filter((x) => x.id !== id));
   };
+
+  if (connecting) {
     return <AuthSiteWebview />;
   } else {
     return (
-      <ScrollView style={style?.view}>
+      <ScrollView
+        style={style?.view}
+        refreshControl={
+          <RefreshControl refreshing={loading} onRefresh={() => refresh()} />
+        }>
         {sites?.map((site: Site, i: number) => (
           <View key={`${i}`} style={style?.card}>
             <Text
