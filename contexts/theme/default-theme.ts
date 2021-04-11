@@ -1,4 +1,5 @@
 import {ThemeValue} from '../theme-context';
+import Color from 'color';
 
 export type ThemeRange = {
   start: number;
@@ -13,6 +14,8 @@ export interface ThemeInterface {
     backgroundHighlight: string;
     backgroundDark: string;
     primary: string;
+    primaryLight: string;
+    primaryDark: string;
     muted: string;
   };
   LineHeight: {
@@ -37,6 +40,15 @@ export interface ThemeInterface {
   FontSize: ThemeRange;
 }
 
+const Darken = (c: string) =>
+  Color(c)
+    .darken(1 / 3)
+    .hex();
+const Lighten = (c: string) =>
+  Color(c)
+    .lighten(1 / 3)
+    .hex();
+
 export const DEFAULT_THEME: ThemeInterface = {
   Colors: {
     text: '#fff',
@@ -45,6 +57,8 @@ export const DEFAULT_THEME: ThemeInterface = {
     backgroundDark: '#0f0f0f',
     primary: '#693ccd',
     muted: '#aaa',
+    primaryDark: Darken('#693ccd'),
+    primaryLight: Lighten('#693ccd'),
   },
   Fonts: {
     body: '',

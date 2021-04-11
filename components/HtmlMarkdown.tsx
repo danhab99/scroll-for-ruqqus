@@ -39,7 +39,7 @@ export default function HtmlMarkdown(props: HtmlMarkdownProps) {
           .catch((err) => console.log('Cannot open markdown link', err));
       }}
       alterNode={(node) => {
-        if (node.attribs.src == '/') {
+        if (node?.attribs?.src == '/') {
           return Object.assign(node, {
             attribs: {
               src: `https://${props.domain || 'ruqqus.com'}${node.attribs.src}`,
