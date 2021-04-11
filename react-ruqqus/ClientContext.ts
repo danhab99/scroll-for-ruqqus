@@ -27,9 +27,7 @@ type UserContextType = React.Dispatch<
 >;
 
 export const UserContext = createContext<UserContextType>(
-  (value: React.SetStateAction<TokenInterface | undefined>) => {
-    throw new SetOutOfContetStateError();
-  },
+  {} as UserContextType,
 );
 
 interface AuthErrorContextProps {}

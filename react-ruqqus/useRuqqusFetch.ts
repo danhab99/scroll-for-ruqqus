@@ -1,7 +1,7 @@
 import {useFetch, UseFetchOpts} from './useFetch';
 import {useRuqqusClient} from './useRuqqusClient';
 
-export function useRuqqusFetch(edge: string, opts?: UseFetchOpts) {
+export function useRuqqusFetch(edge: string, opts: UseFetchOpts = {}) {
   const client = useRuqqusClient();
   return client?.access_token
     ? useFetch(
