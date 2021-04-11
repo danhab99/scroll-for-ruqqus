@@ -15,7 +15,7 @@ import {
   useOnWebviewClear,
 } from '@react-ruqqus';
 import {v4} from 'react-native-uuid';
-import {useValue} from '@contexts';
+import {useNavigation} from '@react-navigation/core';
 
 interface Site {
   _id: string;
@@ -35,12 +35,11 @@ interface Account {
 export default function ROALogin(props: any) {
   const [connecting, setConnecting] = useState(false);
   const [siteID, setSiteID] = useState<string>();
-  const [newTokens, setNewTokens] = useState<any>();
-
   const style = useStyle();
   const theme = useTheme();
   const [accounts, setAccounts] = useValue<Account[]>('accounts');
   const {loading, sites, getAuthURL, refresh} = useAuthSites();
+  const navigation = useNavigation();
 
   useOnWebviewClear((results) => {
     console.log(results);
@@ -59,6 +58,29 @@ export default function ROALogin(props: any) {
       ]);
     }
   });
+
+  useEffect(() => {
+    if (connecting) {
+      let h = (e?: any) => {
+        e?.preventDefault();
+        setConnecting(false);
+        return true;
+      };
+
+      navigation.addListener('beforeRemove', h);
+      BackHandler.addEventListener('hardwareBackPress', h);
+      return () => {
+        navigation.removeListener('beforeRemove', h);
+        BackHandler.removeEventListener('hardwareBackPress', h);
+      };
+    }
+  }, [connecting, navigation]);
+
+  const connectAccount = (id: string) => {
+    setConnecting(true);
+    getAuthURL(id);
+    setSiteID(id);
+  };
 
   const deleteAccount = (id: string) => {
     setAccounts((prev) => prev.filter((x) => x.id !== id));
@@ -116,7 +138,7 @@ export default function ROALogin(props: any) {
                       style={{
                         marginRight: theme?.Space.get?.(1),
                       }}
-                      // onPress={() => pickAccount(account._id)}
+                      // onPress={() => pickAccount(account.id)}
                     />
 
                     <IconButton
