@@ -71,7 +71,7 @@ export function RuqqusClientProvider(props: RuqqusClientProviderProps) {
   return (
     <UserContext.Provider value={setTokens}>
       <WebAuthContext.Provider value={{authSite, setAuthSite}}>
-        <ClientContext.Provider value={clientConfig}>
+        <ClientContext.Provider value={clientConfig as any}>
           <AuthErrorContext.Provider
             value={() => props.onLoginError && props.onLoginError()}>
             {props.children}
