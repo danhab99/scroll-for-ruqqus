@@ -8,12 +8,12 @@ import {Styles} from './theme/style';
 export type ThemeValue = string | number;
 
 export type ThemeContextType =
-  | {theme: ThemeInterface; style: Styles}
+  | {theme: ThemeInterface; style?: Styles}
   | undefined;
 const ThemeContext = createContext<ThemeContextType>(undefined);
 
 export function ThemeProvider(props: ContextChildrenProps) {
-  var theme = useValue<ThemeInterface>('theme');
+  var [theme] = useValue<ThemeInterface>('theme');
   theme = _.defaultsDeep(theme, DEFAULT_THEME);
   let style = theme ? generateStyles(theme) : undefined;
 
