@@ -30,7 +30,7 @@ export interface RuqqusUser {
   username: string;
 }
 
-type RuqqusVote = -1 | 0 | 1;
+export type RuqqusVote = -1 | 0 | 1;
 
 export interface RuqqusPost {
   author: RuqqusUser;

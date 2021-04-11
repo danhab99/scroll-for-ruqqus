@@ -1,9 +1,10 @@
 import {useState, useEffect} from 'react';
+import {RuqqusPost} from './types';
 import {UseFetchOpts} from './useFetch';
 import {useRuqqusFetch} from './useRuqqusFetch';
 
 export function useFeed(edge: string, args?: UseFetchOpts) {
-  const [posts, setPosts] = useState<object[]>();
+  const [posts, setPosts] = useState<RuqqusPost[]>();
   const [page, setPage] = useState(1);
   const [more, setMore] = useState(true);
 
@@ -27,5 +28,6 @@ export function useFeed(edge: string, args?: UseFetchOpts) {
     posts,
     nextPage: () => setPage((x) => (more ? x + 1 : x)),
     refresh,
+    setPosts,
   };
 }

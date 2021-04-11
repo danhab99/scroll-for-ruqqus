@@ -6,7 +6,9 @@ import {
   RefreshControlProps,
 } from 'react-native';
 import {useFeed} from './useFeed';
-import {RuqqusPost, RuqqusGuild, RuqqusUser} from './types';
+import {RuqqusPost, RuqqusGuild, RuqqusUser, RuqqusVote} from './types';
+import {useRuqqusClient} from './useRuqqusClient';
+import {fetcher} from './fetcher';
 
 const PostContext = createContext<RuqqusPost>({} as RuqqusPost);
 const GuildContext = createContext<RuqqusGuild>({} as RuqqusGuild);
@@ -36,8 +38,18 @@ interface RuqqusFeedProps extends Partial<FlatListProps<RuqqusPost>> {
   refreshControlProps?: RefreshControlProps;
 }
 
+type PostMutatorDispatch = React.Dispatch<
+  React.SetStateAction<RuqqusPost[] | undefined>
+>;
+
+const PostMutatorContext = createContext<PostMutatorDispatch>(
+  {} as PostMutatorDispatch,
+);
+
 export function RuqqusFeed(props: RuqqusFeedProps) {
-  const {loading, posts, nextPage, refresh} = useFeed(`${props.feed}`);
+  const {loading, posts, nextPage, refresh, setPosts} = useFeed(
+    `${props.feed}`,
+  );
 
   const renderPost = props.renderPost
     ? (p: PostProps) => (
@@ -75,14 +87,16 @@ export function RuqqusFeed(props: RuqqusFeedProps) {
   );
 
   return (
-    <FlatList
-      data={posts || []}
-      renderItem={renderPost}
-      ListHeaderComponent={renderHeader}
-      refreshControl={refreshControl}
-      // onEndReached={onEndReached}
-      {...props}
-    />
+    <PostMutatorContext.Provider value={setPosts}>
+      <FlatList
+        data={posts || []}
+        renderItem={renderPost}
+        ListHeaderComponent={renderHeader}
+        refreshControl={refreshControl}
+        onEndReached={onEndReached}
+        {...props}
+      />
+    </PostMutatorContext.Provider>
   );
 }
 
@@ -96,4 +110,28 @@ export function useUser() {
 
 export function useGuild() {
   return useContext(GuildContext);
+}
+
+export function useVote() {
+  const post = usePost();
+  const client = useRuqqusClient();
+  const mutate = useContext(PostMutatorContext);
+
+  const vote = (dir: RuqqusVote) => {
+    let d = post.voted === dir ? 0 : dir;
+    return fetcher(client.domain, `vote/${post.id}/${d}`, {
+      access_token: client.access_token,
+    }).then((resp) => {
+      let p: RuqqusPost = resp.body;
+
+      mutate((prev) => prev?.map((x) => (x.id === p.id ? p : x)));
+      return resp;
+    });
+  };
+
+  return {
+    upvote: () => vote(1),
+    downvote: () => vote(-1),
+    reset: () => vote(0),
+  };
 }

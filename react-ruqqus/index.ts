@@ -18,7 +18,7 @@ import {useOnWebviewClear} from './useOnWebviewClear';
 import {useRuqqusClient} from './useRuqqusClient';
 import {useRuqqusFetch} from './useRuqqusFetch';
 import {useIdentity} from './useIdentity';
-import {RuqqusFeed, useGuild, usePost, useUser} from './RuqqusFeed';
+import {RuqqusFeed, useGuild, usePost, useUser, useVote} from './RuqqusFeed';
 import {useSubmit} from './useSubmit';
 
 export {
@@ -42,4 +42,5 @@ export {
   useUser,
   useLogin,
   useSubmit,
+  useVote,
 };
