@@ -8,6 +8,7 @@ import {
   useIdentity,
   useOnWebviewClear,
 } from '@react-ruqqus';
+import {v4} from 'react-native-uuid';
 import {useValue} from '@contexts';
 
 interface Site {
@@ -18,6 +19,7 @@ interface Site {
 }
 
 interface Account {
+  id: string;
   username: string;
   access_token: string;
   refresh_token: string;
@@ -48,6 +50,7 @@ export default function ROALogin(props: any) {
       setAccounts((accounts = []) => [
         ...accounts,
         {
+          id: v4(),
           siteID,
           access_token: results.access_token,
           refresh_token: results.refresh_token,
@@ -57,11 +60,9 @@ export default function ROALogin(props: any) {
     }
   });
 
-  if (loading) {
-    <View style={style?.view}>
-      <ActivityIndicator color={theme?.Colors.primary} size="large" />;
-    </View>;
-  } else if (connecting) {
+  const deleteAccount = (id: string) => {
+    setAccounts((prev) => prev.filter((x) => x.id !== id));
+  };
     return <AuthSiteWebview />;
   } else {
     return (
@@ -114,7 +115,7 @@ export default function ROALogin(props: any) {
 
                     <IconButton
                       name="trash"
-                      // onPress={() => deleteAccount(account._id)}
+                      onPress={() => deleteAccount(account.id)}
                     />
                   </View>
                 ))}
