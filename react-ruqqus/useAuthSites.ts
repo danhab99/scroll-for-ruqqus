@@ -7,7 +7,7 @@ import {useRuqqusClient} from './useRuqqusClient';
 export function useAuthSites() {
   const client = useRuqqusClient();
   const {setAuthSite} = useContext(WebAuthContext);
-  const {loading, body} = useFetch(client?.authserver || '', 'sites');
+  const {loading, body, refresh} = useFetch(client?.authserver || '', 'sites');
 
   const getAuthURL = (id: string) => {
     if (client?.authserver) {
@@ -20,5 +20,5 @@ export function useAuthSites() {
     }
   };
 
-  return {loading, sites: body, getAuthURL};
+  return {loading, sites: body, getAuthURL, refresh};
 }
