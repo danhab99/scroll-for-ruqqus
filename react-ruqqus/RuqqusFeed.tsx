@@ -93,6 +93,7 @@ export function RuqqusFeed(props: RuqqusFeedProps) {
         renderItem={renderPost}
         ListHeaderComponent={renderHeader}
         refreshControl={refreshControl}
+        onEndReachedThreshold={props.onEndReachedThreshold || 3}
         onEndReached={onEndReached}
         {...props}
       />
