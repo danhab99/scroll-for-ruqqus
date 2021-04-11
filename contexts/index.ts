@@ -1,10 +1,11 @@
-import {ValueProvider, useSetValue, useValue} from './storage-context';
+import {ValueProvider, useValue} from './storage-context';
 import {
   ThemeConsumer,
   ThemeProvider,
   useStyle,
   useTheme,
 } from './theme-context';
+import {useCache, useCollection} from './useCollection';
 
 export {
   ThemeConsumer,
@@ -12,6 +13,7 @@ export {
   useStyle,
   useTheme,
   ValueProvider,
-  useSetValue,
   useValue,
+  useCache,
+  useCollection,
 };
