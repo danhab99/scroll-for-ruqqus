@@ -3,10 +3,12 @@ import {View, ActivityIndicator} from 'react-native';
 import Input from '../components/Input';
 import {Button} from '../components/Buttons';
 import {useTheme, useStyle} from '@contexts';
+import {useSubmit} from '@react-ruqqus';
 
 export default function Submit() {
   const theme = useTheme();
   const style = useStyle();
+  const submitPost = useSubmit();
 
   const [ready, setReady] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -18,10 +20,15 @@ export default function Submit() {
   const submit = () => {
     setSubmitting(true);
 
-    // client.submitPost(board, title, url, body).then((post) => {
-    //   setSubmitting(false);
-    //   navigation.navigate('Comments', {post});
-    // });
+    submitPost({
+      board,
+      body,
+      title,
+      url,
+    }).then((resp) => {
+      setSubmitting(false);
+      // navigation.navigate('Comments', {post});
+    });
   };
 
   const disabled = !(ready && [board, url, title, body].every((x) => x !== ''));
