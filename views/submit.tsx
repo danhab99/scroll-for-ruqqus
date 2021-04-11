@@ -1,12 +1,12 @@
 import React, {useState, useEffect} from 'react';
 import {View, ActivityIndicator} from 'react-native';
-import Style, {COLORS, SPACE} from '../theme';
 import Input from '../components/Input';
 import {Button} from '../components/Buttons';
-import {useNavigation} from '@react-navigation/core';
+import {useTheme, useStyle} from '@contexts';
 
-export default function Submit(props) {
-  const navigation = useNavigation();
+export default function Submit() {
+  const theme = useTheme();
+  const style = useStyle();
 
   const [ready, setReady] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -27,7 +27,7 @@ export default function Submit(props) {
   const disabled = !(ready && [board, url, title, body].every((x) => x !== ''));
 
   return (
-    <View style={Style.view}>
+    <View style={style?.view}>
       <Input
         label="Board"
         onChangeText={(x: string) => setBoard(x)}
@@ -52,13 +52,13 @@ export default function Submit(props) {
         disabled={disabled}
         text="Submit"
         style={{
-          marginTop: SPACE(1),
+          marginTop: theme?.Space.get?.(1),
         }}
         onPress={() => submit()}
       />
 
       {submitting ? (
-        <ActivityIndicator size="large" color={COLORS.primary} />
+        <ActivityIndicator size="large" color={theme?.Colors?.primary} />
       ) : null}
     </View>
   );
