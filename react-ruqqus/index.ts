@@ -18,6 +18,7 @@ import {useOnWebviewClear} from './useOnWebviewClear';
 import {useRuqqusClient} from './useRuqqusClient';
 import {useRuqqusFetch} from './useRuqqusFetch';
 import {useIdentity} from './useIdentity';
+import {RuqqusFeed, useGuild, usePost, useUser} from './RuqqusFeed';
 
 export {
   AuthSiteWebview,
@@ -34,5 +35,9 @@ export {
   useRuqqusFetch,
   useRuqqusClient,
   useIdentity,
+  RuqqusFeed,
+  useGuild,
+  usePost,
+  useUser,
   useLogin,
 };
