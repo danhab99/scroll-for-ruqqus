@@ -7,6 +7,8 @@ import {useTheme} from '@contexts';
 import HtmlMarkdown from './HtmlMarkdown';
 import YoutubePlayer from 'react-native-youtube-iframe';
 
+import {Image} from 'react-native';
+
 function PostAsImage() {
   const post = usePost();
   const [loading, setLoading] = useState(true);
@@ -22,19 +24,21 @@ function PostAsImage() {
           resp.text().then((html) => {
             var $ = cheerio.load(html);
             let l = $('meta[property="og:image"]').attr('content');
-            if (l) {
-              setUrl(url);
-              console.log('Url has OG image', url);
+            if (l && l.length > 0) {
+              setUrl(l);
+              console.log('Url has OG image', l);
             } else {
-              console.log('Unable to get OG image', url);
+              console.log('Unable to get OG image', l);
             }
-            setLoading(true);
+            setLoading(false);
           });
         } else if (type?.includes('image')) {
-          console.log('Url already an image', url);
+          console.log('Url already an image', post.url);
           setUrl(url);
           setLoading(false);
         }
+      } else {
+        setLoading(false);
       }
     });
   }, [post.url]);
