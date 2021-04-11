@@ -16,6 +16,7 @@ import {
 } from '@react-ruqqus';
 import {v4} from 'react-native-uuid';
 import {useNavigation} from '@react-navigation/core';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 interface Site {
   _id: string;
@@ -38,6 +39,7 @@ export default function ROALogin(props: any) {
   const style = useStyle();
   const theme = useTheme();
   const [accounts, setAccounts] = useValue<Account[]>('accounts');
+  const [activeAccount, setActiveAccount] = useValue<string>('active-account');
   const {loading, sites, getAuthURL, refresh} = useAuthSites();
   const navigation = useNavigation();
 
@@ -86,6 +88,10 @@ export default function ROALogin(props: any) {
     setAccounts((prev) => prev.filter((x) => x.id !== id));
   };
 
+  const pickAccount = (id: string) => {
+    setActiveAccount(id);
+  };
+
   if (connecting) {
     return <AuthSiteWebview />;
   } else {
@@ -130,6 +136,9 @@ export default function ROALogin(props: any) {
                         fontSize: theme?.FontSize.get?.(1.5),
                         marginRight: theme?.Space.get?.(1),
                       }}>
+                      {activeAccount === account.id ? (
+                        <Icon name="star" />
+                      ) : null}{' '}
                       @{account.username}
                     </Text>
 
@@ -138,7 +147,7 @@ export default function ROALogin(props: any) {
                       style={{
                         marginRight: theme?.Space.get?.(1),
                       }}
-                      // onPress={() => pickAccount(account.id)}
+                      onPress={() => pickAccount(account.id)}
                     />
 
                     <IconButton
