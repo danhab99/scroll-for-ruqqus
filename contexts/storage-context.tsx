@@ -26,7 +26,7 @@ export function ValueProvider(props: ContextChildrenProps) {
     console.log('VALUE WRITE', value);
     Object.entries(value).forEach(([file, content]) =>
       writeFile(
-        `${DocumentDirectoryPath}/${file}.json`,
+        `${DocumentDirectoryPath}/vars/${file}.json`,
         JSON.stringify(content),
       ),
     );
@@ -39,7 +39,7 @@ export function ValueProvider(props: ContextChildrenProps) {
         console.log('VALUE READ', files);
         return Promise.all(
           files.map((file) =>
-            readFile(DocumentDirectoryPath + '/' + file).then((data) => ({
+            readFile(DocumentDirectoryPath + '/vars/' + file).then((data) => ({
               file,
               data: JSON.parse(data),
             })),
