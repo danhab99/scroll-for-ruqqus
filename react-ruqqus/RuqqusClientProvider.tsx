@@ -42,8 +42,7 @@ export function RuqqusClientProvider(props: RuqqusClientProviderProps) {
 
   useEffect(() => {
     if (tokens) {
-      debugger;
-      const interval = setInterval(() => {
+      const timeout = setTimeout(() => {
         fetcher(clientConfig.authserver, `/auth/${tokens.client_id}/refresh`, {
           body: {
             refresh_token: tokens.refresh_token,
@@ -64,7 +63,7 @@ export function RuqqusClientProvider(props: RuqqusClientProviderProps) {
         });
       }, Date.now() - tokens.expires_at);
 
-      return () => clearInterval(interval);
+      return () => clearTimeout(timeout);
     }
   }, [tokens, props.config]);
 
