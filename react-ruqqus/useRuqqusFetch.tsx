@@ -3,7 +3,7 @@ import {useRuqqusClient} from './useRuqqusClient';
 
 export function useRuqqusFetch(edge: string, opts?: UseFetchOpts) {
   const client = useRuqqusClient();
-  return client?.domain
+  return client?.access_token
     ? useFetch(
         client.domain,
         '/api/v1/' + edge,
@@ -11,7 +11,7 @@ export function useRuqqusFetch(edge: string, opts?: UseFetchOpts) {
       )
     : {
         loading: false,
-        resp: new Error('No domain specified'),
-        body: new Error('No domain specified'),
+        resp: new Error('No access token specified'),
+        body: new Error('No access token specified'),
       };
 }
