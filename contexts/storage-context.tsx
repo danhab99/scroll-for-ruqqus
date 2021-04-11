@@ -17,10 +17,7 @@ interface ValueContextProps {
   setValue: React.Dispatch<React.SetStateAction<UnboundObject>>;
 }
 
-const ValueContext = createContext<ValueContextProps>({
-  value: {},
-  setValue: (x) => {},
-});
+const ValueContext = createContext<ValueContextProps>({} as ValueContextProps);
 
 export function ValueProvider(props: ContextChildrenProps) {
   const [value, setValue] = useState<UnboundObject>({});
