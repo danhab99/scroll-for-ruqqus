@@ -12,12 +12,21 @@ interface ColletcionOpts<T> {
   take?: number;
 }
 
+type CollectionHooks<T> = [
+  T[],
+  {
+    add: (next: T[]) => void;
+    nextPage: (page?: number) => void;
+    remove: (predicate: (x: T) => boolean) => void;
+  },
+];
+
 const MAX_COUNT = 1e5;
 
 const useMassStore = (head: string) => <T>(
   name: string,
   opts?: ColletcionOpts<T>,
-) => {
+): CollectionHooks<T> => {
   const [collection, setCollection] = useState(opts?.initial);
   const [page, setPage] = useState(0);
 
@@ -57,7 +66,7 @@ const useMassStore = (head: string) => <T>(
   }, []);
 
   return [
-    collection,
+    collection || [],
     {
       add: (next: T[] | T) =>
         setCollection((prev) => {
