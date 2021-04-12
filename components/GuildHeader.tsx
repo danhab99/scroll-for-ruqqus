@@ -70,7 +70,7 @@ export function GuildHeader(props?: GuildHeaderProps) {
             </Text>
           </View>
         </View>
-        <Button text="Subscribe" />
+        {/* <Button text="Subscribe" /> */}
         <HtmlMarkdown html={guild.description_html} />
       </View>
     );
