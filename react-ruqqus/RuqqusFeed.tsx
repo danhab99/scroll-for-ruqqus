@@ -112,7 +112,14 @@ export function RuqqusFeed(props: RuqqusFeedProps) {
   }
 
   const {loading, posts, nextPage, refresh, setPosts} = useFeed(`${feed}`);
+  const client = useRuqqusClient();
+
+  useEffect(() => {
+    refresh();
+  }, [client]);
+
   const onEndReached = props.onEndReached || (() => nextPage());
+
   const refreshControl = props.refreshControl || (
     <RefreshControl
       refreshing={loading}
