@@ -89,7 +89,6 @@ function StackNavigator(props: ChildrenOnly) {
         headerTitle: (ps) => <StackTitle {...ps} />,
         headerLeft: () => (
           <IconButton
-            // icon="menu"
             name="bars"
             onPress={() => toggle()}
             style={{
@@ -106,56 +105,7 @@ function StackNavigator(props: ChildrenOnly) {
 function FeedStackNavigator(props: ChildrenOnly) {
   return (
     <StackNavigator {...props}>
-      <Stack.Screen
-        name="Frontpage"
-        component={Feed}
-        initialParams={{
-          fetch: (client, options) =>
-            client.feeds.frontpage(options.page, options.sort),
-        }}
-      />
-
-      <Stack.Screen
-        name="All"
-        component={Feed}
-        initialParams={{
-          fetch: (client, options) => {
-            debugger;
-            return client.feeds.all(options.page, options.sort);
-          },
-          name: 'All',
-        }}
-      />
-
-      <Stack.Screen
-        name="Guild"
-        component={Feed}
-        initialParams={{
-          fetch: (client, options) =>
-            client.feeds.guild(options.name, options.page, options.sort),
-          prefix: '+',
-          guildHeader: true,
-        }}
-      />
-
-      <Stack.Screen
-        name="Comments"
-        component={Comments}
-        initialParams={{
-          fetch: (client, options) =>
-            client.feeds.guild(options.name, options.page, options.sort),
-        }}
-      />
-
-      <Stack.Screen
-        name="User"
-        component={Feed}
-        initialParams={{
-          fetch: (client, options) =>
-            client.feeds.user(options.name, options.page, options.sort),
-          prefix: '@',
-        }}
-      />
+      <Stack.Screen name="Frontpage" component={Feed} />
     </StackNavigator>
   );
 }
@@ -164,43 +114,6 @@ function LoginStackNavigator(props: ChildrenOnly) {
   return (
     <StackNavigator {...props}>
       <Stack.Screen name="Login" component={ROALogin} />
-    </StackNavigator>
-  );
-}
-
-function SavedStackNavigator(props: ChildrenOnly) {
-  return (
-    <StackNavigator {...props}>
-      <Stack.Screen
-        name="Saved"
-        component={Feed}
-        initialParams={{
-          fetch: (client, options) => {
-            const PAGESIZE = 5;
-            options.page--;
-            var saved = new Collection('saved');
-            return saved
-              .find({})
-              .then((items) =>
-                Promise.all(
-                  items
-                    .sort((f, l) => (f.savedat < l.savedat ? 1 : -1))
-                    .slice(
-                      options.page * PAGESIZE,
-                      options.page * PAGESIZE + PAGESIZE,
-                    )
-                    .map((item) => client.posts.fetch(item.pid)),
-                ),
-              )
-              .then((posts) => {
-                console.log('SAVED POSTS', posts);
-                return {posts};
-              });
-          },
-          prefix: '',
-          name: 'Saved',
-        }}
-      />
     </StackNavigator>
   );
 }
@@ -232,7 +145,6 @@ export default function App() {
             <Drawer.Screen name="Frontpage" component={FeedStackNavigator} />
             <Drawer.Screen name="All" component={FeedStackNavigator} />
             <Drawer.Screen name="Login" component={LoginStackNavigator} />
-            <Drawer.Screen name="Saved" component={SavedStackNavigator} />
             <Drawer.Screen name="Submit" component={SubmitStackNavigator} />
           </Drawer.Navigator>
         </NavigationContainer>
