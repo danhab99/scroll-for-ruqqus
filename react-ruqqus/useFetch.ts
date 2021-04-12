@@ -1,12 +1,12 @@
 import {useState, useEffect} from 'react';
 import {fetcher, fetcherOpts} from './fetcher';
 
-export type UseFetchOpts = fetcherOpts & {initial?: any; disabled?: boolean};
+export type UseFetchOpts<T> = fetcherOpts & {initial?: T; disabled?: boolean};
 
-export function useFetch(host: string, edge: string, opts?: UseFetchOpts) {
+export function useFetch<T>(host: string, edge: string, opts?: UseFetchOpts) {
   const [loading, setLoading] = useState(false);
   const [resp, setResp] = useState<any>();
-  const [body, setBody] = useState(opts?.initial);
+  const [body, setBody] = useState<T>(opts?.initial);
   const [refresher, setRefresher] = useState(false);
 
   useEffect(() => {

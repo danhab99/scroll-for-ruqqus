@@ -20,6 +20,7 @@ import {useRuqqusFetch} from './useRuqqusFetch';
 import {useIdentity} from './useIdentity';
 import {RuqqusFeed, useGuild, usePost, useUser, useVote} from './RuqqusFeed';
 import {useSubmit} from './useSubmit';
+import {useSearch} from './useSearch';
 
 export {
   AuthSiteWebview,
@@ -43,4 +44,5 @@ export {
   useLogin,
   useSubmit,
   useVote,
+  useSearch,
 };
