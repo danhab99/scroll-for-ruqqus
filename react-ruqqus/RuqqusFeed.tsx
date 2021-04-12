@@ -47,10 +47,6 @@ const PostMutatorContext = createContext<PostMutatorDispatch>(
 );
 
 export function RuqqusFeed(props: RuqqusFeedProps) {
-  const {loading, posts, nextPage, refresh, setPosts} = useFeed(
-    `${props.feed}`,
-  );
-
   const renderPost = props.renderPost
     ? (p: PostProps) => (
         <PostContext.Provider value={p.item}>
@@ -60,6 +56,7 @@ export function RuqqusFeed(props: RuqqusFeedProps) {
     : props.renderItem;
 
   var renderHeader = props.ListHeaderComponent;
+  var feed: any = props.feed;
 
   if (typeof props.feed === 'object') {
     if ('guild' in props.feed) {
@@ -68,15 +65,18 @@ export function RuqqusFeed(props: RuqqusFeedProps) {
           {props.renderGuildHeader(p)}
         </GuildContext.Provider>
       );
+      feed = 'guild/' + props.feed.guild;
     } else if ('user' in props.feed) {
       renderHeader = (p: UserProps) => (
         <UserContext.Provider value={p.user}>
           {props.renderUserHeader(p)}
         </UserContext.Provider>
       );
+      feed = 'user/' + props.feed.user;
     }
   }
 
+  const {loading, posts, nextPage, refresh, setPosts} = useFeed(`${feed}`);
   const onEndReached = props.onEndReached || (() => nextPage());
   const refreshControl = props.refreshControl || (
     <RefreshControl

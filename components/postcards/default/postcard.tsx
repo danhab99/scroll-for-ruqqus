@@ -16,20 +16,24 @@ import SubmissionContent from 'components/PostBody';
 import {IconButton} from 'components/Buttons';
 import {IconButtonProps} from 'react-native-vector-icons/Icon';
 import {useCollection, useSavedPosts} from '../../../contexts/useCollection';
+import {useNavigation} from '@react-navigation/core';
 
 function Head() {
   const post = usePost();
   const theme = useTheme();
   const style = useStyle();
+  const navigation = useNavigation();
 
   const headItems = [
     {
       label: '+' + post.guild.name,
-      action: () => {}, // TODO: Do guild navigation
+      action: () =>
+        navigation.push('Frontpage', {feed: {guild: post.guild_name}}),
     },
     {
       label: post.author_name,
-      action: () => {}, // TODO: Do user navigation
+      action: () =>
+        navigation.push('Frontpage', {feed: {user: post.author_name}}),
     },
     {
       label: post.domain,

@@ -35,7 +35,7 @@ export default function Feed() {
 
   return (
     <RuqqusFeed
-      feed="front"
+      feed={route.params.feed}
       renderPost={(p) => <DefaultPostcard />}
       renderGuildHeader={(g) => <Guild />}
       renderUserHeader={(u) => <User />}

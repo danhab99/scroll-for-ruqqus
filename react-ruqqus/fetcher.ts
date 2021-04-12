@@ -30,7 +30,10 @@ export function fetcher(host: string, edge: string, opts: fetcherOpts = {}) {
 
   console.log('RUQQUS FETCH', {host, edge, opts, options});
 
-  return fetch(`https://${host}/${edge}${args ? '?' : ''}${args}`, options)
+  return fetch(
+    `https://${host}/${edge}${args ? '?' : ''}${args}`.toLowerCase(),
+    options,
+  )
     .then((r) => {
       let isObject: boolean = (r.headers.get('content-type') || '').includes(
         'json',
@@ -50,9 +53,9 @@ export function fetcher(host: string, edge: string, opts: fetcherOpts = {}) {
         typeof r.body === 'object' &&
         r.body['error'] == '401 Not Authorized. Invalid or Expired Token'
       ) {
-        throw new Error('Login error');
+        throw new Error('Login error: ' + JSON.stringify(r));
       } else {
-        throw new Error('Client error');
+        throw new Error('Client error: ' + JSON.stringify(r));
       }
     });
 }
