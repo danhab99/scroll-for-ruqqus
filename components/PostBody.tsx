@@ -7,8 +7,6 @@ import {useTheme} from '@contexts';
 import HtmlMarkdown from './HtmlMarkdown';
 import YoutubePlayer from 'react-native-youtube-iframe';
 
-import {Image} from 'react-native';
-
 function PostAsImage() {
   const post = usePost();
   const [loading, setLoading] = useState(true);
@@ -61,8 +59,9 @@ function PostAsImage() {
               zIndex: 2000,
             }}
           />
-        ) : null}
-        <ScaledImage url={url || ''} />
+        ) : (
+          <ScaledImage url={url} />
+        )}
       </View>
     </View>
   );
@@ -74,6 +73,7 @@ export default function SubmissionContent() {
   const post = usePost();
   const theme = useTheme();
 
+  if (post.url === '9pr5') debugger;
   if (post?.domain == undefined) {
     return <Text style={{color: 'red'}}>Content not supported</Text>;
   } else if (
