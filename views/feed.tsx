@@ -1,5 +1,5 @@
 import React, {useState, useEffect, createRef} from 'react';
-import {View, Text} from 'react-native';
+import {View, Share, Linking} from 'react-native';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/core';
 import {RuqqusFeed, usePost} from 'react-ruqqus';
 import {useValue, useStyle, useTheme} from '@contexts';
@@ -23,7 +23,7 @@ export default function Feed() {
   const [sortPopupVisible, setSortPopupVisible] = useState(false);
   const [sort, setSort] = useState('hot');
 
-  const [menuPostId, setMenuPostId] = useState<RuqqusPost>();
+  const [menuPost, setMenuPost] = useState<RuqqusPost>();
 
   const refreshRef = createRef<() => void>();
 
@@ -100,12 +100,61 @@ export default function Feed() {
         />
       </Popup>
 
-      <Popup
-        visible={menuPostId ? true : false}
-        toggleModal={() => setMenuPostId(undefined)}
-        title="More actions"></Popup>
+      {menuPost ? (
+        <Popup
+          visible={menuPost ? true : false}
+          toggleModal={() => setMenuPost(undefined)}
+          title="More actions">
+          <PopupButton
+            label="Share"
+            icon="share"
+            onPress={() => {
+              Share.share({message: menuPost.url});
+              setMenuPost(undefined);
+            }}
+          />
+          <PopupButton
+            label="Comments"
+            icon="comments"
+            onPress={() => {
+              navigation.push('Comments', {post_id: menuPost.id});
+              setMenuPost(undefined);
+            }}
+          />
+          <PopupButton
+            label={`Go to @${menuPost.author_name}`}
+            icon="user"
+            onPress={() => {
+              navigation.push(route.name, {
+                feed: {user: menuPost.author_name},
+              });
+              setMenuPost(undefined);
+            }}
+          />
+          <PopupButton
+            label={`Go to +${menuPost.guild_name}`}
+            icon="plus"
+            onPress={() => {
+              navigation.push(route.name, {
+                feed: {guild: menuPost.guild_name},
+              });
+              setMenuPost(undefined);
+            }}
+          />
+          <PopupButton
+            label="Open In Browser"
+            icon="chrome"
+            onPress={() => {
+              Linking.canOpenURL(menuPost.url).then(() =>
+                Linking.openURL(menuPost.url),
+              );
+              setMenuPost(undefined);
+            }}
+          />
+        </Popup>
+      ) : null}
 
-      <PostMenuContext.Provider value={[menuPostId, setMenuPostId]}>
+      <PostMenuContext.Provider value={[menuPost, setMenuPost]}>
         <RuqqusFeed
           feed={route.params.feed}
           renderPost={() => <DefaultPostcard />}

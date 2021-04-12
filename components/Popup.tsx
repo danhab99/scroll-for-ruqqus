@@ -10,7 +10,7 @@ interface PopupProps {
   visible: boolean;
   toggleModal: (() => void) | undefined;
   title: string;
-  children: React.ReactNode[];
+  children: React.ReactNode;
 }
 
 export default function Popup(props: PopupProps) {
@@ -87,6 +87,7 @@ export function PopupButton(props: PopupButtonProps) {
         style={{
           display: 'flex',
           justifyContent: 'flex-start',
+          alignItems: 'center',
           flexDirection: 'row',
           marginBottom: SPACE(0.5),
         }}>
