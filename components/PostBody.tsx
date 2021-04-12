@@ -14,7 +14,9 @@ function PostAsImage() {
   const theme = useTheme();
 
   useEffect(() => {
-    fetch(post.url).then((resp) => {
+    const controller = new AbortController();
+
+    fetch(post.url, {signal: controller.signal}).then((resp) => {
       if (resp.ok) {
         let type = resp?.headers?.get?.('content-type');
 
@@ -39,6 +41,10 @@ function PostAsImage() {
         setLoading(false);
       }
     });
+
+    return () => {
+      controller.abort();
+    };
   }, [post.url]);
 
   return (
