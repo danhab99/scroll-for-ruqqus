@@ -93,7 +93,9 @@ function Metas() {
         size={theme?.FontSize.get?.(2)}
       />
       <Text style={style?.downvotes}> {post.downvotes} </Text>
-      <Text style={style?.headText}>({post.score})</Text>
+      <Text style={style?.headText}>
+        ({post.score}) • {post.comment_count} comments
+      </Text>
     </View>
   );
 }
