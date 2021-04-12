@@ -102,7 +102,7 @@ function StackNavigator(props: ChildrenOnly) {
   );
 }
 
-function FeedStackNavigator(props: ChildrenOnly) {
+function FrontpageStackNavigator(props: ChildrenOnly) {
   return (
     <StackNavigator {...props}>
       <Stack.Screen
@@ -110,6 +110,20 @@ function FeedStackNavigator(props: ChildrenOnly) {
         component={Feed}
         initialParams={{
           feed: 'front',
+        }}
+      />
+    </StackNavigator>
+  );
+}
+
+function AllStackNavigator(props: ChildrenOnly) {
+  return (
+    <StackNavigator {...props}>
+      <Stack.Screen
+        name="All"
+        component={Feed}
+        initialParams={{
+          feed: 'all',
         }}
       />
     </StackNavigator>
@@ -148,8 +162,11 @@ export default function App() {
               backgroundColor: theme?.Colors?.backgroundHighlight,
             }}
             drawerContent={(ps) => <CustomDrawerContent {...ps} />}>
-            <Drawer.Screen name="Frontpage" component={FeedStackNavigator} />
-            <Drawer.Screen name="All" component={FeedStackNavigator} />
+            <Drawer.Screen
+              name="Frontpage"
+              component={FrontpageStackNavigator}
+            />
+            <Drawer.Screen name="All" component={FrontpageStackNavigator} />
             <Drawer.Screen name="Login" component={LoginStackNavigator} />
             <Drawer.Screen name="Submit" component={SubmitStackNavigator} />
           </Drawer.Navigator>
