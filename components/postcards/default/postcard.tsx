@@ -17,6 +17,7 @@ import {IconButton} from 'components/Buttons';
 import {IconButtonProps} from 'react-native-vector-icons/Icon';
 import {useCollection, useSavedPosts} from '../../../contexts/useCollection';
 import {useNavigation, useRoute} from '@react-navigation/core';
+import {usePostMenuContext} from 'contexts/post-menu-context';
 
 function Head() {
   const post = usePost();
@@ -141,6 +142,7 @@ function Controls() {
   const theme = useTheme();
   const [saves, {add, remove}] = useSavedPosts();
   const navigator = useNavigation();
+  const [__, setPostMenu] = usePostMenuContext();
 
   const predicate = (x: {id: string; date_saved: Date}): boolean =>
     x.id.includes(post.id);
@@ -179,7 +181,7 @@ function Controls() {
         name="commenting"
         onPress={() => navigator.push('Comments', {post_id: post.id})}
       />
-      <IconButton name="ellipsis-v" />
+      <IconButton name="ellipsis-v" onPress={() => setPostMenu(post)} />
     </View>
   );
 }

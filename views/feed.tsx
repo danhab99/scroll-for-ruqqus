@@ -10,6 +10,8 @@ import {GuildHeader} from '../components/GuildHeader';
 import {UserHeader} from '../components/UserHeader';
 import {IconButton} from 'components/Buttons';
 import Popup, {PopupButton} from 'components/Popup';
+import {RuqqusPost} from 'react-ruqqus/types';
+import {PostMenuContext} from '../contexts/post-menu-context';
 
 export default function Feed() {
   const navigation = useNavigation();
@@ -20,6 +22,8 @@ export default function Feed() {
 
   const [sortPopupVisible, setSortPopupVisible] = useState(false);
   const [sort, setSort] = useState('hot');
+
+  const [menuPostId, setMenuPostId] = useState<RuqqusPost>();
 
   const refreshRef = createRef<() => void>();
 
@@ -96,19 +100,26 @@ export default function Feed() {
         />
       </Popup>
 
-      <RuqqusFeed
-        feed={route.params.feed}
-        renderPost={() => <DefaultPostcard />}
-        renderGuildHeader={() => <GuildHeader />}
-        renderUserHeader={() => <UserHeader />}
-        style={style?.root}
-        contentContainerStyle={{
-          marginTop:
-            typeof route.params.feed === 'object' ? 0 : theme?.Space.get?.(1),
-        }}
-        refreshRef={refreshRef}
-        sort={sort}
-      />
+      <Popup
+        visible={menuPostId ? true : false}
+        toggleModal={() => setMenuPostId(undefined)}
+        title="More actions"></Popup>
+
+      <PostMenuContext.Provider value={[menuPostId, setMenuPostId]}>
+        <RuqqusFeed
+          feed={route.params.feed}
+          renderPost={() => <DefaultPostcard />}
+          renderGuildHeader={() => <GuildHeader />}
+          renderUserHeader={() => <UserHeader />}
+          style={style?.root}
+          contentContainerStyle={{
+            marginTop:
+              typeof route.params.feed === 'object' ? 0 : theme?.Space.get?.(1),
+          }}
+          refreshRef={refreshRef}
+          sort={sort}
+        />
+      </PostMenuContext.Provider>
     </View>
   );
 }
