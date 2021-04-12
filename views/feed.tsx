@@ -5,13 +5,13 @@ import {RuqqusFeed, usePost} from 'react-ruqqus';
 import {useValue, useStyle, useTheme} from '@contexts';
 import * as _ from 'lodash';
 
-import DefaultPostcard from '../components/postcards/default/postcard';
 import {GuildHeader} from '../components/GuildHeader';
 import {UserHeader} from '../components/UserHeader';
 import {IconButton} from 'components/Buttons';
 import Popup, {PopupButton} from 'components/Popup';
 import {RuqqusPost} from 'react-ruqqus/types';
 import {PostMenuContext} from '../contexts/post-menu-context';
+import {CardSelector} from '../components/postcards/cardSelector';
 
 export default function Feed() {
   const navigation = useNavigation();
@@ -157,7 +157,7 @@ export default function Feed() {
       <PostMenuContext.Provider value={[menuPost, setMenuPost]}>
         <RuqqusFeed
           feed={route.params.feed}
-          renderPost={() => <DefaultPostcard />}
+          renderPost={() => <CardSelector />}
           renderGuildHeader={() => <GuildHeader />}
           renderUserHeader={() => <UserHeader />}
           style={style?.root}
