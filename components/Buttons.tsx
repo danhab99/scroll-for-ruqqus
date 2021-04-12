@@ -1,6 +1,5 @@
 import React, {useEffect} from 'react';
 import {View, Pressable, Text} from 'react-native';
-import {SPACE, FONTSIZE, COLORS} from '../theme';
 import {OptionalEventHandler} from './OptionalEventHandler';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {IconButtonProps} from 'react-native-vector-icons/Icon';
@@ -29,16 +28,20 @@ interface ButtonProps {
 }
 
 export function Button(props: ButtonProps) {
+  const theme = useTheme();
+
   return (
     <Pressable onPress={() => !props.disabled && props?.onPress?.()}>
       <Text
         style={{
-          backgroundColor: props.disabled ? COLORS.muted : COLORS.primary,
-          color: COLORS.text,
+          backgroundColor: props.disabled
+            ? theme?.Colors?.muted
+            : theme?.Colors?.primary,
+          color: theme?.Colors?.text,
           justifyContent: 'center',
           textAlign: 'center',
-          fontSize: FONTSIZE(1.5),
-          padding: SPACE(0.5),
+          fontSize: theme?.FontSize?.get?.(1.5),
+          padding: theme?.Space?.get?.(0.5),
           borderRadius: 5,
           ...props.style,
         }}>

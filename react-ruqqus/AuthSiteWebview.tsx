@@ -1,7 +1,6 @@
 import React, {useContext, useRef} from 'react';
 import {ActivityIndicator} from 'react-native';
 import {WebView, WebViewMessageEvent} from 'react-native-webview';
-import {COLORS} from '../theme';
 import {UserContext, WebAuthContext} from './ClientContext';
 
 const CAPTURE_TOKENS = `
@@ -42,9 +41,7 @@ export function AuthSiteWebview() {
       onNavigationStateChange={() => {
         webViewRef.current.injectJavaScript(CAPTURE_TOKENS);
       }}
-      renderLoading={() => (
-        <ActivityIndicator size="large" color={COLORS.primary} />
-      )}
+      renderLoading={() => <ActivityIndicator size="large" />}
       startInLoadingState={true}
       javaScriptEnabled={true}
       domStorageEnabled={true}

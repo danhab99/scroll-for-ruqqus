@@ -79,7 +79,6 @@ export default function SubmissionContent() {
   const post = usePost();
   const theme = useTheme();
 
-  if (post.url === '9pr5') debugger;
   if (post?.domain == undefined) {
     return <Text style={{color: 'red'}}>Content not supported</Text>;
   } else if (

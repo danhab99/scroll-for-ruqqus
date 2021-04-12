@@ -1,6 +1,5 @@
 import React from 'react';
 import {View, Text, Modal, Pressable} from 'react-native';
-import {SPACE, FONTSIZE, COLORS} from '../theme';
 import {IconButton} from './Buttons';
 import {OptionalEventHandler} from './OptionalEventHandler';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -24,7 +23,7 @@ export default function Popup(props: PopupProps) {
       onRequestClose={() => props.toggleModal?.()}>
       <View
         style={{
-          margin: SPACE(3),
+          margin: theme?.Space?.get?.(3),
           alignItems: 'center',
           shadowColor: '#000',
           shadowOpacity: 0.5,
@@ -34,8 +33,8 @@ export default function Popup(props: PopupProps) {
         }}>
         <View
           style={{
-            backgroundColor: COLORS.backgroundDark,
-            padding: SPACE(2),
+            backgroundColor: theme?.Colors?.backgroundDark,
+            padding: theme?.Space?.get?.(2),
             width: '100%',
             borderRadius: 10,
           }}>
@@ -55,8 +54,8 @@ export default function Popup(props: PopupProps) {
             />
             <Text
               style={{
-                color: COLORS.text,
-                fontSize: FONTSIZE(2),
+                color: theme?.Colors?.text,
+                fontSize: theme?.FontSize?.get?.(2),
               }}>
               {props.title}
             </Text>
@@ -81,6 +80,8 @@ interface PopupButtonProps {
 }
 
 export function PopupButton(props: PopupButtonProps) {
+  const theme = useTheme();
+
   return (
     <Pressable onPress={() => props.onPress?.()}>
       <View
@@ -89,14 +90,14 @@ export function PopupButton(props: PopupButtonProps) {
           justifyContent: 'flex-start',
           alignItems: 'center',
           flexDirection: 'row',
-          marginBottom: SPACE(0.5),
+          marginBottom: theme?.Space?.get?.(0.5),
         }}>
-        <Icon name={props.icon} size={30} color={COLORS.text} />
+        <Icon name={props.icon} size={30} color={theme?.Colors?.text} />
         <Text
           style={{
-            color: COLORS.text,
-            fontSize: FONTSIZE(2),
-            marginLeft: SPACE(1),
+            color: theme?.Colors?.text,
+            fontSize: theme?.FontSize?.get?.(2),
+            marginLeft: theme?.Space?.get?.(1),
           }}>
           {props.label}
         </Text>
