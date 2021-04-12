@@ -1,6 +1,6 @@
 import {useRoute} from '@react-navigation/native';
-import React from 'react';
-import {ActivityIndicator, View} from 'react-native';
+import React, {useEffect} from 'react';
+import {ActivityIndicator, View, Alert} from 'react-native';
 import WebView from 'react-native-webview';
 import {useRuqqusClient} from '@react-ruqqus';
 import {useStyle, useTheme} from '@contexts';
@@ -10,6 +10,13 @@ export default function Comments() {
   const client = useRuqqusClient();
   const style = useStyle();
   const theme = useTheme();
+
+  useEffect(() => {
+    Alert.alert(
+      'Sorry',
+      "We're gonna have to use the webapp while we wait for the Ruqqus maintainers to implement a comments api",
+    );
+  }, []);
 
   return (
     <WebView
