@@ -2,12 +2,9 @@ import {useEffect, useRef} from 'react';
 import {fetcher} from './fetcher';
 import {RuqqusUser} from './types';
 import {useRuqqusClient} from './useRuqqusClient';
+import {ClientContextProps} from './ClientContext';
 
-interface UserData {
-  access_token: string;
-  refresh_token: string;
-  user: RuqqusUser;
-}
+type UserData = ClientContextProps & {user: RuqqusUser};
 
 export function useOnWebviewClear(clear: (user: UserData) => void) {
   const client = useRuqqusClient();

@@ -3,7 +3,7 @@ import {TokenInterface} from './RuqqusClientProvider';
 
 class SetOutOfContetStateError extends Error {}
 
-interface ClientContextProps {
+export interface ClientContextProps {
   authserver: string;
   access_token: string;
   refresh_token: string;

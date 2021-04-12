@@ -4,10 +4,20 @@ import {fetcher} from './fetcher';
 import {useFetch} from './useFetch';
 import {useRuqqusClient} from './useRuqqusClient';
 
+interface AuthSite {
+  _id: string;
+  clientID: string;
+  domain: string;
+  name: string;
+}
+
 export function useAuthSites() {
   const client = useRuqqusClient();
   const {setAuthSite} = useContext(WebAuthContext);
-  const {loading, body, refresh} = useFetch(client?.authserver || '', 'sites');
+  const {loading, body, refresh} = useFetch<AuthSite[]>(
+    client?.authserver || '',
+    'sites',
+  );
 
   const getAuthURL = (id: string) => {
     if (client?.authserver) {

@@ -49,18 +49,18 @@ export default function ROALogin(props: any) {
     setConnecting(false);
 
     if (siteID) {
-      setAccounts((accounts = []) => [
-        ...accounts,
-        {
-          id: v4(),
-          siteID,
-          access_token: results.access_token,
-          refresh_token: results.refresh_token,
-          username: results.user.username,
-          client_id: '',
-          expires_at: 0,
-        },
-      ]);
+      let newAccount = {
+        id: v4(),
+        siteID,
+        access_token: results.access_token,
+        refresh_token: results.refresh_token,
+        username: results.user.username,
+        client_id: sites.filter((site) => site._id === siteID)[0].clientID,
+        expires_at: results.expires_at,
+      };
+      setAccounts((accounts = []) => [...accounts, newAccount]);
+
+      setActiveAccount(newAccount.id);
     }
   });
 
@@ -92,9 +92,15 @@ export default function ROALogin(props: any) {
   };
 
   const pickAccount = (id: string) => {
-    setActiveAccount(id);
-    login(accounts.filter((x) => x.id === id)[0] as TokenInterface);
-    navigation.navigate('Frontpage');
+    let account: TokenInterface = accounts.filter((x) => x.id === id)[0];
+
+    if (account) {
+      setActiveAccount(id);
+      login(account);
+      navigation.navigate('Frontpage');
+    } else {
+      setActiveAccount('');
+    }
   };
 
   useEffect(() => {
