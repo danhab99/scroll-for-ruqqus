@@ -19,6 +19,7 @@ import {
 import {v4} from 'react-native-uuid';
 import {useNavigation} from '@react-navigation/core';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import * as _ from 'lodash';
 
 interface Site {
   _id: string;
@@ -96,6 +97,12 @@ export default function ROALogin(props: any) {
     navigation.navigate('Frontpage');
   };
 
+  useEffect(() => {
+    if (!_.isEmpty(activeAccount)) {
+      pickAccount(activeAccount);
+    }
+  }, [activeAccount]);
+
   if (connecting) {
     return <AuthSiteWebview />;
   } else {
@@ -108,69 +115,69 @@ export default function ROALogin(props: any) {
         {sites?.map((site: Site, i: number) => (
           <View key={`${i}`} style={style?.card}>
             <View style={{padding: theme?.Space.get?.(1)}}>
-            <Text
-              style={{
-                color: theme?.Colors?.text,
-                fontSize: theme?.FontSize.get?.(2),
-                fontWeight: 'bold',
-              }}>
-              {site.domain}
-            </Text>
+              <Text
+                style={{
+                  color: theme?.Colors?.text,
+                  fontSize: theme?.FontSize.get?.(2),
+                  fontWeight: 'bold',
+                }}>
+                {site.domain}
+              </Text>
 
-            <View>
-              {(Array.isArray(accounts) ? accounts : [])
-                .filter((x) => x.siteID === site._id)
-                .map((account, i) => (
-                  <View
-                    key={`${i}`}
-                    style={{
-                      marginTop: theme?.Space.get?.(1),
-                      display: 'flex',
-                      flexDirection: 'row',
-                      justifyContent: 'flex-end',
-                      alignContent: 'center',
-                      alignItems: 'center',
-                    }}>
-                    <Text
+              <View>
+                {(Array.isArray(accounts) ? accounts : [])
+                  .filter((x) => x.siteID === site._id)
+                  .map((account, i) => (
+                    <View
+                      key={`${i}`}
                       style={{
-                        color: theme?.Colors.text,
-                        fontWeight: 'bold',
-                        textAlign: 'center',
-                        margin: 'auto',
+                        marginTop: theme?.Space.get?.(1),
+                        display: 'flex',
+                        flexDirection: 'row',
+                        justifyContent: 'flex-end',
                         alignContent: 'center',
-                        fontSize: theme?.FontSize.get?.(1.5),
-                        marginRight: theme?.Space.get?.(1),
+                        alignItems: 'center',
                       }}>
-                      {activeAccount === account.id ? (
-                        <Icon name="star" size={theme?.FontSize?.get?.(2)} />
-                      ) : null}{' '}
-                      @{account.username}
-                    </Text>
+                      <Text
+                        style={{
+                          color: theme?.Colors.text,
+                          fontWeight: 'bold',
+                          textAlign: 'center',
+                          margin: 'auto',
+                          alignContent: 'center',
+                          fontSize: theme?.FontSize.get?.(1.5),
+                          marginRight: theme?.Space.get?.(1),
+                        }}>
+                        {activeAccount === account.id ? (
+                          <Icon name="star" size={theme?.FontSize?.get?.(2)} />
+                        ) : null}{' '}
+                        @{account.username}
+                      </Text>
 
-                    <Button
-                      text="Login"
-                      style={{
-                        marginRight: theme?.Space.get?.(1),
-                      }}
-                      onPress={() => pickAccount(account.id)}
-                    />
+                      <Button
+                        text="Login"
+                        style={{
+                          marginRight: theme?.Space.get?.(1),
+                        }}
+                        onPress={() => pickAccount(account.id)}
+                      />
 
-                    <IconButton
-                      name="trash"
-                      onPress={() => deleteAccount(account.id)}
-                    />
-                  </View>
-                ))}
+                      <IconButton
+                        name="trash"
+                        onPress={() => deleteAccount(account.id)}
+                      />
+                    </View>
+                  ))}
+              </View>
+
+              <Button
+                text="Connect an account"
+                onPress={() => connectAccount(site._id)}
+                style={{
+                  marginTop: theme?.Space.get?.(1),
+                }}
+              />
             </View>
-
-            <Button
-              text="Connect an account"
-              onPress={() => connectAccount(site._id)}
-              style={{
-                marginTop: theme?.Space.get?.(1),
-              }}
-            />
-          </View>
           </View>
         ))}
       </ScrollView>

@@ -52,9 +52,9 @@ export default function Feed() {
   return (
     <RuqqusFeed
       feed={route.params.feed}
-      renderPost={(p) => <DefaultPostcard />}
-      renderGuildHeader={(g) => <GuildHeader />}
-      renderUserHeader={(u) => <User />}
+      renderPost={() => <DefaultPostcard />}
+      renderGuildHeader={() => <GuildHeader />}
+      renderUserHeader={() => <User />}
       style={style?.view}
     />
   );
