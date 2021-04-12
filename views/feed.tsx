@@ -1,7 +1,7 @@
 import React, {useState, useEffect, createRef} from 'react';
-import {View, Share, Linking} from 'react-native';
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/core';
-import {RuqqusFeed, usePost} from 'react-ruqqus';
+import {View} from 'react-native';
+import {useNavigation, useRoute} from '@react-navigation/core';
+import {RuqqusFeed} from 'react-ruqqus';
 import {useValue, useStyle, useTheme} from '@contexts';
 import * as _ from 'lodash';
 
@@ -9,34 +9,22 @@ import {GuildHeader} from '../components/GuildHeader';
 import {UserHeader} from '../components/UserHeader';
 import {IconButton} from 'components/Buttons';
 import Popup, {PopupButton} from 'components/Popup';
-import {RuqqusPost} from 'react-ruqqus/types';
-import {PostMenuContext} from '../contexts/post-menu-context';
 import {CardSelector} from '../components/postcards/cardSelector';
+import {PopupWrapper} from './PopupWrapper';
+import {useEnforceLogin} from './useEnforceLogin';
 
 export default function Feed() {
   const navigation = useNavigation();
   const route = useRoute<any>();
   const style = useStyle();
   const theme = useTheme();
-  const [activeAccount] = useValue<string>('active-account');
 
   const [sortPopupVisible, setSortPopupVisible] = useState(false);
   const [sort, setSort] = useState('hot');
 
-  const [menuPost, setMenuPost] = useState<RuqqusPost>();
-
   const refreshRef = createRef<() => void>();
 
-  useEffect(() => {
-    let h = () => {
-      if (_.isEmpty(activeAccount)) {
-        navigation.navigate('Login');
-      }
-    };
-
-    navigation.addListener('focus', h);
-    return () => navigation.removeListener('focus', h);
-  }, [activeAccount]);
+  useEnforceLogin();
 
   useEffect(() => {
     let feed = route.params.feed;
@@ -100,61 +88,7 @@ export default function Feed() {
         />
       </Popup>
 
-      {menuPost ? (
-        <Popup
-          visible={menuPost ? true : false}
-          toggleModal={() => setMenuPost(undefined)}
-          title="More actions">
-          <PopupButton
-            label="Share"
-            icon="share"
-            onPress={() => {
-              Share.share({message: menuPost.url});
-              setMenuPost(undefined);
-            }}
-          />
-          <PopupButton
-            label="Comments"
-            icon="comments"
-            onPress={() => {
-              navigation.push('Comments', {post_id: menuPost.id});
-              setMenuPost(undefined);
-            }}
-          />
-          <PopupButton
-            label={`Go to @${menuPost.author_name}`}
-            icon="user"
-            onPress={() => {
-              navigation.push(route.name, {
-                feed: {user: menuPost.author_name},
-              });
-              setMenuPost(undefined);
-            }}
-          />
-          <PopupButton
-            label={`Go to +${menuPost.guild_name}`}
-            icon="plus"
-            onPress={() => {
-              navigation.push(route.name, {
-                feed: {guild: menuPost.guild_name},
-              });
-              setMenuPost(undefined);
-            }}
-          />
-          <PopupButton
-            label="Open In Browser"
-            icon="chrome"
-            onPress={() => {
-              Linking.canOpenURL(menuPost.url).then(() =>
-                Linking.openURL(menuPost.url),
-              );
-              setMenuPost(undefined);
-            }}
-          />
-        </Popup>
-      ) : null}
-
-      <PostMenuContext.Provider value={[menuPost, setMenuPost]}>
+      <PopupWrapper>
         <RuqqusFeed
           feed={route.params.feed}
           renderPost={() => <CardSelector />}
@@ -168,7 +102,7 @@ export default function Feed() {
           refreshRef={refreshRef}
           sort={sort}
         />
-      </PostMenuContext.Provider>
+      </PopupWrapper>
     </View>
   );
 }
