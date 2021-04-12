@@ -2,6 +2,8 @@ import React from 'react';
 import {Text, Linking} from 'react-native';
 import {SPACE, FONTSIZE, COLORS, MarkdownStyle} from '../theme';
 import HTML from 'react-native-render-html';
+import {useRuqqusClient} from '../react-ruqqus/useRuqqusClient';
+import {useTheme} from '../contexts/theme-context';
 
 interface HtmlMarkdownProps {
   html: string;
@@ -9,6 +11,9 @@ interface HtmlMarkdownProps {
 }
 
 export default function HtmlMarkdown(props: HtmlMarkdownProps) {
+  const client = useRuqqusClient();
+  const theme = useTheme();
+
   return (
     <HTML
       html={props.html}
@@ -24,9 +29,9 @@ export default function HtmlMarkdown(props: HtmlMarkdownProps) {
             <Text
               style={{
                 color: COLORS.primary,
-                fontSize: FONTSIZE(1.5),
+                fontSize: theme?.FontSize?.get?.(1.5),
                 fontWeight: 'bold',
-                marginRight: SPACE(1 / 5),
+                marginRight: theme?.Space?.get?.(1 / 5),
               }}>
               •
             </Text>
@@ -39,12 +44,17 @@ export default function HtmlMarkdown(props: HtmlMarkdownProps) {
           .catch((err) => console.log('Cannot open markdown link', err));
       }}
       alterNode={(node) => {
-        if (node?.attribs?.src == '/') {
-          return Object.assign(node, {
-            attribs: {
-              src: `https://${props.domain || 'ruqqus.com'}${node.attribs.src}`,
-            },
-          });
+        console.log('HTML', node);
+        if (node.name === 'img') {
+          if (node?.attribs?.src[0] == '/') {
+            return Object.assign(node, {
+              attribs: {
+                src: `https://${client.domain || 'ruqqus.com'}${
+                  node.attribs.src
+                }`,
+              },
+            });
+          }
         }
         return node;
       }}
