@@ -6,6 +6,8 @@ interface ScaledImageProps {
   url: string;
 }
 
+const ErrorImage = require('../assets/noimage.jpg');
+
 export default function ScaledImage(props: ScaledImageProps) {
   const [aspectRatio, setAspectRatio] = useState(1);
   const [source, setSource] = useState<any>();
@@ -19,7 +21,8 @@ export default function ScaledImage(props: ScaledImageProps) {
       },
       (err) => {
         console.log('Unable to get image size', props, err);
-        // setSource(require('../assets/noimage.jpg'));
+        // debugger;
+        setSource(ErrorImage);
       },
     );
   };
@@ -28,20 +31,14 @@ export default function ScaledImage(props: ScaledImageProps) {
     getImageSize();
   }, []);
 
-  // TODO: Determine if this logic is necessesary
-  // shouldComponentUpdate(nextProps, nextState) {
-  //   return (
-  //     this.props.url !== nextProps.url ||
-  //     this.state.aspectRatio !== nextState.aspectRatio
-  //   );
-  // }
-
   return (
     <Image
       source={source}
       style={{
         width: '100%',
         aspectRatio: aspectRatio,
+        height: null,
+        resizeMode: 'contain',
       }}
       onLoad={() => {}}
     />
