@@ -1,12 +1,20 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {usePost, useVote} from '@react-ruqqus';
-import {View, Text, Pressable, TextStyle} from 'react-native';
+import {
+  View,
+  Text,
+  Pressable,
+  TextStyle,
+  ActivityIndicator,
+  GestureResponderEvent,
+} from 'react-native';
 import {useTheme, useStyle} from '@contexts';
 import TimeAgo from 'react-native-timeago';
 import * as _ from 'lodash';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import SubmissionContent from 'components/PostBody';
 import {IconButton} from 'components/Buttons';
+import {IconButtonProps} from 'react-native-vector-icons/Icon';
 
 function Head() {
   const post = usePost();
@@ -85,16 +93,57 @@ function Metas() {
   );
 }
 
+interface LoadingControlProps {
+  name: string;
+  onPress: (cb: () => any) => Promise<any>;
+  highlighted: boolean;
+}
+
+function LoadingControl(props: LoadingControlProps) {
+  const [loading, setLoading] = useState(false);
+  const theme = useTheme();
+
+  const press = () => {
+    setLoading(true);
+
+    let cb = () => {
+      setLoading(false);
+    };
+
+    Promise.resolve(props.onPress(cb)).then(cb);
+  };
+
+  return loading ? (
+    <ActivityIndicator color={theme?.Colors.primary} size="small" />
+  ) : (
+    <IconButton
+      onPress={() => {
+        press();
+      }}
+      name={props.name}
+      color={props.highlighted ? theme?.Colors.primary : theme?.Colors.text}
+    />
+  );
+}
+
 function Controls() {
-  const {} = useVote();
+  const {upvote, downvote} = useVote();
   const post = usePost();
   const style = useStyle();
 
   return (
     <View style={style?.controlrow}>
-      <IconButton name="arrow-up" />
-      <IconButton name="arrow-down" />
-      <IconButton name="save" />
+      <LoadingControl
+        name="arrow-up"
+        onPress={() => upvote()}
+        highlighted={post.voted === 1}
+      />
+      <LoadingControl
+        name="arrow-down"
+        onPress={() => downvote()}
+        highlighted={post.voted === -1}
+      />
+      <LoadingControl name="save" highlighted={false} />
       <IconButton name="commenting" />
       <IconButton name="ellipsis-v" />
     </View>

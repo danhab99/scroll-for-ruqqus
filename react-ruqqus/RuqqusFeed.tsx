@@ -120,14 +120,25 @@ export function useVote() {
 
   const vote = (dir: RuqqusVote) => {
     let d = post.voted === dir ? 0 : dir;
-    return fetcher(client.domain, `vote/${post.id}/${d}`, {
+    return fetcher(client.domain, `api/v1/vote/post/${post.id}/${d}`, {
       access_token: client.access_token,
-    }).then((resp) => {
-      let p: RuqqusPost = resp.body;
+      body: {},
+    })
+      .then((resp) => {
+        if (resp.ok) {
+          return fetcher(client.domain, `api/v1/post/${post.id}`, {
+            access_token: client.access_token,
+          });
+        } else {
+          throw resp;
+        }
+      })
+      .then((resp) => {
+        let p: RuqqusPost = resp.body;
 
-      mutate((prev) => prev?.map((x) => (x.id === p.id ? p : x)));
-      return resp;
-    });
+        mutate((prev) => prev?.map((x) => (x.id === p.id ? p : x)));
+        return resp;
+      });
   };
 
   return {
