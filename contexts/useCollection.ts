@@ -4,6 +4,7 @@ import {
   CachesDirectoryPath,
   readFile,
   writeFile,
+  mkdir,
 } from 'react-native-fs';
 import * as _ from 'lodash';
 
@@ -15,7 +16,7 @@ interface ColletcionOpts<T> {
 type CollectionHooks<T> = [
   T[],
   {
-    add: (next: T[]) => void;
+    add: (next: T[] | T) => void;
     nextPage: (page?: number) => void;
     remove: (predicate: (x: T) => boolean) => void;
   },
@@ -35,19 +36,23 @@ const useMassStore = (head: string) => <T>(
     let start = page * take;
     let filei = Math.floor(start / MAX_COUNT);
 
-    readFile(`${head}/col/${name}.${filei}.json`).then((raw) => {
-      let j = JSON.parse(raw);
-      let l: T[] = _.slice(j, start, start + take);
+    mkdir(`${head}/col`).then(() =>
+      readFile(`${head}/col/${name}.${filei}.json`).then((raw) => {
+        let j = JSON.parse(raw);
+        let l: T[] = _.slice(j, start, start + take);
 
-      setCollection((prev) => (page > 0 ? prev?.concat(l) : l));
-    });
+        setCollection((prev) => (page > 0 ? prev?.concat(l) : l));
+      }),
+    );
   };
 
   const write = () => {
     let chunks = _.chunk(collection, MAX_COUNT);
-    chunks.forEach((chunk, i) => {
-      writeFile(`${head}/col/${name}.${i}.json`, JSON.stringify(chunk));
-    });
+    mkdir(`${head}/col`).then(() =>
+      chunks.forEach((chunk, i) => {
+        writeFile(`${head}/col/${name}.${i}.json`, JSON.stringify(chunk));
+      }),
+    );
   };
 
   useEffect(() => {
@@ -82,3 +87,10 @@ const useMassStore = (head: string) => <T>(
 
 export const useCollection = useMassStore(DocumentDirectoryPath);
 export const useCache = useMassStore(CachesDirectoryPath);
+
+type SavedPosts = {
+  id: string;
+  date_saved: Date;
+};
+
+export const useSavedPosts = () => useCollection<SavedPosts>('saves');
