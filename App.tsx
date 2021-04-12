@@ -63,7 +63,7 @@ function StackTitle(props: StackHeaderTitleProps) {
       <Text
         style={{
           color: theme?.Colors?.text,
-          fontSize: theme?.FontSize?.get?.(2),
+          fontSize: theme?.FontSize?.get?.(3),
           fontWeight: 'bold',
         }}>
         {props.children}
