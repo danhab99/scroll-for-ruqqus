@@ -2,6 +2,7 @@ import {useState, useEffect} from 'react';
 import {RuqqusPost} from './types';
 import {UseFetchOpts} from './useFetch';
 import {useRuqqusFetch} from './useRuqqusFetch';
+import * as _ from 'lodash';
 
 export function useFeed(edge: string, args?: UseFetchOpts) {
   const [posts, setPosts] = useState<RuqqusPost[]>();
@@ -17,8 +18,15 @@ export function useFeed(edge: string, args?: UseFetchOpts) {
 
   useEffect(() => {
     if (body) {
-      let {data} = body;
-      setPosts((prev) => (page > 1 ? prev?.concat(data) : data));
+      let data = body.data;
+      setPosts((prev) => {
+        let next = page > 1 ? prev?.concat(data) : data;
+        next = _.uniqBy(next, (x) => x.id);
+        if (next.length < 1) {
+          console.warn('RUQQUS may have not retrieved new posts');
+        }
+        return next;
+      });
       setMore(body.next_exists);
     }
   }, [page, body]);
