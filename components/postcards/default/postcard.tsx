@@ -15,6 +15,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import SubmissionContent from 'components/PostBody';
 import {IconButton} from 'components/Buttons';
 import {IconButtonProps} from 'react-native-vector-icons/Icon';
+import {useCollection, useSavedPosts} from '../../../contexts/useCollection';
 
 function Head() {
   const post = usePost();
@@ -130,6 +131,24 @@ function Controls() {
   const {upvote, downvote} = useVote();
   const post = usePost();
   const style = useStyle();
+  const theme = useTheme();
+  const [saves, {add, remove}] = useSavedPosts();
+
+  const predicate = (x: {id: string; date_saved: Date}): boolean =>
+    x.id.includes(post.id);
+
+  const saved = _.findIndex(saves, predicate) >= 0;
+
+  const toggleSaved = () => {
+    if (saved) {
+      remove(predicate);
+    } else {
+      add({
+        id: post.id,
+        date_saved: new Date(),
+      });
+    }
+  };
 
   return (
     <View style={style?.controlrow}>
@@ -143,7 +162,11 @@ function Controls() {
         onPress={() => downvote()}
         highlighted={post.voted === -1}
       />
-      <LoadingControl name="save" highlighted={false} />
+      <IconButton
+        name="save"
+        color={saved ? theme?.Colors.primary : theme?.Colors.text}
+        onPress={() => toggleSaved()}
+      />
       <IconButton name="commenting" />
       <IconButton name="ellipsis-v" />
     </View>

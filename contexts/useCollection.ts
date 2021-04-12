@@ -36,20 +36,22 @@ const useMassStore = (head: string) => <T>(
     let start = page * take;
     let filei = Math.floor(start / MAX_COUNT);
 
-    mkdir(`${head}/col`).then(() =>
+    mkdir(`${head}/col`).then(() => {
       readFile(`${head}/col/${name}.${filei}.json`).then((raw) => {
+        console.log('COLLECTIONS READ', name, filei, raw);
         let j = JSON.parse(raw);
         let l: T[] = _.slice(j, start, start + take);
 
         setCollection((prev) => (page > 0 ? prev?.concat(l) : l));
-      }),
-    );
+      });
+    });
   };
 
   const write = () => {
     let chunks = _.chunk(collection, MAX_COUNT);
     mkdir(`${head}/col`).then(() =>
       chunks.forEach((chunk, i) => {
+        console.log('COLLECTIONS WRITE', name, i, chunk);
         writeFile(`${head}/col/${name}.${i}.json`, JSON.stringify(chunk));
       }),
     );
@@ -80,7 +82,7 @@ const useMassStore = (head: string) => <T>(
         }),
       nextPage: (page?: number) => setPage(page ? page : (x) => x + 1),
       remove: (predicate: (x: T) => boolean) =>
-        setCollection((prev) => prev?.filter(predicate)),
+        setCollection((prev) => prev?.filter((x) => !predicate(x))),
     },
   ];
 };
