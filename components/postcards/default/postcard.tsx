@@ -27,13 +27,11 @@ function Head() {
   const headItems = [
     {
       label: '+' + post.guild.name,
-      action: () =>
-        navigation.push('Frontpage', {feed: {guild: post.guild_name}}),
+      action: () => navigation.push('Feed', {feed: {guild: post.guild_name}}),
     },
     {
       label: post.author_name,
-      action: () =>
-        navigation.push('Frontpage', {feed: {user: post.author_name}}),
+      action: () => navigation.push('Feed', {feed: {user: post.author_name}}),
     },
     {
       label: post.domain,

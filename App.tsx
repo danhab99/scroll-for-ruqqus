@@ -105,7 +105,13 @@ function StackNavigator(props: ChildrenOnly) {
 function FeedStackNavigator(props: ChildrenOnly) {
   return (
     <StackNavigator {...props}>
-      <Stack.Screen name="Frontpage" component={Feed} />
+      <Stack.Screen
+        name="Frontpage"
+        component={Feed}
+        initialParams={{
+          feed: 'front',
+        }}
+      />
     </StackNavigator>
   );
 }
