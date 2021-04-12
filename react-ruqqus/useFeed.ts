@@ -3,8 +3,11 @@ import {RuqqusPost} from './types';
 import {UseFetchOpts} from './useFetch';
 import {useRuqqusFetch} from './useRuqqusFetch';
 import * as _ from 'lodash';
+import {SortOptions} from './RuqqusFeed';
 
-export function useFeed(edge: string, args?: UseFetchOpts) {
+type UseFeedOpts = UseFetchOpts<RuqqusPost[]> & {sort: SortOptions};
+
+export function useFeed(edge: string, args?: UseFeedOpts) {
   const [posts, setPosts] = useState<RuqqusPost[]>();
   const [page, setPage] = useState(1);
   const [more, setMore] = useState(true);

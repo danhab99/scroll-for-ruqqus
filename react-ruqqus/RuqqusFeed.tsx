@@ -23,18 +23,10 @@ const GuildContext = createContext<RuqqusGuild>({} as RuqqusGuild);
 const UserContext = createContext<RuqqusUser>({} as RuqqusUser);
 
 type FeedOptions = 'front' | 'all' | {guild: string} | {user: string};
-type SortOptions = 'hot' | 'top' | 'new' | 'disputed' | 'activity';
+export type SortOptions = 'hot' | 'top' | 'new' | 'disputed' | 'activity';
 
 interface PostProps {
   item: RuqqusPost;
-}
-
-interface GuildProps {
-  item: RuqqusGuild;
-}
-
-interface UserProps {
-  item: RuqqusUser;
 }
 
 interface RuqqusFeedProps extends Partial<FlatListProps<RuqqusPost>> {
@@ -112,7 +104,9 @@ export function RuqqusFeed(props: RuqqusFeedProps) {
     }
   }
 
-  const {loading, posts, nextPage, refresh, setPosts} = useFeed(`${feed}`);
+  const {loading, posts, nextPage, refresh, setPosts} = useFeed(feed, {
+    sort: props?.sort || 'hot',
+  });
   const client = useRuqqusClient();
 
   useEffect(() => {

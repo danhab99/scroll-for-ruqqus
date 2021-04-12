@@ -2,8 +2,9 @@ import React from 'react';
 import {View, Text, Modal, Pressable} from 'react-native';
 import {SPACE, FONTSIZE, COLORS} from '../theme';
 import {IconButton} from './Buttons';
-import Icon from '../icons/icon';
 import {OptionalEventHandler} from './OptionalEventHandler';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import {useTheme} from '../contexts/theme-context';
 
 interface PopupProps {
   visible: boolean;
@@ -13,6 +14,8 @@ interface PopupProps {
 }
 
 export default function Popup(props: PopupProps) {
+  const theme = useTheme();
+
   return (
     <Modal
       transparent={true}
@@ -40,24 +43,31 @@ export default function Popup(props: PopupProps) {
             style={{
               display: 'flex',
               flexDirection: 'row',
+              alignItems: 'center',
             }}>
             <IconButton
-              icon="close"
+              name="close"
               style={{
-                marginBottom: SPACE(1),
+                // marginBottom: SPACE(1),
+                backgroundColor: theme?.Colors.backgroundDark,
               }}
               onPress={() => props.toggleModal?.()}
             />
             <Text
               style={{
                 color: COLORS.text,
-                fontSize: FONTSIZE(1.5),
+                fontSize: FONTSIZE(2),
               }}>
               {props.title}
             </Text>
           </View>
 
-          {props.children}
+          <View
+            style={{
+              marginTop: theme?.Space.get?.(1),
+            }}>
+            {props.children}
+          </View>
         </View>
       </View>
     </Modal>

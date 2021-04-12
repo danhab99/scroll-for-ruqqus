@@ -12,7 +12,9 @@ export function IconButton(props: IconButtonProps) {
 
   return (
     <Icon.Button
-      backgroundColor={theme?.Colors.backgroundHighlight}
+      backgroundColor={
+        props.style?.backgroundColor || theme?.Colors.backgroundHighlight
+      }
       size={theme?.FontSize?.get?.(4)}
       {...props}
     />
