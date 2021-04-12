@@ -44,6 +44,7 @@ interface RuqqusFeedProps extends Partial<FlatListProps<RuqqusPost>> {
   renderGuildHeader: () => ReactNode;
   renderUserHeader: () => ReactNode;
   refreshControlProps?: RefreshControlProps;
+  refreshRef: React.Ref<() => void>;
 }
 
 type PostMutatorDispatch = React.Dispatch<
@@ -117,6 +118,8 @@ export function RuqqusFeed(props: RuqqusFeedProps) {
   useEffect(() => {
     refresh();
   }, [client]);
+
+  props.refreshRef.current = () => refresh();
 
   const onEndReached = props.onEndReached || (() => nextPage());
 
