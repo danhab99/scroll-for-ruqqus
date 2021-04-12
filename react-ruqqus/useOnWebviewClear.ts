@@ -17,12 +17,12 @@ export function useOnWebviewClear(clear: (user: UserData) => void) {
     if (client?.access_token) {
       if (client.access_token !== lastToken.current) {
         lastToken.current = client.access_token;
+
         fetcher(client.domain, '/api/v1/identity', {
           access_token: client.access_token,
         }).then((resp) => {
           clear({
-            access_token: client.access_token,
-            refresh_token: client.refresh_token,
+            ...client,
             user: resp.body as RuqqusUser,
           });
         });

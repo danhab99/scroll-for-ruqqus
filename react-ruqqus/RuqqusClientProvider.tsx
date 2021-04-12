@@ -42,26 +42,36 @@ export function RuqqusClientProvider(props: RuqqusClientProviderProps) {
 
   useEffect(() => {
     if (tokens) {
-      const timeout = setTimeout(() => {
-        fetcher(clientConfig.authserver, `/auth/${tokens.client_id}/refresh`, {
-          body: {
-            refresh_token: tokens.refresh_token,
-          },
-          access_token: tokens.access_token,
-        }).then((resp) => {
-          setTokens(
-            (prev): TokenInterface => {
-              return {
-                client_id: resp.body['client_id'] || prev?.client_id,
-                access_token: resp.body['access_token'] || prev?.access_token,
-                refresh_token:
-                  resp.body['refresh_token'] || prev?.refresh_token,
-                expires_at: resp.body['expires_at'] || prev?.expires_at,
-              };
+      const timeout = setTimeout(
+        () => {
+          fetcher(
+            clientConfig.authserver,
+            `/auth/${tokens.client_id}/refresh`,
+            {
+              body: {
+                refresh_token: tokens.refresh_token,
+              },
+              access_token: tokens.access_token,
             },
-          );
-        });
-      }, Date.now() - tokens.expires_at);
+          ).then((resp) => {
+            setTokens(
+              (prev): TokenInterface => {
+                return {
+                  client_id: resp.body['client_id'] || prev?.client_id,
+                  access_token: resp.body['access_token'] || prev?.access_token,
+                  refresh_token:
+                    resp.body['refresh_token'] || prev?.refresh_token,
+                  expires_at: resp.body['expires_at'] || prev?.expires_at,
+                };
+              },
+            );
+          });
+        },
+        (() => {
+          let a = tokens.expires_at / 1000;
+          return Date.now() - a - 30000;
+        })(),
+      );
 
       return () => clearTimeout(timeout);
     }

@@ -16,24 +16,25 @@ import SubmissionContent from 'components/PostBody';
 import {IconButton} from 'components/Buttons';
 import {IconButtonProps} from 'react-native-vector-icons/Icon';
 import {useCollection, useSavedPosts} from '../../../contexts/useCollection';
-import {useNavigation} from '@react-navigation/core';
+import {useNavigation, useRoute} from '@react-navigation/core';
 
 function Head() {
   const post = usePost();
   const theme = useTheme();
   const style = useStyle();
   const navigation = useNavigation();
+  const route = useRoute();
 
   const headItems = [
     {
       label: '+' + post.guild.name,
       action: () =>
-        navigation.push('Frontpage', {feed: {guild: post.guild_name}}),
+        navigation.push(route.name, {feed: {guild: post.guild_name}}),
     },
     {
       label: post.author_name,
       action: () =>
-        navigation.push('Frontpage', {feed: {user: post.author_name}}),
+        navigation.push(route.name, {feed: {user: post.author_name}}),
     },
     {
       label: post.domain,
@@ -189,7 +190,12 @@ export default function DefaultPostcard() {
   const style = useStyle();
 
   return (
-    <View style={{marginBottom: theme?.Space.get?.(0.5)}}>
+    <View
+      style={{
+        marginBottom: theme?.Space.get?.(1),
+        marginRight: theme?.Space.get?.(1),
+        marginLeft: theme?.Space.get?.(1),
+      }}>
       <View style={style?.card}>
         <View style={{padding: theme?.Space.get?.(0.5)}}>
           <Head />
