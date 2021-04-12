@@ -2,20 +2,18 @@ import React, {useState, useEffect} from 'react';
 import {View, Text} from 'react-native';
 import {RouteProp, useNavigation, useRoute} from '@react-navigation/core';
 import {RuqqusFeed, usePost} from 'react-ruqqus';
-import {useValue, useStyle, useCollection} from '@contexts';
+import {useValue, useStyle, useTheme} from '@contexts';
 import * as _ from 'lodash';
 
 import DefaultPostcard from '../components/postcards/default/postcard';
 import {GuildHeader} from '../components/GuildHeader';
-
-function User() {
-  return <View></View>;
-}
+import {UserHeader} from '../components/UserHeader';
 
 export default function Feed() {
   const navigation = useNavigation();
   const route = useRoute<any>();
   const style = useStyle();
+  const theme = useTheme();
 
   const [activeAccount] = useValue<string>('active-account');
 
@@ -54,8 +52,12 @@ export default function Feed() {
       feed={route.params.feed}
       renderPost={() => <DefaultPostcard />}
       renderGuildHeader={() => <GuildHeader />}
-      renderUserHeader={() => <User />}
-      style={style?.view}
+      renderUserHeader={() => <UserHeader />}
+      style={style?.root}
+      contentContainerStyle={{
+        marginTop:
+          typeof route.params.feed === 'object' ? 0 : theme?.Space.get?.(1),
+      }}
     />
   );
 }
