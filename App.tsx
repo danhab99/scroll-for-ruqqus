@@ -18,16 +18,14 @@ import {
 import {StatusBar} from 'expo-status-bar';
 import React from 'react';
 import {View, Text} from 'react-native';
-import {IconButton} from './components/Buttons';
 
+import {IconButton} from './components/Buttons';
 import Feed from './views/feed';
 import Comments from './views/comments';
 import Submit from './views/submit';
 import ROALogin from './views/roa_login';
 
-import Collection from './asyncstorage';
-import {ThemeContextType, useTheme} from './contexts/theme-context';
-import {useStyle} from '@contexts';
+import {useStyle, useTheme} from '@contexts';
 
 type ChildrenOnly = {
   children: React.ReactNode;
