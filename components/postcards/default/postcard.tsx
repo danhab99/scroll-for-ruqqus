@@ -135,6 +135,7 @@ function Controls() {
   const style = useStyle();
   const theme = useTheme();
   const [saves, {add, remove}] = useSavedPosts();
+  const navigator = useNavigation();
 
   const predicate = (x: {id: string; date_saved: Date}): boolean =>
     x.id.includes(post.id);
@@ -169,7 +170,10 @@ function Controls() {
         color={saved ? theme?.Colors.primary : theme?.Colors.text}
         onPress={() => toggleSaved()}
       />
-      <IconButton name="commenting" />
+      <IconButton
+        name="commenting"
+        onPress={() => navigator.push('Comments', {post_id: post.id})}
+      />
       <IconButton name="ellipsis-v" />
     </View>
   );

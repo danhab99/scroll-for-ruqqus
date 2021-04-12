@@ -112,6 +112,7 @@ function FrontpageStackNavigator(props: ChildrenOnly) {
           feed: 'front',
         }}
       />
+      <Stack.Screen name="Comments" component={Comments} />
     </StackNavigator>
   );
 }
@@ -166,7 +167,7 @@ export default function App() {
               name="Frontpage"
               component={FrontpageStackNavigator}
             />
-            <Drawer.Screen name="All" component={FrontpageStackNavigator} />
+            <Drawer.Screen name="All" component={AllStackNavigator} />
             <Drawer.Screen name="Login" component={LoginStackNavigator} />
             <Drawer.Screen name="Submit" component={SubmitStackNavigator} />
           </Drawer.Navigator>

@@ -2,16 +2,20 @@ import {useRoute} from '@react-navigation/native';
 import React from 'react';
 import {ActivityIndicator, View} from 'react-native';
 import WebView from 'react-native-webview';
-import Style, {COLORS, SPACE} from '../theme';
+import {useRuqqusClient} from '@react-ruqqus';
+import {useStyle, useTheme} from '@contexts';
 
 export default function Comments() {
   const route = useRoute<any>();
+  const client = useRuqqusClient();
+  const style = useStyle();
+  const theme = useTheme();
 
   return (
     <WebView
-      style={Style.view}
+      style={style?.view}
       source={{
-        uri: `https://${route?.params?.post?.client?.domain}/post/${route?.params?.post?.id}`,
+        uri: `https://${client.domain}/post/${route?.params?.post_id}`,
       }}
       renderLoading={() => (
         <View
@@ -21,9 +25,9 @@ export default function Comments() {
             alignContent: 'center',
             alignItems: 'center',
             alignSelf: 'center',
-            padding: SPACE(1),
+            padding: theme?.Space.get?.(1),
           }}>
-          <ActivityIndicator color={COLORS.primary} size="large" />
+          <ActivityIndicator color={theme?.Colors.primary} size="large" />
         </View>
       )}
       javaScriptEnabled
