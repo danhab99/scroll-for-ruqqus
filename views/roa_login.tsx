@@ -107,6 +107,7 @@ export default function ROALogin(props: any) {
         }>
         {sites?.map((site: Site, i: number) => (
           <View key={`${i}`} style={style?.card}>
+            <View style={{padding: theme?.Space.get?.(1)}}>
             <Text
               style={{
                 color: theme?.Colors?.text,
@@ -169,6 +170,7 @@ export default function ROALogin(props: any) {
                 marginTop: theme?.Space.get?.(1),
               }}
             />
+          </View>
           </View>
         ))}
       </ScrollView>

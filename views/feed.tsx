@@ -33,6 +33,25 @@ export default function Feed() {
     return () => navigation.removeListener('focus', h);
   }, [activeAccount]);
 
+  useEffect(() => {
+    let feed = route.params.feed;
+    if (typeof feed === 'object') {
+      if ('user' in feed) {
+        navigation.setOptions({
+          title: `@${feed.user}`,
+        });
+      } else if ('guild' in feed) {
+        navigation.setOptions({
+          title: `+${feed.guild}`,
+        });
+      }
+    } else {
+      navigation.setOptions({
+        title: `${feed[0].toUpperCase()}${feed.slice(1)}`,
+      });
+    }
+  }, []);
+
   return (
     <RuqqusFeed
       feed={route.params.feed}
