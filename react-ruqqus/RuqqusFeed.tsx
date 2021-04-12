@@ -22,7 +22,12 @@ const PostContext = createContext<RuqqusPost>({} as RuqqusPost);
 const GuildContext = createContext<RuqqusGuild>({} as RuqqusGuild);
 const UserContext = createContext<RuqqusUser>({} as RuqqusUser);
 
-type FeedOptions = 'front' | 'all' | {guild: string} | {user: string};
+type FeedOptions =
+  | 'front'
+  | 'all'
+  | {guild: string}
+  | {user: string}
+  | RuqqusPost[];
 export type SortOptions = 'hot' | 'top' | 'new' | 'disputed' | 'activity';
 
 interface PostProps {
