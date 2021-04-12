@@ -6,12 +6,9 @@ import {useValue, useStyle, useCollection} from '@contexts';
 import * as _ from 'lodash';
 
 import DefaultPostcard from '../components/postcards/default/postcard';
+import {GuildHeader} from '../components/GuildHeader';
 
 function User() {
-  return <View></View>;
-}
-
-function Guild() {
   return <View></View>;
 }
 
@@ -56,7 +53,7 @@ export default function Feed() {
     <RuqqusFeed
       feed={route.params.feed}
       renderPost={(p) => <DefaultPostcard />}
-      renderGuildHeader={(g) => <Guild />}
+      renderGuildHeader={(g) => <GuildHeader />}
       renderUserHeader={(u) => <User />}
       style={style?.view}
     />

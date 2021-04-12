@@ -1,5 +1,12 @@
-import React, {createContext, ReactNode, useContext, useEffect} from 'react';
+import React, {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 import {
+  ActivityIndicator,
   FlatList,
   FlatListProps,
   RefreshControl,
@@ -9,6 +16,7 @@ import {useFeed} from './useFeed';
 import {RuqqusPost, RuqqusGuild, RuqqusUser, RuqqusVote} from './types';
 import {useRuqqusClient} from './useRuqqusClient';
 import {fetcher} from './fetcher';
+import {useRuqqusFetch} from './useRuqqusFetch';
 
 const PostContext = createContext<RuqqusPost>({} as RuqqusPost);
 const GuildContext = createContext<RuqqusGuild>({} as RuqqusGuild);
@@ -22,19 +30,19 @@ interface PostProps {
 }
 
 interface GuildProps {
-  guild: RuqqusGuild;
+  item: RuqqusGuild;
 }
 
 interface UserProps {
-  user: RuqqusUser;
+  item: RuqqusUser;
 }
 
 interface RuqqusFeedProps extends Partial<FlatListProps<RuqqusPost>> {
   feed: FeedOptions;
   sort?: SortOptions;
-  renderPost: (props: PostProps) => ReactNode;
-  renderGuildHeader: (props: GuildProps) => ReactNode;
-  renderUserHeader: (props: UserProps) => ReactNode;
+  renderPost: () => ReactNode;
+  renderGuildHeader: () => ReactNode;
+  renderUserHeader: () => ReactNode;
   refreshControlProps?: RefreshControlProps;
 }
 
@@ -46,6 +54,33 @@ const PostMutatorContext = createContext<PostMutatorDispatch>(
   {} as PostMutatorDispatch,
 );
 
+function GuildManager(props: {guild: string; children: ReactNode}) {
+  const {loading, body} = useRuqqusFetch(`guild/${props.guild}`);
+
+  if (loading) {
+    return <ActivityIndicator />;
+  } else {
+    return (
+      <GuildContext.Provider value={body as RuqqusGuild}>
+        {props.children}
+      </GuildContext.Provider>
+    );
+  }
+}
+
+function UserManager(props: {user: string; children: ReactNode}) {
+  const {loading, body} = useRuqqusFetch(`user/${props.user}`);
+
+  if (loading) {
+    return <ActivityIndicator />;
+  } else {
+    return (
+      <UserContext.Provider value={body as RuqqusUser}>
+        {props.children}
+      </UserContext.Provider>
+    );
+  }
+}
 export function RuqqusFeed(props: RuqqusFeedProps) {
   const renderPost = props.renderPost
     ? (p: PostProps) => (
@@ -60,17 +95,17 @@ export function RuqqusFeed(props: RuqqusFeedProps) {
 
   if (typeof props.feed === 'object') {
     if ('guild' in props.feed) {
-      renderHeader = (p: GuildProps) => (
-        <GuildContext.Provider value={p.guild}>
-          {props.renderGuildHeader(p)}
-        </GuildContext.Provider>
+      renderHeader = (
+        <GuildManager guild={props.feed.guild}>
+          {props.renderGuildHeader()}
+        </GuildManager>
       );
       feed = 'guild/' + props.feed.guild;
     } else if ('user' in props.feed) {
-      renderHeader = (p: UserProps) => (
-        <UserContext.Provider value={p.user}>
-          {props.renderUserHeader(p)}
-        </UserContext.Provider>
+      renderHeader = (
+        <UserManager user={props.feed.user}>
+          {props.renderUserHeader()}
+        </UserManager>
       );
       feed = 'user/' + props.feed.user;
     }

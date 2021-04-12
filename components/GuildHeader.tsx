@@ -1,8 +1,10 @@
+import {useGuild} from '@react-ruqqus';
 import React from 'react';
 import {View, Image, Text} from 'react-native';
 import {COLORS, FONTSIZE, SPACE} from '../theme';
 import {Button} from './Buttons';
 import HtmlMarkdown from './HtmlMarkdown';
+import {useStyle, useTheme} from '@contexts';
 
 interface GuildHeaderProps {
   guild: {
@@ -17,16 +19,19 @@ interface GuildHeaderProps {
   enabled: boolean;
 }
 
-export function GuildHeader(props: GuildHeaderProps) {
-  if (props.enabled) {
+export function GuildHeader(props?: GuildHeaderProps) {
+  const guild = useGuild();
+  const theme = useTheme();
+
+  if (guild) {
     return (
       <View
         style={{
-          backgroundColor: COLORS.background,
-          marginBottom: SPACE(1.5),
+          backgroundColor: theme?.Colors.background,
+          marginBottom: theme?.Space.get?.(1.5),
         }}>
         <Image
-          source={{uri: props.guild.banner_url}}
+          source={{uri: guild.banner_url}}
           style={{
             width: '100%',
             aspectRatio: 3.4092307692307693,
@@ -39,34 +44,34 @@ export function GuildHeader(props: GuildHeaderProps) {
             justifyContent: 'flex-start',
           }}>
           <Image
-            source={{uri: props.guild.icon_url}}
+            source={{uri: guild.profile_url}}
             style={{
               width: 64,
               aspectRatio: 1,
               borderRadius: 100,
-              margin: SPACE(1),
+              margin: theme?.Space.get?.(1),
             }}
           />
-          <View style={{margin: SPACE(1)}}>
+          <View style={{margin: theme?.Space.get?.(1)}}>
             <Text
               style={{
-                color: COLORS.text,
-                fontSize: FONTSIZE(4 / 3),
+                color: theme?.Colors.text,
+                fontSize: theme?.FontSize.get?.(4 / 3),
                 fontWeight: 'bold',
               }}>
-              +{props.guild.name}
+              +{guild.name}
             </Text>
             <Text
               style={{
-                color: COLORS.text,
+                color: theme?.Colors.text,
                 flexShrink: 1,
               }}>
-              {props.guild.subscribers} subscribers
+              {guild.subscriber_count} subscribers
             </Text>
           </View>
         </View>
         <Button text="Subscribe" />
-        <HtmlMarkdown html={props.guild?.description?.html} />
+        <HtmlMarkdown html={guild.description_html} />
       </View>
     );
   } else {
