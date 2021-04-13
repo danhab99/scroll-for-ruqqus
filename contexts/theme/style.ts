@@ -30,6 +30,7 @@ export function generateStyles(theme: ThemeInterface): Styles {
     view: {
       padding: Space(1),
       backgroundColor: theme.Colors.background,
+      height: '100%',
     },
     horizontal: {
       flexDirection: 'row',

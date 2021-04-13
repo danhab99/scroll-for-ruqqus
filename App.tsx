@@ -126,6 +126,7 @@ function AllStackNavigator(props: ChildrenOnly) {
           feed: 'all',
         }}
       />
+      <Stack.Screen name="Comments" component={Comments} />
     </StackNavigator>
   );
 }
@@ -134,6 +135,7 @@ function SavedStackNavigator(props: ChildrenOnly) {
   return (
     <StackNavigator {...props}>
       <Stack.Screen name="Saved" component={Saved} />
+      <Stack.Screen name="Comments" component={Comments} />
     </StackNavigator>
   );
 }

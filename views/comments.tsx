@@ -14,7 +14,7 @@ export default function Comments() {
   useEffect(() => {
     Alert.alert(
       'Sorry',
-      "We're gonna have to use the webapp while we wait for the Ruqqus maintainers to implement a comments api",
+      "We're gonna have to use the webapp while we wait for the Ruqqus maintainers to implement a comments api. If you find this message annoying, please ask the maintainers to implement a comments api.",
     );
   }, []);
 
