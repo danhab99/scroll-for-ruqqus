@@ -80,7 +80,6 @@ export default function HtmlMarkdown(props: HtmlMarkdownProps) {
           .catch((err) => console.log('Cannot open markdown link', err));
       }}
       alterNode={(node) => {
-        console.log('HTML', node);
         if (node.name === 'img') {
           if (node?.attribs?.src[0] == '/') {
             return Object.assign(node, {
