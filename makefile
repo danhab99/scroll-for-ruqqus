@@ -3,10 +3,10 @@
 build:
 	rm -rf android/app/build
 	rm -rf android/build
+	mkdir -p android/app/src/main/assets
+	react-native bundle --platform android --dev false --entry-file index.tsx --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res/ --reset-cache
 	rm -rf android/app/src/main/res/drawable-*
 	rm -rf android/app/src/main/res/raw
-	mkdir -p android/app/src/main/assets
-	react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res/ --reset-cache
 	$(MAKE) --directory=android compile
 
 keystore:

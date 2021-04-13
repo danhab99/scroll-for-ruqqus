@@ -1,1 +1,0 @@
-Got these icons from [material.io](https://material.io/)
