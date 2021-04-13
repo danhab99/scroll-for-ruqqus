@@ -10,8 +10,10 @@ This is a 3rd party [Ruqqus](https://ruqqus.com/) client for Android and iOS\* w
 * Guild mastering
 
 <div style="display: flex; flexDirection: row; justify-content: space-evenly;">
-<img src="docs/readme/initialdevscreenshot.png" style="width: 40%">
-<img src="docs/readme/examplelogin.png" style="width: 40%">
+<img src="docs/readme/frontpage.png" style="width: 40%">
+<img src="docs/readme/profile.png" style="width: 40%">
+<img src="docs/readme/guild.png" style="width: 40%">
+<img src="docs/readme/actions.png" style="width: 40%">
 </div>
 
 ## Dev setup
