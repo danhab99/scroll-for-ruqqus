@@ -1,5 +1,6 @@
 import React, {
   createContext,
+  useRef,
   ReactNode,
   useContext,
   useEffect,
@@ -109,11 +110,18 @@ export function RuqqusFeed(props: RuqqusFeedProps) {
   });
   const client = useRuqqusClient();
 
-  useEffect(() => {
+  const flatlistRef = useRef<FlatList<RuqqusPost>>();
+
+  const doRefresh = () => {
     refresh();
+    flatlistRef?.current?.scrollToOffset?.({offset: 0, animated: true});
+  };
+
+  useEffect(() => {
+    doRefresh();
   }, [client]);
 
-  props.refreshRef.current = () => refresh();
+  props.refreshRef.current = () => doRefresh();
 
   const onEndReached = props.onEndReached || (() => nextPage());
 
@@ -128,6 +136,7 @@ export function RuqqusFeed(props: RuqqusFeedProps) {
   return (
     <PostMutatorContext.Provider value={setPosts}>
       <FlatList
+        ref={flatlistRef}
         data={posts || []}
         renderItem={renderPost}
         ListHeaderComponent={renderHeader}
