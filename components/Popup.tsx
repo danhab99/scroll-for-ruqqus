@@ -56,6 +56,7 @@ export default function Popup(props: PopupProps) {
               style={{
                 color: theme?.Colors?.text,
                 fontSize: theme?.FontSize?.get?.(2),
+                flexWrap: 'wrap',
               }}>
               {props.title}
             </Text>

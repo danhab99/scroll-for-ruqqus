@@ -1,5 +1,5 @@
 import React, {useState, useEffect, createRef} from 'react';
-import {View} from 'react-native';
+import {Text, View} from 'react-native';
 import {useNavigation, useRoute} from '@react-navigation/core';
 import {RuqqusFeed} from 'react-ruqqus';
 import {useValue, useStyle, useTheme} from '@contexts';
@@ -7,11 +7,12 @@ import * as _ from 'lodash';
 
 import {GuildHeader} from '../components/GuildHeader';
 import {UserHeader} from '../components/UserHeader';
-import {IconButton} from 'components/Buttons';
+import {Button, IconButton} from 'components/Buttons';
 import Popup, {PopupButton} from 'components/Popup';
 import {CardSelector} from '../components/postcards/cardSelector';
 import {PopupWrapper} from './PopupWrapper';
 import {useEnforceLogin} from './useEnforceLogin';
+import Input from 'components/Input';
 
 export default function Feed() {
   const navigation = useNavigation();
@@ -20,7 +21,9 @@ export default function Feed() {
   const theme = useTheme();
 
   const [sortPopupVisible, setSortPopupVisible] = useState(false);
+  const [navigatorVisible, setNavigatorVisible] = useState(false);
   const [sort, setSort] = useState('hot');
+  const [navigate, setNavigate] = useState<string>('');
 
   const refreshRef = createRef<() => void>();
 
@@ -52,7 +55,10 @@ export default function Feed() {
             name="sort-amount-desc"
             onPress={() => setSortPopupVisible(true)}
           />
-          <IconButton name="search" />
+          <IconButton
+            name="location-arrow"
+            onPress={() => setNavigatorVisible(true)}
+          />
         </View>
       ),
     });
@@ -61,6 +67,21 @@ export default function Feed() {
   const doSetSort = (x: string) => () => {
     setSort(x);
     setSortPopupVisible(false);
+  };
+
+  const goto = () => {
+    let target = {
+      '+': 'guild',
+      '@': 'user',
+    }[navigate[0]];
+
+    navigation.push(route.name, {
+      feed: {
+        [target]: navigate.slice(1),
+      },
+    });
+    setNavigate('');
+    setNavigatorVisible(false);
   };
 
   return (
@@ -86,6 +107,29 @@ export default function Feed() {
           label="activity"
           onPress={doSetSort('activity')}
         />
+      </Popup>
+
+      <Popup
+        title="Goto"
+        visible={navigatorVisible}
+        toggleModal={() => setNavigatorVisible((x) => !x)}>
+        <Input
+          label="Goto +guild or @user"
+          autoCapitalize="none"
+          autoCompleteType="off"
+          value={navigate}
+          onChangeText={(e) => setNavigate(e)}
+        />
+        <View
+          style={{
+            marginTop: theme?.Space.get?.(1),
+          }}>
+          <Button
+            text="Go"
+            disabled={!(navigate[0] === '+' || navigate[0] === '@')}
+            onPress={() => goto()}
+          />
+        </View>
       </Popup>
 
       <PopupWrapper>
