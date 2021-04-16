@@ -27,6 +27,7 @@ import ROALogin from "./views/roa_login";
 
 import { useStyle, useTheme } from "@contexts";
 import { Saved } from "./views/saved";
+import { Settings } from "./views/settings/settings";
 
 type ChildrenOnly = {
   children: React.ReactNode;
@@ -156,6 +157,14 @@ function SubmitStackNavigator(props: ChildrenOnly) {
   );
 }
 
+function SettingsStackNavigator(props: ChildrenOnly) {
+  return (
+    <StackNavigator {...props}>
+      <Stack.Screen name="Settings" component={Settings} />
+    </StackNavigator>
+  );
+}
+
 export default function App() {
   const theme = useTheme();
   const style = useStyle();
@@ -180,6 +189,7 @@ export default function App() {
             <Drawer.Screen name="Saved" component={SavedStackNavigator} />
             <Drawer.Screen name="Login" component={LoginStackNavigator} />
             <Drawer.Screen name="Submit" component={SubmitStackNavigator} />
+            <Drawer.Screen name="Settings" component={SettingsStackNavigator} />
           </Drawer.Navigator>
         </NavigationContainer>
       </View>

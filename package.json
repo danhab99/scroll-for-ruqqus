@@ -7,11 +7,18 @@
     "ios": "react-native run-ios",
     "start": "react-native start --resetCache",
     "test": "jest",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "format": "prettier --write ."
   },
+  "pre-commit": [
+    "format",
+    "lint"
+  ],
   "dependencies": {
     "@bam.tech/react-native-make": "^3.0.0",
+    "@react-native-community/checkbox": "^0.5.7",
     "@react-native-community/masked-view": "^0.1.10",
+    "@react-native-community/slider": "^3.0.3",
     "@react-navigation/drawer": "^5.11.4",
     "@react-navigation/native": "^5.8.10",
     "@react-navigation/stack": "^5.12.8",
@@ -33,6 +40,7 @@
     "react-dom": "^17.0.1",
     "react-native": "^0.63.4",
     "react-native-cheerio": "^1.0.0-rc.4",
+    "react-native-color-picker": "^0.6.0",
     "react-native-fs": "^2.14.0",
     "react-native-gesture-handler": "^1.9.0",
     "react-native-reanimated": "^1.13.2",
@@ -77,6 +85,8 @@
     "eslint": "6.8.0",
     "jest": "25.5.4",
     "metro-react-native-babel-preset": "0.59.0",
+    "pre-commit": "^1.2.2",
+    "prettier": "^2.2.1",
     "react-test-renderer": "16.13.1",
     "typescript": "^4.2.3"
   },
