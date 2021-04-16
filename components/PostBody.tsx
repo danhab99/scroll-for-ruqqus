@@ -81,17 +81,35 @@ function PostAsImage() {
 
 const YOUTUBE_VID = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
 
+const VALID_IMAGE_DOMAINS = [
+  "backdatassup.com",
+  "cdn.discordapp.com",
+  "docs.google.com",
+  "external-content.duckduckgo.com",
+  "files.explosm.net",
+  "grrrgraphics.com",
+  "ibb.co",
+  "i.ibb.co",
+  "i.imgflip.com",
+  "i.imgur.com",
+  "imgs.xkcd.com",
+  "i.redd.it",
+  "i.ruqqus.com",
+  "media.discordapp.net",
+  "media.gab.com",
+  "media.giphy.com",
+  "media.tenor.com",
+  "puu.sh",
+  "tenor.com",
+];
+
 export default function SubmissionContent() {
   const post = usePost();
   const theme = useTheme();
 
   if (post?.domain == undefined) {
     return <Text style={{ color: "red" }}>Content not supported</Text>;
-  } else if (
-    ["i.ruqqus.com", "i.imgur.com", "i.redd.it"].some((x) =>
-      post?.domain?.includes(x),
-    )
-  ) {
+  } else if (VALID_IMAGE_DOMAINS.some((x) => post?.domain?.includes(x))) {
     return <ScaledImage url={post.url} />;
   } else if (post.domain == "text post") {
     return (
