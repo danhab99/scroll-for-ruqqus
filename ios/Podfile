@@ -24,6 +24,10 @@ target 'scrollforruqqus' do
 
   pod 'RNFS', :path => '../node_modules/react-native-fs'
 
+  pod 'RNCCheckbox', :path => '../node_modules/@react-native-community/checkbox'
+
+  pod 'react-native-slider', :path => '../node_modules/@react-native-community/slider'
+
   target 'scrollforruqqusTests' do
     inherit! :complete
     # Pods for testing
