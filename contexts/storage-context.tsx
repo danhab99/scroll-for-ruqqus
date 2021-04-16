@@ -94,7 +94,10 @@ export function useValue<T>(
   const getV = _.get(value, path, {});
 
   const setV = (incoming: ValueSetter<T>) => {
-    let next = typeof incoming === "function" ? incoming(getV as T) : incoming;
+    let next =
+      typeof incoming === "function"
+        ? incoming(_.get(value, path) as T)
+        : incoming;
 
     let o = _.set(value, path, next);
     o = Object.assign({}, o);
