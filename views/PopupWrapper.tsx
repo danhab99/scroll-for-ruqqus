@@ -1,11 +1,11 @@
-import React, {ReactNode, useState} from 'react';
-import {Share, View, Linking} from 'react-native';
-import Popup, {PopupButton} from 'components/Popup';
-import {RuqqusPost} from 'react-ruqqus/types';
-import {useNavigation, useRoute} from '@react-navigation/core';
-import {PostMenuContext} from 'contexts/post-menu-context';
+import React, { ReactNode, useState } from "react";
+import { Share, View, Linking } from "react-native";
+import Popup, { PopupButton } from "components/Popup";
+import { RuqqusPost } from "react-ruqqus/types";
+import { useNavigation, useRoute } from "@react-navigation/core";
+import { PostMenuContext } from "contexts/post-menu-context";
 
-export function PopupWrapper(props: {children: ReactNode}) {
+export function PopupWrapper(props: { children: ReactNode }) {
   const navigation = useNavigation();
   const route = useRoute();
   const [menuPost, setMenuPost] = useState<RuqqusPost>();
@@ -21,7 +21,7 @@ export function PopupWrapper(props: {children: ReactNode}) {
             label="Share"
             icon="share"
             onPress={() => {
-              Share.share({message: menuPost.url});
+              Share.share({ message: menuPost.url });
               setMenuPost(undefined);
             }}
           />
@@ -29,7 +29,7 @@ export function PopupWrapper(props: {children: ReactNode}) {
             label="Comments"
             icon="comments"
             onPress={() => {
-              navigation.push('Comments', {post_id: menuPost.id});
+              navigation.push("Comments", { post_id: menuPost.id });
               setMenuPost(undefined);
             }}
           />
@@ -38,7 +38,7 @@ export function PopupWrapper(props: {children: ReactNode}) {
             icon="user"
             onPress={() => {
               navigation.push(route.name, {
-                feed: {user: menuPost.author_name},
+                feed: { user: menuPost.author_name },
               });
               setMenuPost(undefined);
             }}
@@ -48,7 +48,7 @@ export function PopupWrapper(props: {children: ReactNode}) {
             icon="plus"
             onPress={() => {
               navigation.push(route.name, {
-                feed: {guild: menuPost.guild_name},
+                feed: { guild: menuPost.guild_name },
               });
               setMenuPost(undefined);
             }}

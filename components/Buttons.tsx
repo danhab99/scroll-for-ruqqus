@@ -1,9 +1,9 @@
-import React, {useEffect} from 'react';
-import {View, Pressable, Text} from 'react-native';
-import {OptionalEventHandler} from './OptionalEventHandler';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import {IconButtonProps} from 'react-native-vector-icons/Icon';
-import {useTheme} from '@contexts';
+import React, { useEffect } from "react";
+import { View, Pressable, Text } from "react-native";
+import { OptionalEventHandler } from "./OptionalEventHandler";
+import Icon from "react-native-vector-icons/MaterialIcons";
+import { IconButtonProps } from "react-native-vector-icons/Icon";
+import { useTheme } from "@contexts";
 
 export function IconButton(props: IconButtonProps) {
   const theme = useTheme();
@@ -37,8 +37,8 @@ export function Button(props: ButtonProps) {
             ? theme?.Colors?.muted
             : theme?.Colors?.primary,
           color: theme?.Colors?.text,
-          justifyContent: 'center',
-          textAlign: 'center',
+          justifyContent: "center",
+          textAlign: "center",
           fontSize: theme?.FontSize?.get?.(1.5),
           padding: theme?.Space?.get?.(0.5),
           borderRadius: 5,

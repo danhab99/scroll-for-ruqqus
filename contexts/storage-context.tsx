@@ -1,13 +1,13 @@
-import React, {createContext, useContext, useState, useEffect} from 'react';
-import {ContextChildrenProps} from './ContextChildrenProps';
+import React, { createContext, useContext, useState, useEffect } from "react";
+import { ContextChildrenProps } from "./ContextChildrenProps";
 import {
   DocumentDirectoryPath,
   writeFile,
   readFile,
   readdir,
   mkdir,
-} from 'react-native-fs';
-import * as _ from 'lodash';
+} from "react-native-fs";
+import * as _ from "lodash";
 
 type UnboundObject = {
   [key: string]: any;
@@ -24,8 +24,8 @@ export function ValueProvider(props: ContextChildrenProps) {
   const [value, setValue] = useState<UnboundObject>({});
 
   const write = () => {
-    console.log('VALUE WRITE', value);
-    mkdir(DocumentDirectoryPath + '/vars/').then(() =>
+    console.log("VALUE WRITE", value);
+    mkdir(DocumentDirectoryPath + "/vars/").then(() =>
       Object.entries(value).forEach(([file, content]) =>
         writeFile(
           `${DocumentDirectoryPath}/vars/${file}.json`,
@@ -36,14 +36,14 @@ export function ValueProvider(props: ContextChildrenProps) {
   };
 
   const read = () => {
-    mkdir(DocumentDirectoryPath + '/vars/').then(() =>
-      readdir(DocumentDirectoryPath + '/vars/')
-        .then((files: string[]) => files.filter((x) => x.includes('json')))
+    mkdir(DocumentDirectoryPath + "/vars/").then(() =>
+      readdir(DocumentDirectoryPath + "/vars/")
+        .then((files: string[]) => files.filter((x) => x.includes("json")))
         .then((files: string[]) => {
-          console.log('VALUE READ', files);
+          console.log("VALUE READ", files);
           return Promise.all(
             files.map((file) =>
-              readFile(DocumentDirectoryPath + '/vars/' + file).then(
+              readFile(DocumentDirectoryPath + "/vars/" + file).then(
                 (data) => ({
                   file,
                   data: JSON.parse(data),
@@ -52,11 +52,11 @@ export function ValueProvider(props: ContextChildrenProps) {
             ),
           );
         })
-        .then((files: {file: string; data: any}[]) => {
-          console.log('VALUE READ FILES', files);
+        .then((files: { file: string; data: any }[]) => {
+          console.log("VALUE READ FILES", files);
           let o = files.reduce(
             (prev, curr) =>
-              Object.assign(prev, {[curr.file.slice(0, -5)]: curr.data}),
+              Object.assign(prev, { [curr.file.slice(0, -5)]: curr.data }),
             {},
           );
 
@@ -78,7 +78,7 @@ export function ValueProvider(props: ContextChildrenProps) {
   }, []);
 
   return (
-    <ValueContext.Provider value={{value, setValue}}>
+    <ValueContext.Provider value={{ value, setValue }}>
       {props.children}
     </ValueContext.Provider>
   );
@@ -89,12 +89,12 @@ type ValueSetter<T> = T & ((prev: T) => T);
 export function useValue<T>(
   ...path: string[]
 ): [T, (incoming: ValueSetter<T>) => void] {
-  const {value, setValue} = useContext(ValueContext);
+  const { value, setValue } = useContext(ValueContext);
 
   const getV = _.get(value, path, {});
 
   const setV = (incoming: ValueSetter<T>) => {
-    let next = typeof incoming === 'function' ? incoming(getV as T) : incoming;
+    let next = typeof incoming === "function" ? incoming(getV as T) : incoming;
 
     let o = _.set(value, path, next);
     o = Object.assign({}, o);

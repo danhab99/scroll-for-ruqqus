@@ -1,5 +1,5 @@
-import {createContext} from 'react';
-import {TokenInterface} from './RuqqusClientProvider';
+import { createContext } from "react";
+import { TokenInterface } from "./RuqqusClientProvider";
 
 class SetOutOfContetStateError extends Error {}
 
@@ -42,7 +42,7 @@ interface WebAuthContextProps {
 }
 
 export const WebAuthContext = createContext<WebAuthContextProps>({
-  authSite: '',
+  authSite: "",
   setAuthSite: (value: React.SetStateAction<string | undefined>) => {
     throw new SetOutOfContetStateError();
   },

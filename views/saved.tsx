@@ -1,20 +1,20 @@
-import {fetcher, RuqqusFeed} from '@react-ruqqus';
-import {CardSelector} from 'components/postcards/cardSelector';
-import React, {useState, useEffect} from 'react';
-import {View, FlatList, RefreshControl} from 'react-native';
-import {PopupWrapper} from './PopupWrapper';
-import {useRoute} from '@react-navigation/core';
-import {useTheme, useStyle} from '@contexts';
-import {useSavedPosts} from '../contexts/useCollection';
-import {RuqqusPost, useRuqqusClient, PostContext} from 'react-ruqqus';
-import _ from 'lodash';
+import { fetcher, RuqqusFeed } from "@react-ruqqus";
+import { CardSelector } from "components/postcards/cardSelector";
+import React, { useState, useEffect } from "react";
+import { View, FlatList, RefreshControl } from "react-native";
+import { PopupWrapper } from "./PopupWrapper";
+import { useRoute } from "@react-navigation/core";
+import { useTheme, useStyle } from "@contexts";
+import { useSavedPosts } from "../contexts/useCollection";
+import { RuqqusPost, useRuqqusClient, PostContext } from "react-ruqqus";
+import _ from "lodash";
 
 export function Saved() {
   const route = useRoute();
   const theme = useTheme();
   const style = useStyle();
 
-  const [saves, {nextPage}] = useSavedPosts();
+  const [saves, { nextPage }] = useSavedPosts();
   const [posts, setPosts] = useState<RuqqusPost[]>();
   const [loading, setLoading] = useState(false);
 
@@ -44,13 +44,13 @@ export function Saved() {
       <PopupWrapper>
         <FlatList
           data={posts}
-          renderItem={({item}) => (
+          renderItem={({ item }) => (
             <PostContext.Provider value={item}>
               <CardSelector />
             </PostContext.Provider>
           )}
           onEndReached={() => nextPage()}
-          contentContainerStyle={{marginTop: theme?.Space.get?.(1)}}
+          contentContainerStyle={{ marginTop: theme?.Space.get?.(1) }}
           refreshControl={<RefreshControl refreshing={loading} />}
           onEndReachedThreshold={0.1}
         />

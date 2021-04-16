@@ -1,12 +1,12 @@
-import {useState, useEffect} from 'react';
+import { useState, useEffect } from "react";
 import {
   DocumentDirectoryPath,
   CachesDirectoryPath,
   readFile,
   writeFile,
   mkdir,
-} from 'react-native-fs';
-import * as _ from 'lodash';
+} from "react-native-fs";
+import * as _ from "lodash";
 
 interface ColletcionOpts<T> {
   initial?: T[];
@@ -38,7 +38,7 @@ const useMassStore = (head: string) => <T>(
 
     mkdir(`${head}/col`).then(() => {
       readFile(`${head}/col/${name}.${filei}.json`).then((raw) => {
-        console.log('COLLECTIONS READ', name, filei, raw);
+        console.log("COLLECTIONS READ", name, filei, raw);
         let j = JSON.parse(raw);
         let l: T[] = _.slice(j, start, start + take);
 
@@ -51,7 +51,7 @@ const useMassStore = (head: string) => <T>(
     let chunks = _.chunk(collection, MAX_COUNT);
     mkdir(`${head}/col`).then(() =>
       chunks.forEach((chunk, i) => {
-        console.log('COLLECTIONS WRITE', name, i, chunk);
+        console.log("COLLECTIONS WRITE", name, i, chunk);
         writeFile(`${head}/col/${name}.${i}.json`, JSON.stringify(chunk));
       }),
     );
@@ -95,4 +95,4 @@ type SavedPosts = {
   date_saved: Date;
 };
 
-export const useSavedPosts = () => useCollection<SavedPosts>('saves');
+export const useSavedPosts = () => useCollection<SavedPosts>("saves");

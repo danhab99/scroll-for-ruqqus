@@ -1,6 +1,6 @@
-import React from 'react';
-import {View, Text, TextInput, TextInputProps} from 'react-native';
-import {useStyle} from '@contexts';
+import React from "react";
+import { View, Text, TextInput, TextInputProps } from "react-native";
+import { useStyle } from "@contexts";
 
 type InputProps = {
   label: string;

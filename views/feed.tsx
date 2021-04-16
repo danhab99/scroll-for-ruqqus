@@ -1,18 +1,18 @@
-import React, {useState, useEffect, createRef} from 'react';
-import {Text, View} from 'react-native';
-import {useNavigation, useRoute} from '@react-navigation/core';
-import {RuqqusFeed} from 'react-ruqqus';
-import {useValue, useStyle, useTheme} from '@contexts';
-import * as _ from 'lodash';
+import React, { useState, useEffect, createRef } from "react";
+import { Text, View } from "react-native";
+import { useNavigation, useRoute } from "@react-navigation/core";
+import { RuqqusFeed } from "react-ruqqus";
+import { useValue, useStyle, useTheme } from "@contexts";
+import * as _ from "lodash";
 
-import {GuildHeader} from '../components/GuildHeader';
-import {UserHeader} from '../components/UserHeader';
-import {Button, IconButton} from 'components/Buttons';
-import Popup, {PopupButton} from 'components/Popup';
-import {CardSelector} from '../components/postcards/cardSelector';
-import {PopupWrapper} from './PopupWrapper';
-import {useEnforceLogin} from './useEnforceLogin';
-import Input from 'components/Input';
+import { GuildHeader } from "../components/GuildHeader";
+import { UserHeader } from "../components/UserHeader";
+import { Button, IconButton } from "components/Buttons";
+import Popup, { PopupButton } from "components/Popup";
+import { CardSelector } from "../components/postcards/cardSelector";
+import { PopupWrapper } from "./PopupWrapper";
+import { useEnforceLogin } from "./useEnforceLogin";
+import Input from "components/Input";
 
 export default function Feed() {
   const navigation = useNavigation();
@@ -22,8 +22,8 @@ export default function Feed() {
 
   const [sortPopupVisible, setSortPopupVisible] = useState(false);
   const [navigatorVisible, setNavigatorVisible] = useState(false);
-  const [sort, setSort] = useState('hot');
-  const [navigate, setNavigate] = useState<string>('');
+  const [sort, setSort] = useState("hot");
+  const [navigate, setNavigate] = useState<string>("");
 
   const refreshRef = createRef<() => void>();
 
@@ -31,12 +31,12 @@ export default function Feed() {
 
   useEffect(() => {
     let feed = route.params.feed;
-    if (typeof feed === 'object') {
-      if ('user' in feed) {
+    if (typeof feed === "object") {
+      if ("user" in feed) {
         navigation.setOptions({
           title: `@${feed.user}`,
         });
-      } else if ('guild' in feed) {
+      } else if ("guild" in feed) {
         navigation.setOptions({
           title: `+${feed.guild}`,
         });
@@ -49,7 +49,7 @@ export default function Feed() {
 
     navigation.setOptions({
       headerRight: () => (
-        <View style={{display: 'flex', flexDirection: 'row'}}>
+        <View style={{ display: "flex", flexDirection: "row" }}>
           <IconButton name="refresh" onPress={() => refreshRef?.current?.()} />
           <IconButton
             name="sort-amount-desc"
@@ -71,8 +71,8 @@ export default function Feed() {
 
   const goto = () => {
     let target = {
-      '+': 'guild',
-      '@': 'user',
+      "+": "guild",
+      "@": "user",
     }[navigate[0]];
 
     navigation.push(route.name, {
@@ -80,7 +80,7 @@ export default function Feed() {
         [target]: navigate.slice(1),
       },
     });
-    setNavigate('');
+    setNavigate("");
     setNavigatorVisible(false);
   };
 
@@ -90,22 +90,22 @@ export default function Feed() {
         visible={sortPopupVisible}
         toggleModal={() => setSortPopupVisible((x) => !x)}
         title="Sort">
-        <PopupButton icon="fire" label="Hot" onPress={doSetSort('hot')} />
+        <PopupButton icon="fire" label="Hot" onPress={doSetSort("hot")} />
         <PopupButton
           icon="arrow-circle-o-up"
           label="Top"
-          onPress={doSetSort('top')}
+          onPress={doSetSort("top")}
         />
-        <PopupButton icon="star" label="New" onPress={doSetSort('new')} />
+        <PopupButton icon="star" label="New" onPress={doSetSort("new")} />
         <PopupButton
           icon="bullhorn"
           label="disputed"
-          onPress={doSetSort('disputed')}
+          onPress={doSetSort("disputed")}
         />
         <PopupButton
           icon="wechat"
           label="activity"
-          onPress={doSetSort('activity')}
+          onPress={doSetSort("activity")}
         />
       </Popup>
 
@@ -126,7 +126,7 @@ export default function Feed() {
           }}>
           <Button
             text="Go"
-            disabled={!(navigate[0] === '+' || navigate[0] === '@')}
+            disabled={!(navigate[0] === "+" || navigate[0] === "@")}
             onPress={() => goto()}
           />
         </View>
@@ -141,7 +141,7 @@ export default function Feed() {
           style={style?.root}
           contentContainerStyle={{
             marginTop:
-              typeof route.params.feed === 'object' ? 0 : theme?.Space.get?.(1),
+              typeof route.params.feed === "object" ? 0 : theme?.Space.get?.(1),
           }}
           refreshRef={refreshRef}
           sort={sort}

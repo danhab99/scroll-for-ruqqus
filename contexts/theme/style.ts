@@ -1,6 +1,6 @@
-import {StyleSheet, TextStyle, ViewStyle} from 'react-native';
-import {ThemeInterface} from './default-theme';
-import Color from 'color';
+import { StyleSheet, TextStyle, ViewStyle } from "react-native";
+import { ThemeInterface } from "./default-theme";
+import Color from "color";
 
 export interface Styles {
   view: ViewStyle;
@@ -17,6 +17,8 @@ export interface Styles {
   upvotes: TextStyle;
   downvotes: TextStyle;
   controlrow: ViewStyle;
+  settingsInput: ViewStyle;
+  settingsPartition: ViewStyle;
 }
 
 export const gen = (start: number, skip: number) => (x: number) =>
@@ -30,14 +32,14 @@ export function generateStyles(theme: ThemeInterface): Styles {
     view: {
       padding: Space(1),
       backgroundColor: theme.Colors.background,
-      height: '100%',
+      height: "100%",
     },
     horizontal: {
-      flexDirection: 'row',
-      alignContent: 'space-around',
-      display: 'flex',
-      flexWrap: 'wrap',
-      alignItems: 'center',
+      flexDirection: "row",
+      alignContent: "space-around",
+      display: "flex",
+      flexWrap: "wrap",
+      alignItems: "center",
     },
     bottomButtons: {
       marginTop: Space(0.3),
@@ -60,7 +62,7 @@ export function generateStyles(theme: ThemeInterface): Styles {
     },
     root: {
       backgroundColor: theme.Colors.background,
-      height: '100%',
+      height: "100%",
     },
     headText: {
       color: theme.Colors.muted,
@@ -87,12 +89,14 @@ export function generateStyles(theme: ThemeInterface): Styles {
       color: theme.Colors.primaryDark,
     },
     controlrow: {
-      flexDirection: 'row',
-      alignContent: 'space-around',
-      display: 'flex',
-      flexWrap: 'wrap',
-      alignItems: 'center',
-      justifyContent: 'space-evenly',
+      flexDirection: "row",
+      alignContent: "space-around",
+      display: "flex",
+      flexWrap: "wrap",
+      alignItems: "center",
+      justifyContent: "space-evenly",
     },
+    settingsInput: {},
+    settingsPartition: {},
   });
 }

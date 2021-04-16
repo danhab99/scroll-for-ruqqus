@@ -1,8 +1,8 @@
-import React from 'react';
-import {usePost} from '@react-ruqqus';
-import {View, Text} from 'react-native';
-import {useTheme, useStyle} from '@contexts';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import React from "react";
+import { usePost } from "@react-ruqqus";
+import { View, Text } from "react-native";
+import { useTheme, useStyle } from "@contexts";
+import Icon from "react-native-vector-icons/FontAwesome";
 
 export function Metas() {
   const post = usePost();

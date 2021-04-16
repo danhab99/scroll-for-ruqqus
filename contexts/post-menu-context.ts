@@ -1,5 +1,5 @@
-import {createContext, useContext} from 'react';
-import {RuqqusPost} from 'react-ruqqus/types';
+import { createContext, useContext } from "react";
+import { RuqqusPost } from "react-ruqqus/types";
 
 type PostMenuType = [
   RuqqusPost | undefined,

@@ -1,5 +1,5 @@
-import {ThemeValue} from '../theme-context';
-import Color from 'color';
+import { ThemeValue } from "../theme-context";
+import Color from "color";
 
 export type ThemeRange = {
   start: number;
@@ -51,19 +51,19 @@ const Lighten = (c: string) =>
 
 export const DEFAULT_THEME: ThemeInterface = {
   Colors: {
-    text: '#fff',
-    background: '#181818',
-    backgroundHighlight: '#1f2023',
-    backgroundDark: '#0f0f0f',
-    primary: '#693ccd',
-    muted: '#aaa',
-    primaryDark: Darken('#693ccd'),
-    primaryLight: Lighten('#693ccd'),
+    text: "#fff",
+    background: "#181818",
+    backgroundHighlight: "#1f2023",
+    backgroundDark: "#0f0f0f",
+    primary: "#693ccd",
+    muted: "#aaa",
+    primaryDark: Darken("#693ccd"),
+    primaryLight: Lighten("#693ccd"),
   },
   Fonts: {
-    body: '',
+    body: "",
     heading: '"Avenir Next", sans-serif',
-    monospace: 'Menlo, monospace',
+    monospace: "Menlo, monospace",
   },
   FontSize: {
     start: 12,
@@ -74,11 +74,11 @@ export const DEFAULT_THEME: ThemeInterface = {
     step: 14,
   },
   LetterSpace: {
-    body: 'normal',
-    caps: '0.2em',
+    body: "normal",
+    caps: "0.2em",
   },
   FontWeight: {
-    body: 'normal',
+    body: "normal",
     heading: 700,
     bold: 700,
   },

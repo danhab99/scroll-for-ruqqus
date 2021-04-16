@@ -1,9 +1,9 @@
-import React, {useState, useEffect} from 'react';
-import {View, ActivityIndicator} from 'react-native';
-import Input from '../components/Input';
-import {Button} from '../components/Buttons';
-import {useTheme, useStyle} from '@contexts';
-import {useSubmit} from '@react-ruqqus';
+import React, { useState, useEffect } from "react";
+import { View, ActivityIndicator } from "react-native";
+import Input from "../components/Input";
+import { Button } from "../components/Buttons";
+import { useTheme, useStyle } from "@contexts";
+import { useSubmit } from "@react-ruqqus";
 
 export default function Submit() {
   const theme = useTheme();
@@ -12,10 +12,10 @@ export default function Submit() {
 
   const [ready, setReady] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const [board, setBoard] = useState('');
-  const [url, setUrl] = useState('');
-  const [title, setTitle] = useState('');
-  const [body, setBody] = useState('');
+  const [board, setBoard] = useState("");
+  const [url, setUrl] = useState("");
+  const [title, setTitle] = useState("");
+  const [body, setBody] = useState("");
 
   const submit = () => {
     setSubmitting(true);
@@ -31,7 +31,7 @@ export default function Submit() {
     });
   };
 
-  const disabled = !(ready && [board, url, title, body].every((x) => x !== ''));
+  const disabled = !(ready && [board, url, title, body].every((x) => x !== ""));
 
   return (
     <View style={style?.view}>

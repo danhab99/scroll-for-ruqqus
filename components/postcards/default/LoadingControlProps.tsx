@@ -1,7 +1,7 @@
-import React, {useState} from 'react';
-import {ActivityIndicator} from 'react-native';
-import {useTheme} from '@contexts';
-import {IconButton} from 'components/Buttons';
+import React, { useState } from "react";
+import { ActivityIndicator } from "react-native";
+import { useTheme } from "@contexts";
+import { IconButton } from "components/Buttons";
 
 interface LoadingControlProps {
   name: string;

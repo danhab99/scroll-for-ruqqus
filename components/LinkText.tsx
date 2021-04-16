@@ -1,6 +1,6 @@
-import React from 'react';
-import {Text, Linking} from 'react-native';
-import {COLORS, Lighten} from '../theme';
+import React from "react";
+import { Text, Linking } from "react-native";
+import { COLORS, Lighten } from "../theme";
 
 interface LinkTextProps {
   style?: object;
@@ -14,8 +14,8 @@ export default function LinkText(props: LinkTextProps) {
       style={{
         color: Lighten(COLORS.primary),
         textDecorationColor: COLORS.primary,
-        textDecorationStyle: 'solid',
-        textDecorationLine: 'underline',
+        textDecorationStyle: "solid",
+        textDecorationLine: "underline",
         ...props.style,
       }}
       onPress={() => Linking.openURL(props.url)}>

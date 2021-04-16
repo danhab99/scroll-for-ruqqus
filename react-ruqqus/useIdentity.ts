@@ -1,5 +1,5 @@
-import {useRuqqusFetch} from './useRuqqusFetch';
+import { useRuqqusFetch } from "./useRuqqusFetch";
 
 export function useIdentity() {
-  return useRuqqusFetch('identity');
+  return useRuqqusFetch("identity");
 }

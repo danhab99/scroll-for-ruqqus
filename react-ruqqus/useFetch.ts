@@ -1,7 +1,7 @@
-import {useState, useEffect} from 'react';
-import {fetcher, fetcherOpts} from './fetcher';
+import { useState, useEffect } from "react";
+import { fetcher, fetcherOpts } from "./fetcher";
 
-export type UseFetchOpts<T> = fetcherOpts & {initial?: T; disabled?: boolean};
+export type UseFetchOpts<T> = fetcherOpts & { initial?: T; disabled?: boolean };
 
 export function useFetch<T>(host: string, edge: string, opts?: UseFetchOpts) {
   const [loading, setLoading] = useState(false);
@@ -10,7 +10,7 @@ export function useFetch<T>(host: string, edge: string, opts?: UseFetchOpts) {
   const [refresher, setRefresher] = useState(false);
 
   useEffect(() => {
-    let disabled = typeof opts?.disabled === 'boolean' ? opts.disabled : false;
+    let disabled = typeof opts?.disabled === "boolean" ? opts.disabled : false;
     if (!disabled) {
       setLoading(true);
       fetcher(host, edge, opts).then((d) => {
@@ -26,5 +26,5 @@ export function useFetch<T>(host: string, edge: string, opts?: UseFetchOpts) {
     opts?.disable,
   ]);
 
-  return {loading, resp, body, refresh: () => setRefresher((x) => !x)};
+  return { loading, resp, body, refresh: () => setRefresher((x) => !x) };
 }

@@ -5,26 +5,26 @@ import React, {
   useContext,
   useEffect,
   useState,
-} from 'react';
+} from "react";
 import {
   ActivityIndicator,
   FlatList,
   FlatListProps,
   RefreshControl,
   RefreshControlProps,
-} from 'react-native';
-import {useFeed} from './useFeed';
-import {RuqqusPost, RuqqusGuild, RuqqusUser, RuqqusVote} from './types';
-import {useRuqqusClient} from './useRuqqusClient';
-import {fetcher} from './fetcher';
-import {useRuqqusFetch} from './useRuqqusFetch';
+} from "react-native";
+import { useFeed } from "./useFeed";
+import { RuqqusPost, RuqqusGuild, RuqqusUser, RuqqusVote } from "./types";
+import { useRuqqusClient } from "./useRuqqusClient";
+import { fetcher } from "./fetcher";
+import { useRuqqusFetch } from "./useRuqqusFetch";
 
 export const PostContext = createContext<RuqqusPost>({} as RuqqusPost);
 const GuildContext = createContext<RuqqusGuild>({} as RuqqusGuild);
 const UserContext = createContext<RuqqusUser>({} as RuqqusUser);
 
-type FeedOptions = 'front' | 'all' | {guild: string} | {user: string};
-export type SortOptions = 'hot' | 'top' | 'new' | 'disputed' | 'activity';
+type FeedOptions = "front" | "all" | { guild: string } | { user: string };
+export type SortOptions = "hot" | "top" | "new" | "disputed" | "activity";
 
 interface PostProps {
   item: RuqqusPost;
@@ -48,8 +48,8 @@ const PostMutatorContext = createContext<PostMutatorDispatch>(
   {} as PostMutatorDispatch,
 );
 
-function GuildManager(props: {guild: string; children: ReactNode}) {
-  const {loading, body} = useRuqqusFetch(`guild/${props.guild}`);
+function GuildManager(props: { guild: string; children: ReactNode }) {
+  const { loading, body } = useRuqqusFetch(`guild/${props.guild}`);
 
   if (loading) {
     return <ActivityIndicator />;
@@ -62,8 +62,8 @@ function GuildManager(props: {guild: string; children: ReactNode}) {
   }
 }
 
-function UserManager(props: {user: string; children: ReactNode}) {
-  const {loading, body} = useRuqqusFetch(`user/${props.user}`);
+function UserManager(props: { user: string; children: ReactNode }) {
+  const { loading, body } = useRuqqusFetch(`user/${props.user}`);
 
   if (loading) {
     return <ActivityIndicator />;
@@ -87,26 +87,26 @@ export function RuqqusFeed(props: RuqqusFeedProps) {
   var renderHeader = props.ListHeaderComponent;
   var feed: any = props.feed;
 
-  if (typeof props.feed === 'object') {
-    if ('guild' in props.feed) {
+  if (typeof props.feed === "object") {
+    if ("guild" in props.feed) {
       renderHeader = (
         <GuildManager guild={props.feed.guild}>
           {props.renderGuildHeader()}
         </GuildManager>
       );
-      feed = 'guild/' + props.feed.guild;
-    } else if ('user' in props.feed) {
+      feed = "guild/" + props.feed.guild;
+    } else if ("user" in props.feed) {
       renderHeader = (
         <UserManager user={props.feed.user}>
           {props.renderUserHeader()}
         </UserManager>
       );
-      feed = 'user/' + props.feed.user;
+      feed = "user/" + props.feed.user;
     }
   }
 
-  const {loading, posts, nextPage, refresh, setPosts} = useFeed(feed, {
-    sort: props?.sort || 'hot',
+  const { loading, posts, nextPage, refresh, setPosts } = useFeed(feed, {
+    sort: props?.sort || "hot",
   });
   const client = useRuqqusClient();
 
@@ -114,7 +114,7 @@ export function RuqqusFeed(props: RuqqusFeedProps) {
 
   const doRefresh = () => {
     refresh();
-    flatlistRef?.current?.scrollToOffset?.({offset: 0, animated: true});
+    flatlistRef?.current?.scrollToOffset?.({ offset: 0, animated: true });
   };
 
   useEffect(() => {

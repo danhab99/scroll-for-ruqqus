@@ -4,10 +4,10 @@ This is a 3rd party [Ruqqus](https://ruqqus.com/) client for Android and iOS\* w
 
 ## Features
 
-* Not bound to any one domain
-* Posting
-* Commenting
-* Guild mastering
+- Not bound to any one domain
+- Posting
+- Commenting
+- Guild mastering
 
 <div style="display: flex; flexDirection: row; justify-content: space-evenly;">
 <img src="docs/readme/frontpage.png" style="width: 40%">
@@ -29,7 +29,7 @@ This is a 3rd party [Ruqqus](https://ruqqus.com/) client for Android and iOS\* w
 
 - [ ] Icon and logo design
 - [x] Still waiting on app keys from ruqqus admins
-- [ ] Implement app ¯\\\_(ツ)_/¯
+- [ ] Implement app ¯\\\_(ツ)\_/¯
 - [ ] Ruqqus api requires implicit oauth
 
-<sup>* I don't have an iPhone so iOS compatibility is gonna be shotty. If you have an iPhone and are willing to fix, plz submit pull request</sup>
+<sup>\* I don't have an iPhone so iOS compatibility is gonna be shotty. If you have an iPhone and are willing to fix, plz submit pull request</sup>

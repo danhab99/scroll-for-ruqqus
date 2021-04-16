@@ -1,18 +1,18 @@
-import {useState, useEffect} from 'react';
-import {RuqqusPost} from './types';
-import {UseFetchOpts} from './useFetch';
-import {useRuqqusFetch} from './useRuqqusFetch';
-import * as _ from 'lodash';
-import {SortOptions} from './RuqqusFeed';
+import { useState, useEffect } from "react";
+import { RuqqusPost } from "./types";
+import { UseFetchOpts } from "./useFetch";
+import { useRuqqusFetch } from "./useRuqqusFetch";
+import * as _ from "lodash";
+import { SortOptions } from "./RuqqusFeed";
 
-type UseFeedOpts = UseFetchOpts<RuqqusPost[]> & {sort: SortOptions};
+type UseFeedOpts = UseFetchOpts<RuqqusPost[]> & { sort: SortOptions };
 
 export function useFeed(edge: string, args?: UseFeedOpts) {
   const [posts, setPosts] = useState<RuqqusPost[]>();
   const [page, setPage] = useState(1);
   const [more, setMore] = useState(true);
 
-  const {loading, body, refresh} = useRuqqusFetch(`${edge}/listing`, {
+  const { loading, body, refresh } = useRuqqusFetch(`${edge}/listing`, {
     args: {
       ...args,
       page,
@@ -26,7 +26,7 @@ export function useFeed(edge: string, args?: UseFeedOpts) {
         let next = page > 1 ? prev?.concat(data) : data;
         next = _.uniqBy(next, (x) => x.id);
         if (next.length < 1) {
-          console.warn('RUQQUS may have not retrieved new posts');
+          console.warn("RUQQUS may have not retrieved new posts");
         }
         return next;
       });

@@ -1,9 +1,9 @@
-import React from 'react';
-import {View, Text, Modal, Pressable} from 'react-native';
-import {IconButton} from './Buttons';
-import {OptionalEventHandler} from './OptionalEventHandler';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import {useTheme} from '../contexts/theme-context';
+import React from "react";
+import { View, Text, Modal, Pressable } from "react-native";
+import { IconButton } from "./Buttons";
+import { OptionalEventHandler } from "./OptionalEventHandler";
+import Icon from "react-native-vector-icons/FontAwesome";
+import { useTheme } from "../contexts/theme-context";
 
 interface PopupProps {
   visible: boolean;
@@ -24,25 +24,25 @@ export default function Popup(props: PopupProps) {
       <View
         style={{
           margin: theme?.Space?.get?.(3),
-          alignItems: 'center',
-          shadowColor: '#000',
+          alignItems: "center",
+          shadowColor: "#000",
           shadowOpacity: 0.5,
           elevation: 5,
           flex: 1,
-          justifyContent: 'center',
+          justifyContent: "center",
         }}>
         <View
           style={{
             backgroundColor: theme?.Colors?.backgroundDark,
             padding: theme?.Space?.get?.(2),
-            width: '100%',
+            width: "100%",
             borderRadius: 10,
           }}>
           <View
             style={{
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
             }}>
             <IconButton
               name="close"
@@ -56,7 +56,7 @@ export default function Popup(props: PopupProps) {
               style={{
                 color: theme?.Colors?.text,
                 fontSize: theme?.FontSize?.get?.(2),
-                flexWrap: 'wrap',
+                flexWrap: "wrap",
               }}>
               {props.title}
             </Text>
@@ -87,10 +87,10 @@ export function PopupButton(props: PopupButtonProps) {
     <Pressable onPress={() => props.onPress?.()}>
       <View
         style={{
-          display: 'flex',
-          justifyContent: 'flex-start',
-          alignItems: 'center',
-          flexDirection: 'row',
+          display: "flex",
+          justifyContent: "flex-start",
+          alignItems: "center",
+          flexDirection: "row",
           marginBottom: theme?.Space?.get?.(0.5),
         }}>
         <Icon name={props.icon} size={30} color={theme?.Colors?.text} />

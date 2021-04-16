@@ -1,12 +1,12 @@
-import * as RNFS from 'react-native-fs';
-import uuid from 'react-native-uuid';
-import isMatch from 'lodash.ismatch';
+import * as RNFS from "react-native-fs";
+import uuid from "react-native-uuid";
+import isMatch from "lodash.ismatch";
 
 export class Value {
   static getValue(name: string): Promise<any> {
     let filename = `${RNFS.DocumentDirectoryPath}${name}`;
 
-    return RNFS.readFile(filename, 'utf8')
+    return RNFS.readFile(filename, "utf8")
       .then((raw) => JSON.parse(raw))
       .catch((e) => {
         return this.setValue(name, null).then(() => this.getValue(name));
@@ -15,7 +15,7 @@ export class Value {
 
   static setValue(name: string, data: any): Promise<void> {
     let filename = `${RNFS.DocumentDirectoryPath}${name}`;
-    return RNFS.writeFile(filename, JSON.stringify(data), 'utf8');
+    return RNFS.writeFile(filename, JSON.stringify(data), "utf8");
   }
 }
 
@@ -72,7 +72,7 @@ export default class Collection<T> {
   }
 
   findById(id: string) {
-    return this.findOne({_id: id});
+    return this.findOne({ _id: id });
   }
 
   update(pattern: Object, change: T) {

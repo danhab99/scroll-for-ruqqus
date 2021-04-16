@@ -1,13 +1,13 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, { useState, useEffect, useRef } from "react";
 import {
   View,
   Text,
   ScrollView,
   RefreshControl,
   BackHandler,
-} from 'react-native';
-import {Button, IconButton} from '../components/Buttons';
-import {useValue, useStyle, useTheme} from '@contexts';
+} from "react-native";
+import { Button, IconButton } from "../components/Buttons";
+import { useValue, useStyle, useTheme } from "@contexts";
 import {
   AuthSiteWebview,
   useAuthSites,
@@ -15,11 +15,11 @@ import {
   useOnWebviewClear,
   useLogin,
   TokenInterface,
-} from '@react-ruqqus';
-import {v4} from 'react-native-uuid';
-import {useNavigation} from '@react-navigation/core';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import * as _ from 'lodash';
+} from "@react-ruqqus";
+import { v4 } from "react-native-uuid";
+import { useNavigation } from "@react-navigation/core";
+import Icon from "react-native-vector-icons/FontAwesome";
+import * as _ from "lodash";
 
 interface Site {
   _id: string;
@@ -39,9 +39,9 @@ export default function ROALogin(props: any) {
   const [siteID, setSiteID] = useState<string>();
   const style = useStyle();
   const theme = useTheme();
-  const [accounts, setAccounts] = useValue<Account[]>('accounts');
-  const [activeAccount, setActiveAccount] = useValue<string>('active-account');
-  const {loading, sites, getAuthURL, refresh} = useAuthSites();
+  const [accounts, setAccounts] = useValue<Account[]>("accounts");
+  const [activeAccount, setActiveAccount] = useValue<string>("active-account");
+  const { loading, sites, getAuthURL, refresh } = useAuthSites();
   const navigation = useNavigation();
   const login = useLogin();
 
@@ -72,11 +72,11 @@ export default function ROALogin(props: any) {
         return true;
       };
 
-      navigation.addListener('beforeRemove', h);
-      BackHandler.addEventListener('hardwareBackPress', h);
+      navigation.addListener("beforeRemove", h);
+      BackHandler.addEventListener("hardwareBackPress", h);
       return () => {
-        navigation.removeListener('beforeRemove', h);
-        BackHandler.removeEventListener('hardwareBackPress', h);
+        navigation.removeListener("beforeRemove", h);
+        BackHandler.removeEventListener("hardwareBackPress", h);
       };
     }
   }, [connecting, navigation]);
@@ -97,9 +97,9 @@ export default function ROALogin(props: any) {
     if (account) {
       setActiveAccount(id);
       login(account);
-      navigation.navigate('Frontpage');
+      navigation.navigate("Frontpage");
     } else {
-      setActiveAccount('');
+      setActiveAccount("");
     }
   };
 
@@ -120,12 +120,12 @@ export default function ROALogin(props: any) {
         }>
         {sites?.map((site: Site, i: number) => (
           <View key={`${i}`} style={style?.card}>
-            <View style={{padding: theme?.Space.get?.(1)}}>
+            <View style={{ padding: theme?.Space.get?.(1) }}>
               <Text
                 style={{
                   color: theme?.Colors?.text,
                   fontSize: theme?.FontSize.get?.(2),
-                  fontWeight: 'bold',
+                  fontWeight: "bold",
                 }}>
                 {site.domain}
               </Text>
@@ -138,25 +138,25 @@ export default function ROALogin(props: any) {
                       key={`${i}`}
                       style={{
                         marginTop: theme?.Space.get?.(1),
-                        display: 'flex',
-                        flexDirection: 'row',
-                        justifyContent: 'flex-end',
-                        alignContent: 'center',
-                        alignItems: 'center',
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "flex-end",
+                        alignContent: "center",
+                        alignItems: "center",
                       }}>
                       <Text
                         style={{
                           color: theme?.Colors.text,
-                          fontWeight: 'bold',
-                          textAlign: 'center',
-                          margin: 'auto',
-                          alignContent: 'center',
+                          fontWeight: "bold",
+                          textAlign: "center",
+                          margin: "auto",
+                          alignContent: "center",
                           fontSize: theme?.FontSize.get?.(1.5),
                           marginRight: theme?.Space.get?.(1),
                         }}>
                         {activeAccount === account.id ? (
                           <Icon name="star" size={theme?.FontSize?.get?.(2)} />
-                        ) : null}{' '}
+                        ) : null}{" "}
                         @{account.username}
                       </Text>
 

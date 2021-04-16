@@ -2,31 +2,31 @@ import {
   DrawerActions,
   NavigationContainer,
   useNavigation,
-} from '@react-navigation/native';
+} from "@react-navigation/native";
 import {
   createStackNavigator,
   HeaderBackButton,
   StackHeaderTitleProps,
-} from '@react-navigation/stack';
+} from "@react-navigation/stack";
 import {
   createDrawerNavigator,
   DrawerContentComponentProps,
   DrawerContentOptions,
   DrawerContentScrollView,
   DrawerItemList,
-} from '@react-navigation/drawer';
-import {StatusBar} from 'expo-status-bar';
-import React from 'react';
-import {View, Text} from 'react-native';
+} from "@react-navigation/drawer";
+import { StatusBar } from "expo-status-bar";
+import React from "react";
+import { View, Text } from "react-native";
 
-import {IconButton} from './components/Buttons';
-import Feed from './views/feed';
-import Comments from './views/comments';
-import Submit from './views/submit';
-import ROALogin from './views/roa_login';
+import { IconButton } from "./components/Buttons";
+import Feed from "./views/feed";
+import Comments from "./views/comments";
+import Submit from "./views/submit";
+import ROALogin from "./views/roa_login";
 
-import {useStyle, useTheme} from '@contexts';
-import {Saved} from './views/saved';
+import { useStyle, useTheme } from "@contexts";
+import { Saved } from "./views/saved";
 
 type ChildrenOnly = {
   children: React.ReactNode;
@@ -58,14 +58,14 @@ function StackTitle(props: StackHeaderTitleProps) {
     <View
       style={{
         flex: 1,
-        flexDirection: 'row',
-        width: '100%',
+        flexDirection: "row",
+        width: "100%",
       }}>
       <Text
         style={{
           color: theme?.Colors?.text,
           fontSize: theme?.FontSize?.get?.(3),
-          fontWeight: 'bold',
+          fontWeight: "bold",
         }}>
         {props.children}
       </Text>
@@ -108,7 +108,7 @@ function FrontpageStackNavigator(props: ChildrenOnly) {
         name="Frontpage"
         component={Feed}
         initialParams={{
-          feed: 'front',
+          feed: "front",
         }}
       />
       <Stack.Screen name="Comments" component={Comments} />
@@ -123,7 +123,7 @@ function AllStackNavigator(props: ChildrenOnly) {
         name="All"
         component={Feed}
         initialParams={{
-          feed: 'all',
+          feed: "all",
         }}
       />
       <Stack.Screen name="Comments" component={Comments} />

@@ -1,10 +1,10 @@
-import {useGuild} from '@react-ruqqus';
-import React from 'react';
-import {View, Image, Text} from 'react-native';
-import {COLORS, FONTSIZE, SPACE} from '../theme';
-import {Button} from './Buttons';
-import HtmlMarkdown from './HtmlMarkdown';
-import {useStyle, useTheme} from '@contexts';
+import { useGuild } from "@react-ruqqus";
+import React from "react";
+import { View, Image, Text } from "react-native";
+import { COLORS, FONTSIZE, SPACE } from "../theme";
+import { Button } from "./Buttons";
+import HtmlMarkdown from "./HtmlMarkdown";
+import { useStyle, useTheme } from "@contexts";
 
 interface GuildHeaderProps {
   guild: {
@@ -31,20 +31,20 @@ export function GuildHeader(props?: GuildHeaderProps) {
           marginBottom: theme?.Space.get?.(1.5),
         }}>
         <Image
-          source={{uri: guild.banner_url}}
+          source={{ uri: guild.banner_url }}
           style={{
-            width: '100%',
+            width: "100%",
             aspectRatio: 3.4092307692307693,
           }}
         />
         <View
           style={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'flex-start',
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "flex-start",
           }}>
           <Image
-            source={{uri: guild.profile_url}}
+            source={{ uri: guild.profile_url }}
             style={{
               width: 64,
               aspectRatio: 1,
@@ -52,12 +52,12 @@ export function GuildHeader(props?: GuildHeaderProps) {
               margin: theme?.Space.get?.(1),
             }}
           />
-          <View style={{margin: theme?.Space.get?.(1)}}>
+          <View style={{ margin: theme?.Space.get?.(1) }}>
             <Text
               style={{
                 color: theme?.Colors.text,
                 fontSize: theme?.FontSize.get?.(4 / 3),
-                fontWeight: 'bold',
+                fontWeight: "bold",
               }}>
               +{guild.name}
             </Text>

@@ -1,20 +1,20 @@
-import {useEffect} from 'react';
-import {useValue} from '@contexts';
-import {useNavigation} from '@react-navigation/core';
-import * as _ from 'lodash';
+import { useEffect } from "react";
+import { useValue } from "@contexts";
+import { useNavigation } from "@react-navigation/core";
+import * as _ from "lodash";
 
 export function useEnforceLogin() {
-  const [activeAccount] = useValue<string>('active-account');
+  const [activeAccount] = useValue<string>("active-account");
   const navigation = useNavigation();
 
   useEffect(() => {
     let h = () => {
       if (_.isEmpty(activeAccount)) {
-        navigation.navigate('Login');
+        navigation.navigate("Login");
       }
     };
 
-    navigation.addListener('focus', h);
-    return () => navigation.removeListener('focus', h);
+    navigation.addListener("focus", h);
+    return () => navigation.removeListener("focus", h);
   }, [activeAccount]);
 }

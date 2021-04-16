@@ -1,24 +1,24 @@
-import React from 'react';
-import {usePost, useVote} from '@react-ruqqus';
-import {View} from 'react-native';
-import {useTheme, useStyle} from '@contexts';
-import * as _ from 'lodash';
-import {IconButton} from 'components/Buttons';
-import {useSavedPosts} from '../../../contexts/useCollection';
-import {useNavigation} from '@react-navigation/core';
-import {usePostMenuContext} from 'contexts/post-menu-context';
-import {LoadingControl} from './LoadingControlProps';
+import React from "react";
+import { usePost, useVote } from "@react-ruqqus";
+import { View } from "react-native";
+import { useTheme, useStyle } from "@contexts";
+import * as _ from "lodash";
+import { IconButton } from "components/Buttons";
+import { useSavedPosts } from "../../../contexts/useCollection";
+import { useNavigation } from "@react-navigation/core";
+import { usePostMenuContext } from "contexts/post-menu-context";
+import { LoadingControl } from "./LoadingControlProps";
 
 export function Controls() {
-  const {upvote, downvote} = useVote();
+  const { upvote, downvote } = useVote();
   const post = usePost();
   const style = useStyle();
   const theme = useTheme();
-  const [saves, {add, remove}] = useSavedPosts();
+  const [saves, { add, remove }] = useSavedPosts();
   const navigator = useNavigation();
   const [__, setPostMenu] = usePostMenuContext();
 
-  const predicate = (x: {id: string; date_saved: Date}): boolean =>
+  const predicate = (x: { id: string; date_saved: Date }): boolean =>
     x.id.includes(post.id);
 
   const saved = _.findIndex(saves, predicate) >= 0;
@@ -53,7 +53,7 @@ export function Controls() {
       />
       <IconButton
         name="commenting"
-        onPress={() => navigator.push('Comments', {post_id: post.id})}
+        onPress={() => navigator.push("Comments", { post_id: post.id })}
       />
       <IconButton name="ellipsis-v" onPress={() => setPostMenu(post)} />
     </View>

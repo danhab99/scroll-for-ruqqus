@@ -1,11 +1,11 @@
-import {useUser} from '@react-ruqqus';
-import React from 'react';
-import {View, Image, Text} from 'react-native';
-import Style, {COLORS, FONTSIZE, SPACE} from '../theme';
-import {Button} from './Buttons';
-import HtmlMarkdown from './HtmlMarkdown';
-import {useStyle, useTheme} from '@contexts';
-import {useRuqqusClient} from '../react-ruqqus/useRuqqusClient';
+import { useUser } from "@react-ruqqus";
+import React from "react";
+import { View, Image, Text } from "react-native";
+import Style, { COLORS, FONTSIZE, SPACE } from "../theme";
+import { Button } from "./Buttons";
+import HtmlMarkdown from "./HtmlMarkdown";
+import { useStyle, useTheme } from "@contexts";
+import { useRuqqusClient } from "../react-ruqqus/useRuqqusClient";
 
 interface GuildHeaderProps {
   guild: {
@@ -27,7 +27,7 @@ export function UserHeader(props?: GuildHeaderProps) {
 
   if (user) {
     return (
-      <View style={{width: '100%'}}>
+      <View style={{ width: "100%" }}>
         <Image
           source={{
             uri: user.banner_url.includes(client.domain)
@@ -35,18 +35,18 @@ export function UserHeader(props?: GuildHeaderProps) {
               : `https://${client.domain}${user.banner_url}`,
           }}
           style={{
-            width: '100%',
+            width: "100%",
             aspectRatio: 3.4092307692307693,
           }}
         />
         <View
           style={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'flex-start',
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "flex-start",
           }}>
           <Image
-            source={{uri: user.profile_url}}
+            source={{ uri: user.profile_url }}
             style={{
               width: 64,
               aspectRatio: 1,
@@ -55,12 +55,12 @@ export function UserHeader(props?: GuildHeaderProps) {
               borderRadius: 4,
             }}
           />
-          <View style={{margin: theme?.Space.get?.(1)}}>
+          <View style={{ margin: theme?.Space.get?.(1) }}>
             <Text
               style={{
                 color: theme?.Colors.text,
                 fontSize: theme?.FontSize.get?.(4 / 3),
-                fontWeight: 'bold',
+                fontWeight: "bold",
               }}>
               {user.username}
             </Text>
@@ -71,22 +71,22 @@ export function UserHeader(props?: GuildHeaderProps) {
                 fontSize: theme?.FontSize.get?.(1),
               }}>
               Post rep: {user.post_rep}
-              {'\n'}
+              {"\n"}
               Comment rep: {user.comment_rep}
             </Text>
             {user.badges.map((badge) => (
-              <View style={{display: 'flex', flexDirection: 'row'}}>
+              <View style={{ display: "flex", flexDirection: "row" }}>
                 <Image
-                  source={{uri: badge.icon_url}}
-                  style={{width: 26, height: 26}}
+                  source={{ uri: badge.icon_url }}
+                  style={{ width: 26, height: 26 }}
                 />
                 <Text
                   style={{
                     color: theme?.Colors.text,
                     fontSize: theme?.FontSize.get?.(1),
-                    overflow: 'scroll',
+                    overflow: "scroll",
                   }}>
-                  {' '}
+                  {" "}
                   {badge.text}
                 </Text>
               </View>

@@ -1,11 +1,11 @@
-import React, {useState, useEffect, useContext} from 'react';
+import React, { useState, useEffect, useContext } from "react";
 import {
   UserContext,
   WebAuthContext,
   ClientContext,
   AuthErrorContext,
-} from './ClientContext';
-import {fetcher} from './fetcher';
+} from "./ClientContext";
+import { fetcher } from "./fetcher";
 
 interface RuqqusClientProviderProps {
   config: {
@@ -29,13 +29,13 @@ export function RuqqusClientProvider(props: RuqqusClientProviderProps) {
 
   const clientConfig = Object.assign(
     {
-      domain: 'ruqqus.com',
-      authserver: 'sfroa.danhab99.xyz',
-      access_token: '',
-      refresh_token: '',
-      client_id: '',
+      domain: "ruqqus.com",
+      authserver: "sfroa.danhab99.xyz",
+      access_token: "",
+      refresh_token: "",
+      client_id: "",
       expires_at: -1,
-      siteID: '',
+      siteID: "",
       ...tokens,
     },
     props.config,
@@ -43,7 +43,7 @@ export function RuqqusClientProvider(props: RuqqusClientProviderProps) {
 
   const refreshTokens = () => {
     if (tokens?.siteID) {
-      console.log('RUQQUS REFRESHING TOKENS');
+      console.log("RUQQUS REFRESHING TOKENS");
       fetcher(clientConfig.authserver, `auth/${tokens.siteID}/refresh`, {
         body: {
           refresh_token: tokens.refresh_token,
@@ -53,10 +53,10 @@ export function RuqqusClientProvider(props: RuqqusClientProviderProps) {
         setTokens(
           (prev): TokenInterface => {
             return {
-              client_id: resp.body['client_id'] || prev?.client_id,
-              access_token: resp.body['access_token'] || prev?.access_token,
-              refresh_token: resp.body['refresh_token'] || prev?.refresh_token,
-              expires_at: resp.body['expires_at'] || prev?.expires_at,
+              client_id: resp.body["client_id"] || prev?.client_id,
+              access_token: resp.body["access_token"] || prev?.access_token,
+              refresh_token: resp.body["refresh_token"] || prev?.refresh_token,
+              expires_at: resp.body["expires_at"] || prev?.expires_at,
             };
           },
         );
@@ -65,7 +65,7 @@ export function RuqqusClientProvider(props: RuqqusClientProviderProps) {
   };
 
   useEffect(() => {
-    console.log('RUQQUS TOKENS CHANGED', tokens, props.config);
+    console.log("RUQQUS TOKENS CHANGED", tokens, props.config);
     refreshTokens();
 
     let timeout = setTimeout(() => refreshTokens(), 3e6);
@@ -74,7 +74,7 @@ export function RuqqusClientProvider(props: RuqqusClientProviderProps) {
 
   return (
     <UserContext.Provider value={setTokens}>
-      <WebAuthContext.Provider value={{authSite, setAuthSite}}>
+      <WebAuthContext.Provider value={{ authSite, setAuthSite }}>
         <ClientContext.Provider value={clientConfig as any}>
           <AuthErrorContext.Provider
             value={() => props.onLoginError && props.onLoginError()}>

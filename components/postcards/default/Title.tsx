@@ -1,7 +1,7 @@
-import React from 'react';
-import {usePost} from '@react-ruqqus';
-import {View, Text} from 'react-native';
-import {useStyle} from '@contexts';
+import React from "react";
+import { usePost } from "@react-ruqqus";
+import { View, Text } from "react-native";
+import { useStyle } from "@contexts";
 
 export function Title() {
   const post = usePost();

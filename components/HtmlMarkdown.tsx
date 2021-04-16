@@ -1,8 +1,8 @@
-import React from 'react';
-import {Text, Linking, StyleSheet} from 'react-native';
-import HTML from 'react-native-render-html';
-import {useRuqqusClient} from '../react-ruqqus/useRuqqusClient';
-import {useTheme} from '../contexts/theme-context';
+import React from "react";
+import { Text, Linking, StyleSheet } from "react-native";
+import HTML from "react-native-render-html";
+import { useRuqqusClient } from "../react-ruqqus/useRuqqusClient";
+import { useTheme } from "../contexts/theme-context";
 
 interface HtmlMarkdownProps {
   html: string;
@@ -66,7 +66,7 @@ export default function HtmlMarkdown(props: HtmlMarkdownProps) {
               style={{
                 color: theme?.Colors?.primary,
                 fontSize: theme?.FontSize?.get?.(1.5),
-                fontWeight: 'bold',
+                fontWeight: "bold",
                 marginRight: theme?.Space?.get?.(1 / 5),
               }}>
               •
@@ -77,14 +77,14 @@ export default function HtmlMarkdown(props: HtmlMarkdownProps) {
       onLinkPress={(evt, href, attr) => {
         Linking.canOpenURL(href)
           .then(() => Linking.openURL(href))
-          .catch((err) => console.log('Cannot open markdown link', err));
+          .catch((err) => console.log("Cannot open markdown link", err));
       }}
       alterNode={(node) => {
-        if (node.name === 'img') {
-          if (node?.attribs?.src[0] == '/') {
+        if (node.name === "img") {
+          if (node?.attribs?.src[0] == "/") {
             return Object.assign(node, {
               attribs: {
-                src: `https://${client.domain || 'ruqqus.com'}${
+                src: `https://${client.domain || "ruqqus.com"}${
                   node.attribs.src
                 }`,
               },
