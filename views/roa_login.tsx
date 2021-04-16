@@ -169,7 +169,7 @@ export default function ROALogin(props: any) {
                       />
 
                       <IconButton
-                        name="trash"
+                        name="delete"
                         onPress={() => deleteAccount(account.id)}
                       />
                     </View>

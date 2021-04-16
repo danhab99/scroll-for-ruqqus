@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, Modal, Pressable } from "react-native";
 import { IconButton } from "./Buttons";
 import { OptionalEventHandler } from "./OptionalEventHandler";
-import Icon from "react-native-vector-icons/FontAwesome";
+import Icon from "react-native-vector-icons/MaterialIcons";
 import { useTheme } from "../contexts/theme-context";
 
 interface PopupProps {

@@ -37,12 +37,12 @@ export function Controls() {
   return (
     <View style={style?.controlrow}>
       <LoadingControl
-        name="arrow-up"
+        name="arrow-upward"
         onPress={() => upvote()}
         highlighted={post.voted === 1}
       />
       <LoadingControl
-        name="arrow-down"
+        name="arrow-downward"
         onPress={() => downvote()}
         highlighted={post.voted === -1}
       />
@@ -52,10 +52,10 @@ export function Controls() {
         onPress={() => toggleSaved()}
       />
       <IconButton
-        name="commenting"
+        name="comment"
         onPress={() => navigator.push("Comments", { post_id: post.id })}
       />
-      <IconButton name="ellipsis-v" onPress={() => setPostMenu(post)} />
+      <IconButton name="more-vert" onPress={() => setPostMenu(post)} />
     </View>
   );
 }

@@ -13,7 +13,7 @@ export function IconButton(props: IconButtonProps) {
       backgroundColor={
         props.style?.backgroundColor || theme?.Colors.backgroundHighlight
       }
-      size={theme?.FontSize?.get?.(3)}
+      size={theme?.FontSize?.get?.(4)}
       {...props}
     />
   );

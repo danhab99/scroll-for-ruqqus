@@ -89,7 +89,7 @@ function StackNavigator(props: ChildrenOnly) {
         headerTitle: (ps) => <StackTitle {...ps} />,
         headerLeft: () => (
           <IconButton
-            name="bars"
+            name="menu"
             onPress={() => toggle()}
             style={{
               marginLeft: theme?.Space.get?.(1) || 1,

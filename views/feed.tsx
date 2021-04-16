@@ -51,12 +51,9 @@ export default function Feed() {
       headerRight: () => (
         <View style={{ display: "flex", flexDirection: "row" }}>
           <IconButton name="refresh" onPress={() => refreshRef?.current?.()} />
+          <IconButton name="sort" onPress={() => setSortPopupVisible(true)} />
           <IconButton
-            name="sort-amount-desc"
-            onPress={() => setSortPopupVisible(true)}
-          />
-          <IconButton
-            name="location-arrow"
+            name="navigation"
             onPress={() => setNavigatorVisible(true)}
           />
         </View>
