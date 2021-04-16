@@ -1,9 +1,8 @@
 import React, {useEffect} from 'react';
 import {View, Pressable, Text} from 'react-native';
 import {OptionalEventHandler} from './OptionalEventHandler';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import {IconButtonProps} from 'react-native-vector-icons/Icon';
-import {useStyle} from '@contexts';
 import {useTheme} from '@contexts';
 
 export function IconButton(props: IconButtonProps) {
@@ -14,7 +13,7 @@ export function IconButton(props: IconButtonProps) {
       backgroundColor={
         props.style?.backgroundColor || theme?.Colors.backgroundHighlight
       }
-      size={theme?.FontSize?.get?.(4)}
+      size={theme?.FontSize?.get?.(3)}
       {...props}
     />
   );
