@@ -50,7 +50,6 @@ export function UserHeader(props?: GuildHeaderProps) {
             style={{
               width: 64,
               aspectRatio: 1,
-              borderRadius: 100,
               margin: theme?.Space.get?.(1),
               borderRadius: 4,
             }}
