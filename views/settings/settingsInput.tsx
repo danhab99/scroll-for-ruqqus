@@ -5,7 +5,7 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import Slider from "@react-native-community/slider";
 import { useNavigation } from "@react-navigation/core";
 import Popup, { PopupButton } from "components/Popup";
-import ColorPicker from "react-native-wheel-color-picker";
+import { ColorPicker } from "components/ColorPicker";
 
 type SettingsType =
   | { type: "choice"; choices: string[] }
@@ -60,7 +60,6 @@ export function SettingsInput(props: SettingsInputProps) {
         visible={popupVisible}>
         {props.type.type === "choice" &&
           props.type.choices.map((choice) => {
-            debugger;
             return (
               <PopupButton
                 icon={`radio-button-${value === choice ? "on" : "off"}`}
@@ -73,7 +72,14 @@ export function SettingsInput(props: SettingsInputProps) {
             );
           })}
 
-        {props.type.type === "color" ? <View></View> : null}
+        {props.type.type === "color" ? (
+          <View>
+            <ColorPicker
+              onColorChange={(color) => console.log(`Color selected: ${color}`)}
+              initialColor={"#fff"}
+            />
+          </View>
+        ) : null}
       </Popup>
 
       <Pressable onPress={() => onPress()}>

@@ -16,6 +16,26 @@ export function Settings() {
         address={["general", "rightHanded"]}
         type={{ type: "checkbox" }}
       />
+
+      <SettingsInput
+        title="Primary color"
+        address={["general", "primaryColor"]}
+        type={{ type: "color" }}
+        iconName="color-lens"
+        default="#693ccd"
+      />
+
+      <SettingsInput
+        title="Example choice"
+        address={["test", "choice"]}
+        type={{
+          type: "choice",
+          choices: ["option1", "option2", "option3"],
+        }}
+        default="option1"
+        iconName="menu"
+        description="Test choice"
+      />
     </View>
   );
 }
