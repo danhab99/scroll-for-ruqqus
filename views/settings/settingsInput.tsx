@@ -28,7 +28,7 @@ export function SettingsInput(props: SettingsInputProps) {
   const navigation = useNavigation();
   const theme = useTheme();
   const style = useStyle();
-  const [value, setValue] = useValue<any>("settings", ...props.address);
+  const [value, setValue] = useValue<any>(...props.address);
   const [popupVisible, setPopupVisible] = useState(false);
 
   // if (typeof value === 'undefined') {
@@ -59,9 +59,10 @@ export function SettingsInput(props: SettingsInputProps) {
         toggleModal={() => setPopupVisible((x) => !x)}
         visible={popupVisible}>
         {props.type.type === "choice" &&
-          props.type.choices.map((choice) => {
+          props.type.choices.map((choice, i) => {
             return (
               <PopupButton
+                key={i}
                 icon={`radio-button-${value === choice ? "on" : "off"}`}
                 label={choice}
                 onPress={() => {
@@ -75,8 +76,8 @@ export function SettingsInput(props: SettingsInputProps) {
         {props.type.type === "color" ? (
           <View>
             <ColorPicker
-              onColorChange={(color) => console.log(`Color selected: ${color}`)}
-              initialColor={"#fff"}
+              onColorChange={(color) => setValue(color)}
+              initialColor={value || props.default}
             />
           </View>
         ) : null}
