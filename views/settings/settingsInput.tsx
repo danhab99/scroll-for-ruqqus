@@ -97,7 +97,7 @@ export function SettingsInput(props: SettingsInputProps) {
           <Icon
             name={props.iconName}
             size={theme?.FontSize.get?.(8)}
-            color={props.type.type === "color" ? value : theme?.Colors.text}
+            color={props.type.type === "color" ? safeValue : theme?.Colors.text}
             style={{ marginRight: theme?.Space.get?.(0.5) }}
           />
 
