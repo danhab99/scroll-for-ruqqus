@@ -1,41 +1,36 @@
 import React from "react";
-import { View, Text } from "react-native";
+import { ScrollView, Text } from "react-native";
 import { useValue, useTheme, useStyle } from "@contexts";
-import { SettingsInput } from "./settingsInput";
+import { SettingsInput, SettingsSection } from "./settingsInput";
 
 export function Settings() {
   const style = useStyle();
 
   return (
-    <View style={style?.view}>
+    <ScrollView style={style?.view}>
       <SettingsInput
-        title="Right handed mode"
-        description="Switch the order or horizontal elements"
-        iconName="switch-right"
-        default={false}
-        address={["general", "rightHanded"]}
-        type={{ type: "checkbox" }}
-      />
-
-      <SettingsInput
-        title="Primary color"
-        address={["general", "primaryColor"]}
-        type={{ type: "color" }}
-        iconName="color-lens"
-        default="#693ccd"
-      />
-
-      <SettingsInput
-        title="Example choice"
-        address={["test", "choice"]}
+        iconName="apps"
+        title="General"
+        description="General options about the user interface"
+        address={[]}
+        default=""
         type={{
-          type: "choice",
-          choices: ["option1", "option2", "option3"],
+          type: "navigate",
+          screen: "General Settings",
         }}
-        default="option1"
-        iconName="menu"
-        description="Test choice"
       />
-    </View>
+
+      <SettingsInput
+        iconName="edit"
+        title="Theme"
+        description="Colors and fonts"
+        address={[]}
+        default=""
+        type={{
+          type: "navigate",
+          screen: "Theme Settings",
+        }}
+      />
+    </ScrollView>
   );
 }

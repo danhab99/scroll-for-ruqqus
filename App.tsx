@@ -28,6 +28,8 @@ import ROALogin from "./views/roa_login";
 import { useStyle, useTheme } from "@contexts";
 import { Saved } from "./views/saved";
 import { Settings } from "./views/settings/settings";
+import { ThemeSettings } from "views/settings/theme";
+import { GeneralSettings } from "./views/settings/general";
 
 type ChildrenOnly = {
   children: React.ReactNode;
@@ -161,6 +163,8 @@ function SettingsStackNavigator(props: ChildrenOnly) {
   return (
     <StackNavigator {...props}>
       <Stack.Screen name="Settings" component={Settings} />
+      <Stack.Screen name="General Settings" component={GeneralSettings} />
+      <Stack.Screen name="Theme Settings" component={ThemeSettings} />
     </StackNavigator>
   );
 }
