@@ -4,8 +4,7 @@ import {
   DocumentDirectoryPath,
   writeFile,
   readFile,
-  readdir,
-  mkdir,
+  unlink,
 } from "react-native-fs";
 import * as _ from "lodash";
 
@@ -32,14 +31,21 @@ export function ValueProvider(props: ContextChildrenProps) {
 
   const read = () => {
     readFile(ValuesFile).then((raw) => {
-      let p = JSON.parse(raw);
-      console.log("VALUE READ", p);
-      return p;
+      try {
+        let p = JSON.parse(raw);
+        console.log("VALUE READ", p);
+        setValue(p);
+      } catch (e) {
+        unlink(ValuesFile);
+        console.error("values.json broken", e, raw);
+      }
     });
   };
 
   useEffect(() => {
-    write();
+    if (!_.isEmpty(value)) {
+      write();
+    }
   }, [value]);
 
   useEffect(() => {
