@@ -51,9 +51,9 @@ export function ValueProvider(props: ContextChildrenProps) {
   useEffect(() => {
     read();
 
-    return () => {
-      write();
-    };
+    // return () => {
+    //   write();
+    // };
   }, []);
 
   return (
