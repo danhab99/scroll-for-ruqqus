@@ -5,12 +5,22 @@ import * as _ from "lodash";
 import { ThemeInterface, DEFAULT_THEME } from "./theme/default-theme";
 import { generateStyles, gen } from "./theme/style";
 import { Styles } from "./theme/style";
+import Color from "color";
 export type ThemeValue = string | number;
 
 export type ThemeContextType =
   | { theme: ThemeInterface; style?: Styles }
   | undefined;
 const ThemeContext = createContext<ThemeContextType>(undefined);
+
+const Darken = (c: string) =>
+  Color(c)
+    .darken(1 / 3)
+    .hex();
+const Lighten = (c: string) =>
+  Color(c)
+    .lighten(1 / 3)
+    .hex();
 
 export function ThemeProvider(props: ContextChildrenProps) {
   var [theme] = useValue<ThemeInterface>("theme");
@@ -26,6 +36,8 @@ export function ThemeProvider(props: ContextChildrenProps) {
     "FontSize",
     "get",
   );
+  deepSet(Darken(theme.Colors.primary), "Colors", "primaryDark");
+  deepSet(Lighten(theme.Colors.primary), "Colors", "primaryLight");
 
   return (
     <ThemeContext.Provider value={{ theme, style }}>
