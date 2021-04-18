@@ -6,6 +6,7 @@ import Slider from "@react-native-community/slider";
 import { useNavigation } from "@react-navigation/core";
 import Popup, { PopupButton } from "components/Popup";
 import { ColorPicker } from "components/ColorPicker";
+import _ from "lodash";
 
 type SettingsType =
   | { type: "choice"; choices: string[] }
@@ -51,6 +52,8 @@ export function SettingsInput(props: SettingsInputProps) {
     }
   };
 
+  const safeValue = _.isEmpty(value) ? props.default : value;
+
   return (
     <View style={{ marginBottom: theme?.Space.get?.(1) }}>
       <Popup
@@ -62,7 +65,7 @@ export function SettingsInput(props: SettingsInputProps) {
             return (
               <PopupButton
                 key={i}
-                icon={`radio-button-${value === choice ? "on" : "off"}`}
+                icon={`radio-button-${safeValue === choice ? "on" : "off"}`}
                 label={choice}
                 onPress={() => {
                   setValue(choice);
@@ -76,7 +79,7 @@ export function SettingsInput(props: SettingsInputProps) {
           <View>
             <ColorPicker
               onColorChange={(color) => setValue(color)}
-              initialColor={value || props.default}
+              initialColor={safeValue}
             />
           </View>
         ) : null}
@@ -118,6 +121,8 @@ export function SettingsInput(props: SettingsInputProps) {
               <Slider
                 minimumValue={props.type.min}
                 maximumValue={props.type.max}
+                value={safeValue}
+                onValueChange={(e) => setValue(e)}
               />
             ) : null}
           </View>
@@ -125,7 +130,7 @@ export function SettingsInput(props: SettingsInputProps) {
           <View>
             {props.type.type === "checkbox" ? (
               <Icon
-                name={`check-box${value ? "" : "-outline-blank"}`}
+                name={`check-box${safeValue ? "" : "-outline-blank"}`}
                 size={theme?.FontSize.get?.(5)}
                 color={value ? theme?.Colors.primary : theme?.Colors.text}
               />

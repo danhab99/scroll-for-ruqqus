@@ -12,7 +12,7 @@ export function GeneralSettings() {
         title="Card style"
         description="Pick which card gets used"
         iconName="filter-none"
-        default={"Default"}
+        default="Default"
         address={["general", "cardStyle"]}
         type={{
           type: "choice",
