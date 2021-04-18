@@ -1,46 +1,42 @@
 import React, { useState, useEffect } from "react";
 import Slider from "@react-native-community/slider";
-import { View, Pressable, StyleSheet, ScrollView } from "react-native";
+import { View, ViewStyle } from "react-native";
 import Color from "color";
 import Input from "./Input";
 import { useTheme } from "@contexts";
-import TextBox from "./TextBox";
 
 interface ColorSliderProps {
   initialColor: string;
   onColorChange: (color: string) => void;
+  style?: ViewStyle;
 }
 
 export function ColorPicker(props: ColorSliderProps) {
   const theme = useTheme();
 
-  const initialColor = Color(props.initialColor);
+  var initialColor;
+  try {
+    initialColor = Color(props.initialColor);
+  } catch (e) {
+    initialColor = Color([200, 200, 200]);
+  }
 
   const [red, setRed] = useState(initialColor.red());
   const [green, setGreen] = useState(initialColor.green());
   const [blue, setBlue] = useState(initialColor.blue());
   const [hexValue, setHexValue] = useState("");
 
-  const setHex = (t: string) => {
-    try {
-      var c = Color(t);
-      setRed(c.red());
-      setBlue(c.blue());
-      setGreen(c.green());
-    } catch (e) {
-      console.warn("COLOR", e);
-    }
-  };
-
   useEffect(() => {
     try {
       var c = Color({ r: red, g: green, b: blue });
-      setHexValue(c.hex().toString());
+      let h = c.hex().toString();
+      setHexValue(h);
+      props.onColorChange(h);
     } catch (e) {}
   }, [red, green, blue]);
 
   return (
-    <View>
+    <View style={props.style}>
       <View
         style={{
           backgroundColor: `rgb(${red}, ${green}, ${blue})`,
