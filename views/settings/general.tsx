@@ -22,7 +22,7 @@ export function GeneralSettings() {
 
       <SettingsInput
         title="Right handed mode"
-        description="Switch the order or horizontal elements"
+        description="Right handed post buttons"
         iconName="switch-right"
         default={false}
         address={["general", "rightHanded"]}

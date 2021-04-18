@@ -39,7 +39,7 @@ export function SettingsInput(props: SettingsInputProps) {
     switch (props.type.type) {
       case "checkbox":
         setValue((x: boolean) =>
-          typeof x === "undefined" ? props.default : !x,
+          typeof x === "undefined" ? !props.default : !x,
         );
         break;
       case "navigate":

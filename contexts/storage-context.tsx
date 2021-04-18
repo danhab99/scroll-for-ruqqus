@@ -26,11 +26,11 @@ export function ValueProvider(props: ContextChildrenProps) {
 
   const write = () => {
     console.log("VALUE WRITE", value);
-    writeFile(ValuesFile, JSON.stringify(value));
+    writeFile(ValuesFile, JSON.stringify(value), "utf8");
   };
 
   const read = () => {
-    readFile(ValuesFile).then((raw) => {
+    readFile(ValuesFile, "utf8").then((raw) => {
       try {
         let p = JSON.parse(raw);
         console.log("VALUE READ", p);

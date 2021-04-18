@@ -1,6 +1,6 @@
 import { StyleSheet, TextStyle, ViewStyle } from "react-native";
 import { ThemeInterface } from "./default-theme";
-import Color from "color";
+import { useValue } from "@contexts";
 
 export interface Styles {
   view: ViewStyle;
@@ -27,6 +27,7 @@ export const gen = (start: number, skip: number) => (x: number) =>
 export function generateStyles(theme: ThemeInterface): Styles {
   const Space = gen(theme?.Space?.start, theme?.Space?.step);
   const FontSize = gen(theme?.FontSize?.start, theme?.FontSize?.step);
+  const [rightHanded] = useValue<boolean>("general", "rightHanded");
 
   return StyleSheet.create<Styles>({
     view: {
@@ -89,7 +90,9 @@ export function generateStyles(theme: ThemeInterface): Styles {
       color: theme.Colors.primaryDark,
     },
     controlrow: {
-      flexDirection: "row",
+      flexDirection: (typeof rightHanded === "boolean" ? rightHanded : false)
+        ? "row-reverse"
+        : "row",
       alignContent: "space-around",
       display: "flex",
       flexWrap: "wrap",
