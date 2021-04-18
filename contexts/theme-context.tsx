@@ -17,15 +17,14 @@ export function ThemeProvider(props: ContextChildrenProps) {
   theme = _.defaultsDeep(theme, DEFAULT_THEME);
   let style = theme ? generateStyles(theme) : undefined;
 
-  theme = _.set(
-    theme,
-    ["Space", "get"],
-    gen(theme?.Space?.start, theme?.Space?.step),
-  );
-  theme = _.set(
-    theme,
-    ["FontSize", "get"],
+  const deepSet = (value: any, ...address: string[]) =>
+    (theme = _.set(theme, address, value));
+
+  deepSet(gen(theme?.Space?.start, theme?.Space?.step), "Space", "get");
+  deepSet(
     gen(theme?.FontSize?.start, theme?.FontSize?.step),
+    "FontSize",
+    "get",
   );
 
   return (
