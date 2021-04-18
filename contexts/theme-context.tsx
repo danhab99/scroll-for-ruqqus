@@ -38,6 +38,8 @@ export function ThemeProvider(props: ContextChildrenProps) {
   );
   deepSet(Darken(theme.Colors.primary), "Colors", "primaryDark");
   deepSet(Lighten(theme.Colors.primary), "Colors", "primaryLight");
+  deepSet(Darken(theme.Colors.background), "Colors", "backgroundDark");
+  deepSet(Lighten(theme.Colors.background), "Colors", "backgroundHighlight");
 
   return (
     <ThemeContext.Provider value={{ theme, style }}>

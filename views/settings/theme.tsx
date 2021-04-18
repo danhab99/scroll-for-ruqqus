@@ -10,10 +10,29 @@ export function ThemeSettings() {
     <ScrollView style={style?.view}>
       <SettingsInput
         title="Primary color"
+        description="The color for important things"
         address={["theme", "Colors", "primary"]}
         type={{ type: "color" }}
         iconName="color-lens"
         default="#693ccd"
+      />
+
+      <SettingsInput
+        title="Text color"
+        description="Any text's color"
+        address={["theme", "Colors", "text"]}
+        type={{ type: "color" }}
+        iconName="color-lens"
+        default="#fff"
+      />
+
+      <SettingsInput
+        title="Background color"
+        description="The color of the backdrop"
+        address={["theme", "Colors", "background"]}
+        type={{ type: "color" }}
+        iconName="color-lens"
+        default="#fff"
       />
     </ScrollView>
   );
