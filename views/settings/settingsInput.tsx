@@ -7,10 +7,11 @@ import { useNavigation } from "@react-navigation/core";
 import Popup, { PopupButton } from "components/Popup";
 import { ColorPicker } from "components/ColorPicker";
 import _ from "lodash";
+import TextBox from "../../components/TextBox";
 
 type SettingsType =
   | { type: "choice"; choices: string[] }
-  | { type: "number"; min: number; max: number }
+  | { type: "number"; min: number; max: number; steps?: number }
   | { type: "checkbox" }
   | { type: "navigate"; screen: string }
   | { type: "color" };
@@ -54,7 +55,9 @@ export function SettingsInput(props: SettingsInputProps) {
   };
 
   const safeValue =
-    typeof value !== "boolean" && _.isEmpty(value) ? props.default : value;
+    typeof value !== "boolean" && typeof value !== "number" && _.isEmpty(value)
+      ? props.default
+      : value;
 
   return (
     <View style={{ marginBottom: theme?.Space.get?.(1) }}>
@@ -123,6 +126,7 @@ export function SettingsInput(props: SettingsInputProps) {
               <Slider
                 minimumValue={props.type.min}
                 maximumValue={props.type.max}
+                step={props.type.steps || 1}
                 value={safeValue}
                 onValueChange={(e) => setValue(e)}
               />
@@ -146,7 +150,9 @@ export function SettingsInput(props: SettingsInputProps) {
               />
             ) : null}
 
-            {props.type.type === "number" ? <Text>{value}</Text> : null}
+            {props.type.type === "number" ? (
+              <TextBox>{safeValue}</TextBox>
+            ) : null}
           </View>
         </View>
       </Pressable>
