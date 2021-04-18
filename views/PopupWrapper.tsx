@@ -18,7 +18,7 @@ export function PopupWrapper(props: { children: ReactNode }) {
           toggleModal={() => setMenuPost(undefined)}
           title="More actions">
           <PopupButton
-            label="share"
+            label="Share"
             icon="share"
             onPress={() => {
               Share.share({ message: menuPost.url });

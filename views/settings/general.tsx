@@ -19,12 +19,22 @@ export function GeneralSettings() {
           choices: ["Default", "Ruqques-like", "RuqES-like"],
         }}
       />
+
       <SettingsInput
         title="Right handed mode"
         description="Switch the order or horizontal elements"
         iconName="switch-right"
         default={false}
         address={["general", "rightHanded"]}
+        type={{ type: "checkbox" }}
+      />
+
+      <SettingsInput
+        title="Comments view warning"
+        description="Show that appology for using the webapp for comments"
+        iconName="chat"
+        default={true}
+        address={["general", "appologise"]}
         type={{ type: "checkbox" }}
       />
     </ScrollView>

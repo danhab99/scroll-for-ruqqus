@@ -27,7 +27,6 @@ interface SettingsInputProps {
 export function SettingsInput(props: SettingsInputProps) {
   const navigation = useNavigation();
   const theme = useTheme();
-  const style = useStyle();
   const [value, setValue] = useValue<any>(...props.address);
   const [popupVisible, setPopupVisible] = useState(false);
 
@@ -39,7 +38,9 @@ export function SettingsInput(props: SettingsInputProps) {
   const onPress = () => {
     switch (props.type.type) {
       case "checkbox":
-        setValue((x: boolean) => !x);
+        setValue((x: boolean) =>
+          typeof x === "undefined" ? props.default : !x,
+        );
         break;
       case "navigate":
         navigation.navigate(props.type.screen || "");
@@ -52,7 +53,8 @@ export function SettingsInput(props: SettingsInputProps) {
     }
   };
 
-  const safeValue = _.isEmpty(value) ? props.default : value;
+  const safeValue =
+    typeof value !== "boolean" && _.isEmpty(value) ? props.default : value;
 
   return (
     <View style={{ marginBottom: theme?.Space.get?.(1) }}>
@@ -132,7 +134,7 @@ export function SettingsInput(props: SettingsInputProps) {
               <Icon
                 name={`check-box${safeValue ? "" : "-outline-blank"}`}
                 size={theme?.FontSize.get?.(5)}
-                color={value ? theme?.Colors.primary : theme?.Colors.text}
+                color={theme?.Colors.text}
               />
             ) : null}
 

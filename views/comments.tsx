@@ -3,19 +3,22 @@ import React, { useEffect } from "react";
 import { ActivityIndicator, View, Alert } from "react-native";
 import WebView from "react-native-webview";
 import { useRuqqusClient } from "@react-ruqqus";
-import { useStyle, useTheme } from "@contexts";
+import { useStyle, useTheme, useValue } from "@contexts";
 
 export default function Comments() {
   const route = useRoute<any>();
   const client = useRuqqusClient();
   const style = useStyle();
   const theme = useTheme();
+  const [appologise] = useValue<boolean>("general", "appologise");
 
   useEffect(() => {
-    Alert.alert(
-      "Sorry",
-      "We're gonna have to use the webapp while we wait for the Ruqqus maintainers to implement a comments api. If you find this message annoying, please ask the maintainers to implement a comments api.",
-    );
+    if (appologise) {
+      Alert.alert(
+        "Sorry",
+        "We're gonna have to use the webapp while we wait for the Ruqqus maintainers to implement a comments api. If you find this message annoying, please ask the maintainers to implement a comments api.",
+      );
+    }
   }, []);
 
   return (
