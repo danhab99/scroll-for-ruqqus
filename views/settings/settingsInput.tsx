@@ -83,14 +83,20 @@ export function SettingsInput(props: SettingsInputProps) {
       </Popup>
 
       <Pressable onPress={() => onPress()}>
-        <View style={{ display: "flex", flexDirection: "row" }}>
+        <View
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}>
           <Icon
             name={props.iconName}
             size={theme?.FontSize.get?.(8)}
             color={props.type.type === "color" ? value : theme?.Colors.text}
+            style={{ marginRight: theme?.Space.get?.(0.5) }}
           />
 
-          <View style={{ width: "80%" }}>
+          <View style={{ width: "80%", flexShrink: 1 }}>
             <Text
               style={{
                 color: theme?.Colors.text,
@@ -115,6 +121,7 @@ export function SettingsInput(props: SettingsInputProps) {
               />
             ) : null}
           </View>
+
           <View>
             {props.type.type === "checkbox" ? (
               <Icon
@@ -125,7 +132,11 @@ export function SettingsInput(props: SettingsInputProps) {
             ) : null}
 
             {props.type.type === "navigate" ? (
-              <Icon name="keyboard-arrow-right" />
+              <Icon
+                name="keyboard-arrow-right"
+                color={theme?.Colors.text}
+                size={theme?.FontSize.get?.(2)}
+              />
             ) : null}
 
             {props.type.type === "number" ? <Text>{value}</Text> : null}
