@@ -87,21 +87,25 @@ export default function Feed() {
         visible={sortPopupVisible}
         toggleModal={() => setSortPopupVisible((x) => !x)}
         title="Sort">
-        <PopupButton icon="fire" label="Hot" onPress={doSetSort("hot")} />
+        <PopupButton icon="whatshot" label="Hot" onPress={doSetSort("hot")} />
         <PopupButton
-          icon="arrow-circle-o-up"
+          icon="vertical-align-top"
           label="Top"
           onPress={doSetSort("top")}
         />
-        <PopupButton icon="star" label="New" onPress={doSetSort("new")} />
         <PopupButton
-          icon="bullhorn"
-          label="disputed"
+          icon="auto-awesome"
+          label="New"
+          onPress={doSetSort("new")}
+        />
+        <PopupButton
+          icon="announcement"
+          label="Disputed"
           onPress={doSetSort("disputed")}
         />
         <PopupButton
-          icon="wechat"
-          label="activity"
+          icon="chat"
+          label="Activity"
           onPress={doSetSort("activity")}
         />
       </Popup>

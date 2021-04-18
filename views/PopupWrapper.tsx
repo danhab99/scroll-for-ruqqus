@@ -18,7 +18,7 @@ export function PopupWrapper(props: { children: ReactNode }) {
           toggleModal={() => setMenuPost(undefined)}
           title="More actions">
           <PopupButton
-            label="Share"
+            label="share"
             icon="share"
             onPress={() => {
               Share.share({ message: menuPost.url });
@@ -27,7 +27,7 @@ export function PopupWrapper(props: { children: ReactNode }) {
           />
           <PopupButton
             label="Comments"
-            icon="comments"
+            icon="chat"
             onPress={() => {
               navigation.push("Comments", { post_id: menuPost.id });
               setMenuPost(undefined);
@@ -35,7 +35,7 @@ export function PopupWrapper(props: { children: ReactNode }) {
           />
           <PopupButton
             label={`Go to @${menuPost.author_name}`}
-            icon="user"
+            icon="person"
             onPress={() => {
               navigation.push(route.name, {
                 feed: { user: menuPost.author_name },
@@ -45,7 +45,7 @@ export function PopupWrapper(props: { children: ReactNode }) {
           />
           <PopupButton
             label={`Go to +${menuPost.guild_name}`}
-            icon="plus"
+            icon="add"
             onPress={() => {
               navigation.push(route.name, {
                 feed: { guild: menuPost.guild_name },
@@ -55,7 +55,7 @@ export function PopupWrapper(props: { children: ReactNode }) {
           />
           <PopupButton
             label="Open In Browser"
-            icon="chrome"
+            icon="open-in-browser"
             onPress={() => {
               Linking.canOpenURL(menuPost.url).then(() =>
                 Linking.openURL(menuPost.url),
