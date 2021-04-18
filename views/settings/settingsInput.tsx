@@ -21,7 +21,6 @@ interface SettingsInputProps {
   type: SettingsType;
   address: string[];
   default: any;
-  screen?: string;
 }
 
 export function SettingsInput(props: SettingsInputProps) {
@@ -42,7 +41,7 @@ export function SettingsInput(props: SettingsInputProps) {
         setValue((x: boolean) => !x);
         break;
       case "navigate":
-        navigation.navigate(props?.screen || "");
+        navigation.navigate(props.type.screen || "");
         break;
 
       case "color":
@@ -133,6 +132,51 @@ export function SettingsInput(props: SettingsInputProps) {
           </View>
         </View>
       </Pressable>
+    </View>
+  );
+}
+
+interface SettingsSectionProps {
+  title: string;
+  children: React.ReactNode;
+}
+
+export function SettingsSection(props: SettingsSectionProps) {
+  const theme = useTheme();
+  const [expanded, setExpanded] = useState(true);
+
+  return (
+    <View>
+      <Pressable onPress={() => setExpanded((x) => !x)}>
+        <View
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            width: "100%",
+            borderBottomWidth: 1,
+            borderBottomColor: theme?.Colors.primaryDark,
+            marginBottom: theme?.Space.get?.(1),
+            marginTop: theme?.Space.get?.(1),
+            paddingBottom: theme?.Space.get?.(1),
+          }}>
+          <Text
+            style={{
+              color: theme?.Colors.muted,
+              fontSize: theme?.FontSize.get?.(0.8),
+            }}>
+            {props.title}
+          </Text>
+          <Icon
+            name={`arrow-drop-${expanded ? "up" : "down"}`}
+            size={theme?.FontSize.get?.(2)}
+            color={theme?.Colors.muted}
+          />
+        </View>
+      </Pressable>
+
+      {expanded ? <View>{props.children}</View> : null}
     </View>
   );
 }
