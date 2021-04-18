@@ -69,7 +69,9 @@ function StackTitle(props: StackHeaderTitleProps) {
           color: theme?.Colors?.text,
           fontSize: theme?.FontSize?.get?.(3),
           fontWeight: "bold",
-        }}>
+        }}
+        numberOfLines={1}
+        ellipsizeMode="middle">
         {props.children}
       </Text>
     </View>
