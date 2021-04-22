@@ -2,6 +2,7 @@ import React from "react";
 import { usePost } from "@react-ruqqus";
 import { View, Text } from "react-native";
 import { useStyle } from "@contexts";
+import { decode } from "html-entities";
 
 export function Title() {
   const post = usePost();
@@ -9,7 +10,7 @@ export function Title() {
 
   return (
     <View>
-      <Text style={style?.title}>{post.title}</Text>
+      <Text style={style?.title}>{decode(post.title)}</Text>
     </View>
   );
 }
