@@ -6,8 +6,6 @@ import TimeAgo from "react-native-timeago";
 import * as _ from "lodash";
 import { useNavigation, useRoute } from "@react-navigation/core";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { Tooltip } from "react-native-elements";
-import TextBox from "../../TextBox";
 
 interface BadgeProps {
   text: string;
@@ -33,21 +31,14 @@ function Badge(props: BadgeProps) {
   );
 }
 
-function MiniIcon(props: { name: string; tooltip: string }) {
-  const theme = useTheme();
-
+function MiniIcon(props: { name: string }) {
   return (
-    <Tooltip
-      popover={<TextBox>{props.tooltip}</TextBox>}
-      overlayColor="none"
-      backgroundColor={theme?.Colors.primary || ""}>
-      <Icon
-        name={props.name}
-        size={20}
-        color="white"
-        style={{ marginRight: 5 }}
-      />
-    </Tooltip>
+    <Icon
+      name={props.name}
+      size={20}
+      color="white"
+      style={{ marginRight: 5 }}
+    />
   );
 }
 
@@ -98,13 +89,9 @@ export function Head() {
     <View>
       <View style={style?.horizontal}>{head}</View>
       <View style={style?.horizontal}>
-        {post.is_archived ? (
-          <MiniIcon name="archive" tooltip="Archived" />
-        ) : null}
-        {post.is_banned ? (
-          <MiniIcon name="block-helper" tooltip="Banned" />
-        ) : null}
-        {post.is_bot ? <MiniIcon name="robot" tooltip="Bot post" /> : null}
+        {post.is_archived ? <MiniIcon name="archive" /> : null}
+        {post.is_banned ? <MiniIcon name="block-helper" /> : null}
+        {post.is_bot ? <MiniIcon name="robot" /> : null}
         {post.is_deleted ? <MiniIcon name="trash-can" /> : null}
         {post.is_nsfl ? <Badge text="NSFL" fg="white" bg="black" /> : null}
         {post.is_nsfw ? <Badge text="NSFW" fg="white" bg="red" /> : null}
