@@ -5,6 +5,51 @@ import { useTheme, useStyle } from "@contexts";
 import TimeAgo from "react-native-timeago";
 import * as _ from "lodash";
 import { useNavigation, useRoute } from "@react-navigation/core";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { Tooltip } from "react-native-elements";
+import TextBox from "../../TextBox";
+
+interface BadgeProps {
+  text: string;
+  fg: string;
+  bg: string;
+}
+
+function Badge(props: BadgeProps) {
+  const theme = useTheme();
+
+  return (
+    <Text
+      style={{
+        backgroundColor: props.bg,
+        color: props.fg,
+        fontSize: theme?.FontSize.get?.(0.2),
+        padding: 1,
+        borderRadius: 5,
+        marginRight: 5,
+      }}>
+      {props.text}
+    </Text>
+  );
+}
+
+function MiniIcon(props: { name: string; tooltip: string }) {
+  const theme = useTheme();
+
+  return (
+    <Tooltip
+      popover={<TextBox>{props.tooltip}</TextBox>}
+      overlayColor="none"
+      backgroundColor={theme?.Colors.primary || ""}>
+      <Icon
+        name={props.name}
+        size={20}
+        color="white"
+        style={{ marginRight: 5 }}
+      />
+    </Tooltip>
+  );
+}
 
 export function Head() {
   const post = usePost();
@@ -28,7 +73,7 @@ export function Head() {
       label: post.domain,
     },
     {
-      label: <TimeAgo time={post?.created_utc?.getSeconds?.()} hideAgo />,
+      label: <TimeAgo time={post?.created_utc * 1000} />,
     },
     {
       label: post.id,
@@ -49,5 +94,24 @@ export function Head() {
       : value,
   );
 
-  return <View style={style?.horizontal}>{head}</View>;
+  return (
+    <View>
+      <View style={style?.horizontal}>{head}</View>
+      <View style={style?.horizontal}>
+        {post.is_archived ? (
+          <MiniIcon name="archive" tooltip="Archived" />
+        ) : null}
+        {post.is_banned ? (
+          <MiniIcon name="block-helper" tooltip="Banned" />
+        ) : null}
+        {post.is_bot ? <MiniIcon name="robot" tooltip="Bot post" /> : null}
+        {post.is_deleted ? <MiniIcon name="trash-can" /> : null}
+        {post.is_nsfl ? <Badge text="NSFL" fg="white" bg="black" /> : null}
+        {post.is_nsfw ? <Badge text="NSFW" fg="white" bg="red" /> : null}
+        {post.is_offensive ? (
+          <Badge text="OFFENSIVE" fg="black" bg="orange" />
+        ) : null}
+      </View>
+    </View>
+  );
 }
