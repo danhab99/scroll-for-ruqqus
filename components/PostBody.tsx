@@ -66,26 +66,24 @@ function PostAsImage() {
 
   return (
     <View>
-      <View>
-        {loading ? (
-          <ActivityIndicator
-            size={100}
-            color={theme?.Colors?.primary}
-            style={{
-              position: "absolute",
-              left: 0,
-              right: 0,
-              top: 0,
-              bottom: 0,
-              alignItems: "center",
-              justifyContent: "center",
-              zIndex: 2000,
-            }}
-          />
-        ) : (
-          <ScaledImage url={url} />
-        )}
-      </View>
+      {loading ? (
+        <ActivityIndicator
+          size={100}
+          color={theme?.Colors?.primary}
+          style={{
+            position: "absolute",
+            left: 0,
+            right: 0,
+            top: 0,
+            bottom: 0,
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 2000,
+          }}
+        />
+      ) : (
+        <ScaledImage url={url} />
+      )}
     </View>
   );
 }
@@ -121,7 +119,11 @@ export default function SubmissionContent() {
   if (post?.domain == undefined) {
     return <Text style={{ color: "red" }}>Content not supported</Text>;
   } else if (VALID_IMAGE_DOMAINS.some((x) => post?.domain?.includes(x))) {
-    return <ScaledImage url={post.url} />;
+    return (
+      <View>
+        <ScaledImage url={post.url} scalable />
+      </View>
+    );
   } else if (post.domain == "text post") {
     return (
       <HtmlMarkdown

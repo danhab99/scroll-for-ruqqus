@@ -1,22 +1,27 @@
 import React, { useState, useEffect } from "react";
-import { Image } from "react-native";
-import { writeFile } from "react-native-fs";
-import { usePost } from "@react-ruqqus";
+import { Modal, Image, View, Pressable, Dimensions } from "react-native";
+import ImageZoom from "react-native-image-pan-zoom";
 
 interface ScaledImageProps {
   url: string;
+  scalable: boolean;
 }
 
 const ErrorImage = require("../assets/noimage.jpg");
 
 export default function ScaledImage(props: ScaledImageProps) {
   const [aspectRatio, setAspectRatio] = useState(1);
+  const [width, setWidth] = useState(0);
+  const [height, setHeight] = useState();
+  const [modalVisible, setModalVisible] = useState(false);
 
   const getImageSize = () => {
     Image.getSize(
       props.url,
       (width, height) => {
         setAspectRatio(width / height);
+        setWidth(width);
+        setHeight(height);
       },
       (err) => {
         console.log("Unable to get image size", props, err, post);
@@ -26,18 +31,52 @@ export default function ScaledImage(props: ScaledImageProps) {
 
   useEffect(() => {
     getImageSize();
-  }, []);
+  }, [props.url]);
 
-  return (
+  const source = props.url ? { uri: props.url } : ErrorImage;
+
+  const component = (
     <Image
-      source={props.url ? { uri: props.url } : ErrorImage}
+      source={source}
       style={{
         width: "100%",
         aspectRatio: aspectRatio,
         height: null,
         resizeMode: "contain",
       }}
-      onLoad={() => {}}
     />
+  );
+
+  return (
+    <View>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}>
+        <View
+          style={{
+            backgroundColor: "rgba(0,0,0,0.8)",
+          }}>
+          <ImageZoom
+            cropWidth={Dimensions.get("window").width}
+            cropHeight={Dimensions.get("window").height}
+            imageWidth={Dimensions.get("window").width}
+            imageHeight={Dimensions.get("window").width / aspectRatio}
+            onClick={() => setModalVisible(false)}
+            onSwipeDown={() => setModalVisible(false)}
+            enableSwipeDown
+            enableDoubleClickZoom>
+            {component}
+          </ImageZoom>
+        </View>
+      </Modal>
+
+      {props.scalable ? (
+        <Pressable onPress={() => setModalVisible(true)}>{component}</Pressable>
+      ) : (
+        component
+      )}
+    </View>
   );
 }
