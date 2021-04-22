@@ -65,11 +65,13 @@ export function RuqqusClientProvider(props: RuqqusClientProviderProps) {
   };
 
   useEffect(() => {
-    console.log("RUQQUS TOKENS CHANGED", tokens, props.config);
-    refreshTokens();
+    if (tokens) {
+      console.log("RUQQUS TOKENS CHANGED", tokens, props.config);
+      refreshTokens();
 
-    let timeout = setTimeout(() => refreshTokens(), 3e6);
-    return () => clearTimeout(timeout);
+      let timeout = setTimeout(() => refreshTokens(), 3e5);
+      return () => clearTimeout(timeout);
+    }
   }, [tokens, props.config]);
 
   return (
