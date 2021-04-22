@@ -11,31 +11,15 @@ const ErrorImage = require("../assets/noimage.jpg");
 
 export default function ScaledImage(props: ScaledImageProps) {
   const [aspectRatio, setAspectRatio] = useState(1);
-  const [source, setSource] = useState<any>();
-  const post = usePost();
-
-  var realUrl = "";
-
-  if (props?.url?.length > 0) {
-    realUrl = props?.url;
-  } else if (post?.url?.length > 0) {
-    realUrl = post?.url;
-  } else if (post?.thumb_url?.length > 0) {
-    realUrl = post?.thumb_url;
-  } else {
-    console.warn("Unable to get image", props, post);
-  }
 
   const getImageSize = () => {
     Image.getSize(
-      realUrl,
+      props.url,
       (width, height) => {
         setAspectRatio(width / height);
-        setSource({ uri: realUrl });
       },
       (err) => {
         console.log("Unable to get image size", props, err, post);
-        setSource(ErrorImage);
       },
     );
   };
@@ -46,7 +30,7 @@ export default function ScaledImage(props: ScaledImageProps) {
 
   return (
     <Image
-      source={source}
+      source={props.url ? { uri: props.url } : ErrorImage}
       style={{
         width: "100%",
         aspectRatio: aspectRatio,

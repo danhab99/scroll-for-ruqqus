@@ -16,13 +16,23 @@ import YoutubePlayer from "react-native-youtube-iframe";
 function PostAsImage() {
   const post = usePost();
   const [loading, setLoading] = useState(true);
-  const [url, setUrl] = useState<string>();
+  const [url, setUrl] = useState<string>(post.thumb_url);
   const theme = useTheme();
 
   useEffect(() => {
     const controller = new AbortController();
 
-    fetch(post.url, { signal: controller.signal }).then((resp) => {
+    fetch(post.url, {
+      signal: controller.signal,
+      headers: {
+        "User-Agent":
+          "Mozilla/5.0 (iPhone; CPU iPhone OS 9_3_2 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Mobile/13F69 [FBAN/FBIOS;FBAV/59.0.0.51.142;FBBV/33266808;FBRV/0;FBDV/iPhone7,1;FBMD/iPhone;FBSN/iPhone OS;FBSV/9.3.2;FBSS/3;FBCR/Telkomsel;FBID/phone;FBLC/en_US;FBOP/5] evaliant",
+      },
+      body: null,
+      method: "GET",
+      mode: "cors",
+      credentials: "omit",
+    }).then((resp) => {
       if (resp.ok) {
         let type = resp?.headers?.get?.("content-type");
 
@@ -34,7 +44,8 @@ function PostAsImage() {
               setUrl(l);
               console.log("Url has OG image", l);
             } else {
-              console.log("Unable to get OG image", l);
+              if (post.id === "a8xf") debugger;
+              console.log("Unable to get OG image", post.url);
             }
             setLoading(false);
           });
