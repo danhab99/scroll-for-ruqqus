@@ -56,10 +56,10 @@ export function UserHeader(props?: GuildHeaderProps) {
               }}
             />
             <View style={{ padding: theme?.Space.get?.(1) }}>
-              {user.is_banned || true ? (
+              {user.is_banned ? (
                 <Badge text="BANNED" fg="white" bg="black" />
               ) : null}
-              {user.is_premium || true ? (
+              {user.is_premium ? (
                 <Badge fg="black" bg="gold" text="Premium" />
               ) : null}
               {user.is_private ? (
