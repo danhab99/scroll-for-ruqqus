@@ -58,6 +58,7 @@
     "react-native-web": "^0.14.8",
     "react-native-webview": "^11.0.0",
     "react-native-youtube-iframe": "^1.4.0",
+    "unfetch": "^4.2.0",
     "url": "^0.11.0",
     "url-parse": "^1.4.7"
   },
