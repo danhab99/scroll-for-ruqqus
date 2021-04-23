@@ -6,30 +6,7 @@ import TimeAgo from "react-native-timeago";
 import * as _ from "lodash";
 import { useNavigation, useRoute } from "@react-navigation/core";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-
-interface BadgeProps {
-  text: string;
-  fg: string;
-  bg: string;
-}
-
-function Badge(props: BadgeProps) {
-  const theme = useTheme();
-
-  return (
-    <Text
-      style={{
-        backgroundColor: props.bg,
-        color: props.fg,
-        fontSize: theme?.FontSize.get?.(0.2),
-        padding: 1,
-        borderRadius: 5,
-        marginRight: 5,
-      }}>
-      {props.text}
-    </Text>
-  );
-}
+import { Badge } from "../../MiniBadge";
 
 function MiniIcon(props: { name: string }) {
   return (
