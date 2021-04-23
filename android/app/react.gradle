@@ -18,7 +18,7 @@ def detectEntryFile(config) {
         return "index.android.js"
     }
 
-    return "index.js";
+    return "index.tsx";
 }
 
 /**
