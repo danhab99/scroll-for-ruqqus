@@ -11,8 +11,6 @@ const ErrorImage = require("../assets/noimage.jpg");
 
 export default function ScaledImage(props: ScaledImageProps) {
   const [aspectRatio, setAspectRatio] = useState(1);
-  const [width, setWidth] = useState(0);
-  const [height, setHeight] = useState();
   const [modalVisible, setModalVisible] = useState(false);
 
   const getImageSize = () => {
@@ -20,8 +18,6 @@ export default function ScaledImage(props: ScaledImageProps) {
       props.url,
       (width, height) => {
         setAspectRatio(width / height);
-        setWidth(width);
-        setHeight(height);
       },
       (err) => {
         console.log("Unable to get image size", props, err, post);
