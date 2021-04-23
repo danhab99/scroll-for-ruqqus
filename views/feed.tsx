@@ -51,8 +51,6 @@ export default function Feed() {
 
   const refreshRef = createRef<() => void>();
 
-  useEnforceLogin();
-
   useEffect(() => {
     let feed = route.params.feed;
     if (typeof feed === "object") {
@@ -67,7 +65,7 @@ export default function Feed() {
       }
     } else {
       navigation.setOptions({
-        title: `${feed[0].toUpperCase()}${feed.slice(1)}`,
+        title: `${feed?.[0]?.toUpperCase()}${feed?.slice(1)}`,
       });
     }
 

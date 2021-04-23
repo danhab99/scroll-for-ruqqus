@@ -7,6 +7,7 @@ import {
   PrimerContext,
 } from "./ClientContext";
 import { fetcher } from "./fetcher";
+import _ from "lodash";
 
 interface RuqqusClientProviderProps {
   config: {
@@ -56,13 +57,14 @@ export function RuqqusClientProvider(props: RuqqusClientProviderProps) {
           console.log("RUQQUS READY");
           setTokens(
             (prev): TokenInterface => {
-              return {
-                client_id: resp.body["client_id"] || prev?.client_id,
-                access_token: resp.body["access_token"] || prev?.access_token,
-                refresh_token:
-                  resp.body["refresh_token"] || prev?.refresh_token,
-                expires_at: resp.body["expires_at"] || prev?.expires_at,
-              };
+              let p = _.assign(prev, {
+                client_id: resp.body["client_id"],
+                access_token: resp.body["access_token"],
+                refresh_token: resp.body["refresh_token"],
+                expires_at: resp.body["expires_at"],
+              });
+
+              return p;
             },
           );
           setReady(true);

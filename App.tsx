@@ -1,6 +1,7 @@
 import {
   DrawerActions,
   NavigationContainer,
+  NavigationContainerRef,
   useNavigation,
 } from "@react-navigation/native";
 import {
@@ -16,7 +17,7 @@ import {
   DrawerItemList,
 } from "@react-navigation/drawer";
 import { StatusBar } from "expo-status-bar";
-import React from "react";
+import React, { useRef } from "react";
 import { View, Text } from "react-native";
 
 import { IconButton } from "./components/Buttons";
@@ -30,6 +31,8 @@ import { Saved } from "./views/saved";
 import { Settings } from "./views/settings/settings";
 import { ThemeSettings } from "views/settings/theme";
 import { GeneralSettings } from "./views/settings/general";
+import { useRuqqusClient } from "./react-ruqqus/useRuqqusClient";
+import { RuqqusClientProvider } from "@react-ruqqus";
 
 type ChildrenOnly = {
   children: React.ReactNode;
@@ -136,6 +139,23 @@ function AllStackNavigator(props: ChildrenOnly) {
   );
 }
 
+function UserStackNavigator(props: ChildrenOnly) {
+  const client = useRuqqusClient();
+
+  return (
+    <StackNavigator {...props}>
+      <Stack.Screen
+        name="All"
+        component={Feed}
+        initialParams={{
+          feed: { user: client.username || "" },
+        }}
+      />
+      <Stack.Screen name="Comments" component={Comments} />
+    </StackNavigator>
+  );
+}
+1;
 function SavedStackNavigator(props: ChildrenOnly) {
   return (
     <StackNavigator {...props}>
