@@ -1,11 +1,10 @@
 import { useUser } from "@react-ruqqus";
 import React from "react";
 import { View, Image, Text } from "react-native";
-import Style, { COLORS, FONTSIZE, SPACE } from "../theme";
-import { Button } from "./Buttons";
 import HtmlMarkdown from "./HtmlMarkdown";
 import { useStyle, useTheme } from "@contexts";
 import { useRuqqusClient } from "../react-ruqqus/useRuqqusClient";
+import { Badge } from "./MiniBadge";
 
 interface GuildHeaderProps {
   guild: {
@@ -23,6 +22,7 @@ interface GuildHeaderProps {
 export function UserHeader(props?: GuildHeaderProps) {
   const user = useUser();
   const theme = useTheme();
+  const style = useStyle();
   const client = useRuqqusClient();
 
   if (user) {
@@ -45,15 +45,28 @@ export function UserHeader(props?: GuildHeaderProps) {
             flexDirection: "row",
             justifyContent: "flex-start",
           }}>
-          <Image
-            source={{ uri: user.profile_url }}
-            style={{
-              width: 64,
-              aspectRatio: 1,
-              margin: theme?.Space.get?.(1),
-              borderRadius: 4,
-            }}
-          />
+          <View>
+            <Image
+              source={{ uri: user.profile_url }}
+              style={{
+                width: 64,
+                aspectRatio: 1,
+                margin: theme?.Space.get?.(1),
+                borderRadius: 4,
+              }}
+            />
+            <View style={{ padding: theme?.Space.get?.(1) }}>
+              {user.is_banned || true ? (
+                <Badge text="BANNED" fg="white" bg="black" />
+              ) : null}
+              {user.is_premium || true ? (
+                <Badge fg="black" bg="gold" text="Premium" />
+              ) : null}
+              {user.is_private ? (
+                <Badge bg="purple" fg="white" text="Private" />
+              ) : null}
+            </View>
+          </View>
           <View style={{ margin: theme?.Space.get?.(1) }}>
             <Text
               style={{
