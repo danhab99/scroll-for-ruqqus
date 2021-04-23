@@ -1,18 +1,20 @@
-import { useEffect, useRef } from "react";
+import { useContext, useEffect, useRef } from "react";
 import { fetcher } from "./fetcher";
 import { RuqqusUser } from "./types";
 import { useRuqqusClient } from "./useRuqqusClient";
-import { ClientContextProps } from "./ClientContext";
+import { ClientContextProps, WebAuthContext } from "./ClientContext";
 
 type UserData = ClientContextProps & { user: RuqqusUser };
 
 export function useOnWebviewClear(clear: (user: UserData) => void) {
   const client = useRuqqusClient();
+  const { authSite, setAuthSite } = useContext(WebAuthContext);
   const lastToken = useRef<string>();
 
   useEffect(() => {
-    if (client?.access_token) {
+    if (authSite && client?.access_token) {
       if (client.access_token !== lastToken.current) {
+        setAuthSite(undefined);
         lastToken.current = client.access_token;
 
         const controller = new AbortController();

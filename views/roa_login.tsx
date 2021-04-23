@@ -11,7 +11,6 @@ import { useValue, useStyle, useTheme } from "@contexts";
 import {
   AuthSiteWebview,
   useAuthSites,
-  useIdentity,
   useOnWebviewClear,
   useLogin,
   TokenInterface,
