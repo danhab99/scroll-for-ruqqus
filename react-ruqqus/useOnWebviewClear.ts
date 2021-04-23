@@ -15,14 +15,21 @@ export function useOnWebviewClear(clear: (user: UserData) => void) {
       if (client.access_token !== lastToken.current) {
         lastToken.current = client.access_token;
 
-        fetcher(client.domain, "/api/v1/identity", {
+        const controller = new AbortController();
+
+        fetcher(client.domain, "api/v1/identity", {
           access_token: client.access_token,
+          controller,
         }).then((resp) => {
           clear({
             ...client,
             user: resp.body as RuqqusUser,
           });
         });
+
+        return () => {
+          controller.abort();
+        };
       }
     }
   }, [client]);

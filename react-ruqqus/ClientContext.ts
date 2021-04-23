@@ -30,7 +30,7 @@ export const UserContext = createContext<UserContextType>(
   {} as UserContextType,
 );
 
-interface AuthErrorContextProps {}
+type AuthErrorContextProps = (e: Error) => void;
 
 export const AuthErrorContext = createContext<AuthErrorContextProps>(
   {} as AuthErrorContextProps,
@@ -47,3 +47,5 @@ export const WebAuthContext = createContext<WebAuthContextProps>({
     throw new SetOutOfContetStateError();
   },
 });
+
+export const PrimerContext = createContext<boolean>(false);

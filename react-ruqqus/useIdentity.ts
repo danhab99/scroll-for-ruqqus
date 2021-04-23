@@ -1,5 +1,7 @@
+import { RuqqusUser } from "./types";
 import { useRuqqusFetch } from "./useRuqqusFetch";
 
 export function useIdentity() {
-  return useRuqqusFetch("identity");
+  debugger;
+  return useRuqqusFetch<RuqqusUser>("identity");
 }

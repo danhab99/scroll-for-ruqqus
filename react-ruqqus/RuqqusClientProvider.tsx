@@ -4,6 +4,7 @@ import {
   WebAuthContext,
   ClientContext,
   AuthErrorContext,
+  PrimerContext,
 } from "./ClientContext";
 import { fetcher } from "./fetcher";
 
@@ -12,7 +13,7 @@ interface RuqqusClientProviderProps {
     domain: string;
     authserver: string;
   };
-  onLoginError?: () => void;
+  onLoginError?: (e: Error) => void;
   children: React.ReactNode;
 }
 
@@ -26,6 +27,7 @@ export interface TokenInterface {
 export function RuqqusClientProvider(props: RuqqusClientProviderProps) {
   const [tokens, setTokens] = useState<TokenInterface>();
   const [authSite, setAuthSite] = useState<string>();
+  const [ready, setReady] = useState(false);
 
   const clientConfig = Object.assign(
     {
@@ -50,16 +52,23 @@ export function RuqqusClientProvider(props: RuqqusClientProviderProps) {
         },
         access_token: tokens.access_token,
       }).then((resp) => {
-        setTokens(
-          (prev): TokenInterface => {
-            return {
-              client_id: resp.body["client_id"] || prev?.client_id,
-              access_token: resp.body["access_token"] || prev?.access_token,
-              refresh_token: resp.body["refresh_token"] || prev?.refresh_token,
-              expires_at: resp.body["expires_at"] || prev?.expires_at,
-            };
-          },
-        );
+        if (resp.ok) {
+          console.log("RUQQUS READY");
+          setTokens(
+            (prev): TokenInterface => {
+              return {
+                client_id: resp.body["client_id"] || prev?.client_id,
+                access_token: resp.body["access_token"] || prev?.access_token,
+                refresh_token:
+                  resp.body["refresh_token"] || prev?.refresh_token,
+                expires_at: resp.body["expires_at"] || prev?.expires_at,
+              };
+            },
+          );
+          setReady(true);
+        } else {
+          props.onLoginError?.(new Error("Token error"));
+        }
       });
     }
   };
@@ -71,6 +80,8 @@ export function RuqqusClientProvider(props: RuqqusClientProviderProps) {
 
       let timeout = setTimeout(() => refreshTokens(), 3e5);
       return () => clearTimeout(timeout);
+    } else {
+      props.onLoginError?.(new Error("No tokens"));
     }
   }, [tokens, props.config]);
 
@@ -79,8 +90,10 @@ export function RuqqusClientProvider(props: RuqqusClientProviderProps) {
       <WebAuthContext.Provider value={{ authSite, setAuthSite }}>
         <ClientContext.Provider value={clientConfig as any}>
           <AuthErrorContext.Provider
-            value={() => props.onLoginError && props.onLoginError()}>
-            {props.children}
+            value={(e) => props.onLoginError && props.onLoginError(e)}>
+            <PrimerContext.Provider value={ready}>
+              {props.children}
+            </PrimerContext.Provider>
           </AuthErrorContext.Provider>
         </ClientContext.Provider>
       </WebAuthContext.Provider>

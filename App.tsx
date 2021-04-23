@@ -171,15 +171,24 @@ function SettingsStackNavigator(props: ChildrenOnly) {
   );
 }
 
+const RUQQUS_CLIENT_CONFIG = {
+  domain: "ruqqus.com",
+  authserver: "sfroa.danhab99.xyz",
+};
+
 export default function App() {
   const theme = useTheme();
   const style = useStyle();
 
+  const navRef = useRef<NavigationContainerRef | null>();
+
   return (
-    <View>
+    <RuqqusClientProvider
+      config={RUQQUS_CLIENT_CONFIG}
+      onLoginError={() => navRef.current?.navigate("Login")}>
       <View style={style?.root}>
         <StatusBar />
-        <NavigationContainer>
+        <NavigationContainer ref={(r) => (navRef.current = r)}>
           <StatusBar style="light" />
 
           <Drawer.Navigator
@@ -193,12 +202,13 @@ export default function App() {
             />
             <Drawer.Screen name="All" component={AllStackNavigator} />
             <Drawer.Screen name="Saved" component={SavedStackNavigator} />
+            <Drawer.Screen name="Me" component={UserStackNavigator} />
             <Drawer.Screen name="Login" component={LoginStackNavigator} />
             <Drawer.Screen name="Submit" component={SubmitStackNavigator} />
             <Drawer.Screen name="Settings" component={SettingsStackNavigator} />
           </Drawer.Navigator>
         </NavigationContainer>
       </View>
-    </View>
+    </RuqqusClientProvider>
   );
 }

@@ -95,7 +95,6 @@ export default function ROALogin(props: any) {
     let account: TokenInterface = accounts.filter((x) => x.id === id)[0];
 
     if (account) {
-      setActiveAccount(id);
       login(account);
       navigation.navigate("Frontpage");
     } else {
@@ -118,7 +117,7 @@ export default function ROALogin(props: any) {
         refreshControl={
           <RefreshControl refreshing={loading} onRefresh={() => refresh()} />
         }>
-        {sites?.map((site: Site, i: number) => (
+        {sites?.map?.((site: Site, i: number) => (
           <View key={`${i}`} style={style?.card}>
             <View style={{ padding: theme?.Space.get?.(1) }}>
               <Text

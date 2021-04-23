@@ -8,24 +8,19 @@ import { AppRegistry } from "react-native";
 import App from "./App";
 import { name as appName } from "./app.json";
 import { ValueProvider } from "./contexts/storage-context";
-import { RuqqusClientProvider } from "@react-ruqqus";
+import { gestureHandlerRootHOC } from "react-native-gesture-handler";
 import { ThemeProvider } from "./contexts/theme-context";
-
-const RUQQUS_CLIENT_CONFIG = {
-  domain: "ruqqus.com",
-  authserver: "sfroa.danhab99.xyz",
-};
 
 function ContextComposite() {
   return (
     <ValueProvider>
-      <RuqqusClientProvider config={RUQQUS_CLIENT_CONFIG}>
-        <ThemeProvider>
-          <App />
-        </ThemeProvider>
-      </RuqqusClientProvider>
+      <ThemeProvider>
+        <App />
+      </ThemeProvider>
     </ValueProvider>
   );
 }
 
-AppRegistry.registerComponent(appName, () => ContextComposite);
+AppRegistry.registerComponent(appName, () =>
+  gestureHandlerRootHOC(ContextComposite),
+);
