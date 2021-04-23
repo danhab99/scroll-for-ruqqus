@@ -12,6 +12,7 @@ import {
   FlatListProps,
   RefreshControl,
   RefreshControlProps,
+  View,
 } from "react-native";
 import { useFeed } from "./useFeed";
 import { RuqqusPost, RuqqusGuild, RuqqusUser, RuqqusVote } from "./types";
@@ -38,6 +39,7 @@ interface RuqqusFeedProps extends Partial<FlatListProps<RuqqusPost>> {
   renderUserHeader: () => ReactNode;
   refreshControlProps?: RefreshControlProps;
   refreshRef: React.Ref<() => void>;
+  noContentComponent: ReactNode;
 }
 
 type PostMutatorDispatch = React.Dispatch<
@@ -143,6 +145,7 @@ export function RuqqusFeed(props: RuqqusFeedProps) {
         refreshControl={refreshControl}
         onEndReachedThreshold={props.onEndReachedThreshold || 3}
         onEndReached={onEndReached}
+        ListEmptyComponent={props.noContentComponent}
         {...props}
       />
     </PostMutatorContext.Provider>
