@@ -8,6 +8,7 @@ import Popup, { PopupButton } from "components/Popup";
 import { ColorPicker } from "components/ColorPicker";
 import _ from "lodash";
 import TextBox from "../../components/TextBox";
+import { StackNavigationProp } from "@react-navigation/stack";
 
 type SettingsType =
   | { type: "choice"; choices: string[] }
@@ -26,7 +27,7 @@ interface SettingsInputProps {
 }
 
 export function SettingsInput(props: SettingsInputProps) {
-  const navigation = useNavigation();
+  const navigation = useNavigation<StackNavigationProp<any>>();
   const theme = useTheme();
   const [value, setValue] = useValue<any>(...props.address);
   const [popupVisible, setPopupVisible] = useState(false);

@@ -7,6 +7,7 @@ import * as _ from "lodash";
 import { useNavigation, useRoute } from "@react-navigation/core";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { Badge } from "../../MiniBadge";
+import { StackNavigationProp } from "@react-navigation/stack";
 
 function MiniIcon(props: { name: string }) {
   return (
@@ -23,7 +24,8 @@ export function Head() {
   const post = usePost();
   const theme = useTheme();
   const style = useStyle();
-  const navigation = useNavigation();
+  const navigation = useNavigation<StackNavigationProp<any>>();
+
   const route = useRoute();
 
   const headItems = [

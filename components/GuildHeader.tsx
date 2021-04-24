@@ -6,20 +6,7 @@ import { Button } from "./Buttons";
 import HtmlMarkdown from "./HtmlMarkdown";
 import { useStyle, useTheme } from "@contexts";
 
-interface GuildHeaderProps {
-  guild: {
-    banner_url: string;
-    icon_url: string;
-    name: string;
-    subscribers: number;
-    description: {
-      html: string;
-    };
-  };
-  enabled: boolean;
-}
-
-export function GuildHeader(props?: GuildHeaderProps) {
+export function GuildHeader() {
   const guild = useGuild();
   const theme = useTheme();
 
@@ -34,7 +21,8 @@ export function GuildHeader(props?: GuildHeaderProps) {
           source={{ uri: guild.banner_url }}
           style={{
             width: "100%",
-            aspectRatio: 3.4092307692307693,
+            height: "250px",
+            resizeMode: "contain",
           }}
         />
         <View

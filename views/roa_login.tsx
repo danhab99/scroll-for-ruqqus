@@ -19,6 +19,7 @@ import { v4 } from "react-native-uuid";
 import { useNavigation } from "@react-navigation/core";
 import Icon from "react-native-vector-icons/FontAwesome";
 import * as _ from "lodash";
+import { StackNavigationProp } from "@react-navigation/stack";
 
 interface Site {
   _id: string;
@@ -41,7 +42,8 @@ export default function ROALogin(props: any) {
   const [accounts, setAccounts] = useValue<Account[]>("accounts");
   const [activeAccount, setActiveAccount] = useValue<string>("active-account");
   const { loading, sites, getAuthURL, refresh } = useAuthSites();
-  const navigation = useNavigation();
+  const navigation = useNavigation<StackNavigationProp<any>>();
+
   const login = useLogin();
 
   useOnWebviewClear((results) => {

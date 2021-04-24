@@ -8,6 +8,7 @@ import { useSavedPosts } from "../../../contexts/useCollection";
 import { useNavigation } from "@react-navigation/core";
 import { usePostMenuContext } from "contexts/post-menu-context";
 import { LoadingControl } from "./LoadingControlProps";
+import { StackNavigationProp } from "@react-navigation/stack";
 
 export function Controls() {
   const { upvote, downvote } = useVote();
@@ -15,7 +16,8 @@ export function Controls() {
   const style = useStyle();
   const theme = useTheme();
   const [saves, { add, remove }] = useSavedPosts();
-  const navigator = useNavigation();
+  const navigation = useNavigation<StackNavigationProp<any>>();
+
   const [__, setPostMenu] = usePostMenuContext();
 
   const predicate = (x: { id: string; date_saved: Date }): boolean =>
@@ -53,7 +55,7 @@ export function Controls() {
       />
       <IconButton
         name="comment"
-        onPress={() => navigator.push("Comments", { post_id: post.id })}
+        onPress={() => navigation.push("Comments", { post_id: post.id })}
       />
       <IconButton name="more-vert" onPress={() => setPostMenu(post)} />
     </View>

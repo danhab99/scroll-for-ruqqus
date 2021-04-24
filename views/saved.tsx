@@ -23,7 +23,7 @@ function NoPosts() {
         padding: theme?.Space.get?.(5),
       }}>
       <Icon
-        name="file-question-outline"
+        name="ghost"
         color={theme?.Colors.muted}
         size={theme?.FontSize.get?.(10)}
         style={{ margin: theme?.Space.get?.(1) }}

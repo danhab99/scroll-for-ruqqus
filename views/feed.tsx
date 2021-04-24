@@ -1,7 +1,7 @@
 import React, { useState, useEffect, createRef } from "react";
 import { Text, View } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/core";
-import { RuqqusFeed } from "react-ruqqus";
+import { RuqqusFeed, SortOptions } from "react-ruqqus";
 import { useValue, useStyle, useTheme } from "@contexts";
 import * as _ from "lodash";
 
@@ -15,6 +15,7 @@ import { useEnforceLogin } from "./useEnforceLogin";
 import Input from "components/Input";
 import TextBox from "../components/TextBox";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { StackNavigationProp } from "@react-navigation/stack";
 
 function NoPosts() {
   const theme = useTheme();
@@ -28,7 +29,7 @@ function NoPosts() {
         padding: theme?.Space.get?.(5),
       }}>
       <Icon
-        name="file-question-outline"
+        name="ghost"
         color={theme?.Colors.muted}
         size={theme?.FontSize.get?.(10)}
         style={{ margin: theme?.Space.get?.(1) }}
@@ -39,7 +40,7 @@ function NoPosts() {
 }
 
 export default function Feed() {
-  const navigation = useNavigation();
+  const navigation = useNavigation<StackNavigationProp<any>>();
   const route = useRoute<any>();
   const style = useStyle();
   const theme = useTheme();
@@ -96,7 +97,7 @@ export default function Feed() {
 
     navigation.push(route.name, {
       feed: {
-        [target]: navigate.slice(1),
+        [target || ""]: navigate.slice(1),
       },
     });
     setNavigate("");
@@ -167,7 +168,7 @@ export default function Feed() {
               typeof route.params.feed === "object" ? 0 : theme?.Space.get?.(1),
           }}
           refreshRef={refreshRef}
-          sort={sort}
+          sort={sort as SortOptions}
           noContentComponent={<NoPosts />}
         />
       </PopupWrapper>

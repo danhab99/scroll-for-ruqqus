@@ -6,20 +6,7 @@ import { useStyle, useTheme } from "@contexts";
 import { useRuqqusClient } from "../react-ruqqus/useRuqqusClient";
 import { Badge } from "./MiniBadge";
 
-interface GuildHeaderProps {
-  guild: {
-    banner_url: string;
-    icon_url: string;
-    name: string;
-    subscribers: number;
-    description: {
-      html: string;
-    };
-  };
-  enabled: boolean;
-}
-
-export function UserHeader(props?: GuildHeaderProps) {
+export function UserHeader() {
   const user = useUser();
   const theme = useTheme();
   const style = useStyle();
@@ -36,7 +23,8 @@ export function UserHeader(props?: GuildHeaderProps) {
           }}
           style={{
             width: "100%",
-            aspectRatio: 3.4092307692307693,
+            height: "250px",
+            resizeMode: "contain",
           }}
         />
         <View

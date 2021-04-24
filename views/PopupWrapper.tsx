@@ -4,9 +4,10 @@ import Popup, { PopupButton } from "components/Popup";
 import { RuqqusPost } from "react-ruqqus/types";
 import { useNavigation, useRoute } from "@react-navigation/core";
 import { PostMenuContext } from "contexts/post-menu-context";
+import { StackNavigationProp } from "@react-navigation/stack";
 
 export function PopupWrapper(props: { children: ReactNode }) {
-  const navigation = useNavigation();
+  const navigation = useNavigation<StackNavigationProp<any>>();
   const route = useRoute();
   const [menuPost, setMenuPost] = useState<RuqqusPost>();
 
