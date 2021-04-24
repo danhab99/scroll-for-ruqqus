@@ -31,7 +31,9 @@ export function fetcher<T>(
       "X-Library": "react-ruqqus",
       "X-Supports": "auth",
       "User-Agent": `scroll-for-ruqqus`,
-      Authorization: `Bearer ${opts.access_token}`,
+      ...(opts.access_token && {
+        Authorization: `Bearer ${opts.access_token}`,
+      }),
     },
     signal: opts.controller,
   };
@@ -66,7 +68,7 @@ export function fetcher<T>(
         edge,
         opts,
         options,
-        r: resp,
+        resp,
         fid,
       });
       if (resp.ok) {

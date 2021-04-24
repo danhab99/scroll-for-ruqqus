@@ -31,7 +31,7 @@ export function useFetch<T>(
         })
         .catch((e: Error) => {
           setResp(e);
-          setBody({} as T);
+          setBody(undefined);
 
           if (e.message.includes("Client") || e.message.includes("Login")) {
             console.error("RUQQUS AUTH ERROR", e);

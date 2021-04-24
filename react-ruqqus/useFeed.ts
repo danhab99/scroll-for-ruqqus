@@ -32,7 +32,9 @@ export function useFeed(edge: string, args?: UseFeedOpts) {
       });
       setMore(body.next_exists);
     }
-  }, [page, body]);
+  }, [body]);
+
+  useEffect(() => setPage(0), [args?.sort]);
 
   return {
     loading,

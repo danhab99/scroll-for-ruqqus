@@ -31,7 +31,7 @@ interface PostProps {
   item: RuqqusPost;
 }
 
-interface RuqqusFeedProps extends Partial<FlatListProps<RuqqusPost>> {
+interface RuqqusFeedProps {
   feed: FeedOptions;
   sort?: SortOptions;
   renderPost: () => ReactNode;
@@ -39,7 +39,7 @@ interface RuqqusFeedProps extends Partial<FlatListProps<RuqqusPost>> {
   renderUserHeader: () => ReactNode;
   refreshControlProps?: RefreshControlProps;
   refreshRef: React.Ref<() => void>;
-  noContentComponent: ReactNode;
+  noContentComponent: React.ComponentType<any> | ReactNode;
 }
 
 type PostMutatorDispatch = React.Dispatch<
@@ -50,38 +50,34 @@ const PostMutatorContext = createContext<PostMutatorDispatch>(
   {} as PostMutatorDispatch,
 );
 
-function GuildManager(props: { guild: string; children: ReactNode }) {
-  const { loading, body } = useRuqqusFetch(`guild/${props.guild}`);
+interface ContextManagerProps<T> {
+  edge: string;
+  target: string;
+  children: ReactNode;
+  context: React.Context<T>;
+}
+
+function ContextManager<T>(props: ContextManagerProps<T>) {
+  const { loading, body } = useRuqqusFetch(`${props.edge}/${props.target}`);
+
+  const Context = props.context;
 
   if (loading) {
     return <ActivityIndicator />;
   } else {
     return (
-      <GuildContext.Provider value={body as RuqqusGuild}>
-        {props.children}
-      </GuildContext.Provider>
+      <Context.Provider value={body as T}>{props.children}</Context.Provider>
     );
   }
 }
 
-function UserManager(props: { user: string; children: ReactNode }) {
-  const { loading, body } = useRuqqusFetch(`user/${props.user}`);
-
-  if (loading) {
-    return <ActivityIndicator />;
-  } else {
-    return (
-      <UserContext.Provider value={body as RuqqusUser}>
-        {props.children}
-      </UserContext.Provider>
-    );
-  }
-}
-export function RuqqusFeed(props: RuqqusFeedProps) {
+export function RuqqusFeed(
+  props: RuqqusFeedProps & Partial<FlatListProps<RuqqusPost>>,
+) {
   const renderPost = props.renderPost
     ? (p: PostProps) => (
         <PostContext.Provider value={p.item}>
-          {props.renderPost(p)}
+          {props.renderPost()}
         </PostContext.Provider>
       )
     : props.renderItem;
@@ -92,16 +88,22 @@ export function RuqqusFeed(props: RuqqusFeedProps) {
   if (typeof props.feed === "object") {
     if ("guild" in props.feed) {
       renderHeader = (
-        <GuildManager guild={props.feed.guild}>
+        <ContextManager
+          context={GuildContext}
+          edge="guild"
+          target={props.feed.guild}>
           {props.renderGuildHeader()}
-        </GuildManager>
+        </ContextManager>
       );
       feed = "guild/" + props.feed.guild;
     } else if ("user" in props.feed) {
       renderHeader = (
-        <UserManager user={props.feed.user}>
+        <ContextManager
+          context={UserContext}
+          edge="user"
+          target={props.feed.user}>
           {props.renderUserHeader()}
-        </UserManager>
+        </ContextManager>
       );
       feed = "user/" + props.feed.user;
     }
@@ -112,7 +114,7 @@ export function RuqqusFeed(props: RuqqusFeedProps) {
   });
   const client = useRuqqusClient();
 
-  const flatlistRef = useRef<FlatList<RuqqusPost>>();
+  const flatlistRef = useRef<FlatList<RuqqusPost> | null>();
 
   const doRefresh = () => {
     refresh();
@@ -123,7 +125,9 @@ export function RuqqusFeed(props: RuqqusFeedProps) {
     doRefresh();
   }, [client]);
 
-  props.refreshRef.current = () => doRefresh();
+  if (props.refreshRef) {
+    props.refreshRef = () => doRefresh();
+  }
 
   const onEndReached = props.onEndReached || (() => nextPage());
 
@@ -138,7 +142,9 @@ export function RuqqusFeed(props: RuqqusFeedProps) {
   return (
     <PostMutatorContext.Provider value={setPosts}>
       <FlatList
-        ref={flatlistRef}
+        ref={(r) => {
+          flatlistRef.current = r;
+        }}
         data={posts || []}
         renderItem={renderPost}
         ListHeaderComponent={renderHeader}
@@ -185,8 +191,7 @@ export function useVote() {
         }
       })
       .then((resp) => {
-        let p: RuqqusPost = resp.body;
-
+        let p = resp.body as RuqqusPost;
         mutate((prev) => prev?.map((x) => (x.id === p.id ? p : x)));
         return resp;
       });
