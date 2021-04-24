@@ -34,7 +34,7 @@ export function useFeed(edge: string, args?: UseFeedOpts) {
     }
   }, [body]);
 
-  useEffect(() => setPage(0), [args?.sort]);
+  useEffect(() => setPage(1), [args?.sort]);
 
   return {
     loading,

@@ -59,7 +59,6 @@ export function generateStyles(theme: ThemeInterface): Styles {
     },
     card: {
       backgroundColor: theme.Colors.backgroundHighlight,
-      // padding: Space(1),
       borderRadius: 4,
     },
     root: {
@@ -103,9 +102,9 @@ export function generateStyles(theme: ThemeInterface): Styles {
     settingsInput: {},
     settingsPartition: {},
     paddedCard: {
-      marginBottom: theme?.Space.get?.(1 / 2),
-      marginRight: theme?.Space.get?.(1 / 2),
-      marginLeft: theme?.Space.get?.(1 / 2),
+      marginBottom: Space(1 / 2),
+      marginRight: Space(1 / 2),
+      marginLeft: Space(1 / 2),
     },
   });
 }
