@@ -3,7 +3,7 @@ import { View, Text, Modal, Pressable } from "react-native";
 import { IconButton } from "./Buttons";
 import { OptionalEventHandler } from "./OptionalEventHandler";
 import Icon from "react-native-vector-icons/MaterialIcons";
-import { useTheme } from "../contexts/theme-context";
+import { useTheme } from "@contexts";
 
 interface PopupProps {
   visible: boolean;

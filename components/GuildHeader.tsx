@@ -1,8 +1,6 @@
 import { useGuild } from "@react-ruqqus";
 import React from "react";
 import { View, Image, Text } from "react-native";
-import { COLORS, FONTSIZE, SPACE } from "../theme";
-import { Button } from "./Buttons";
 import HtmlMarkdown from "./HtmlMarkdown";
 import { useStyle, useTheme } from "@contexts";
 

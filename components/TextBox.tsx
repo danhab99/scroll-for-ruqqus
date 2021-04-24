@@ -1,7 +1,6 @@
 import React from "react";
 import { Text, TextStyle, View } from "react-native";
 import { useTheme } from "@contexts";
-import { ThemeInterface } from "contexts/theme/default-theme";
 
 interface TextBoxProps {
   size?: number;

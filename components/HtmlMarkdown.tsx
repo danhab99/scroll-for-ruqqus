@@ -2,7 +2,7 @@ import React from "react";
 import { Text, Linking, StyleSheet } from "react-native";
 import HTML from "react-native-render-html";
 import { useRuqqusClient } from "../react-ruqqus/useRuqqusClient";
-import { useTheme } from "../contexts/theme-context";
+import { useTheme } from "@contexts";
 
 interface HtmlMarkdownProps {
   html: string;

@@ -1,10 +1,9 @@
 import React from "react";
 import { usePost, useVote } from "@react-ruqqus";
 import { View } from "react-native";
-import { useTheme, useStyle } from "@contexts";
+import { useTheme, useStyle, useSavedPosts } from "@contexts";
 import * as _ from "lodash";
 import { IconButton } from "components/Buttons";
-import { useSavedPosts } from "../../../contexts/useCollection";
 import { useNavigation } from "@react-navigation/core";
 import { usePostMenuContext } from "contexts/post-menu-context";
 import { LoadingControl } from "./LoadingControlProps";

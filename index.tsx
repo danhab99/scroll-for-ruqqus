@@ -7,9 +7,8 @@ import { AppRegistry } from "react-native";
 
 import App from "./App";
 import { name as appName } from "./app.json";
-import { ValueProvider } from "./contexts/storage-context";
 import { gestureHandlerRootHOC } from "react-native-gesture-handler";
-import { ThemeProvider } from "./contexts/theme-context";
+import { ValueProvider, ThemeProvider } from "@contexts";
 
 function ContextComposite() {
   return (
