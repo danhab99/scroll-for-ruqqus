@@ -13,12 +13,7 @@ export default function DefaultPostcard() {
   const style = useStyle();
 
   return (
-    <View
-      style={{
-        marginBottom: theme?.Space.get?.(1),
-        marginRight: theme?.Space.get?.(1),
-        marginLeft: theme?.Space.get?.(1),
-      }}>
+    <View style={style?.paddedCard}>
       <View style={style?.card}>
         <View style={{ padding: theme?.Space.get?.(0.5) }}>
           <Head />

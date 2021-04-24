@@ -19,6 +19,7 @@ export interface Styles {
   controlrow: ViewStyle;
   settingsInput: ViewStyle;
   settingsPartition: ViewStyle;
+  paddedCard: ViewStyle;
 }
 
 export const gen = (start: number, skip: number) => (x: number) =>
@@ -101,5 +102,10 @@ export function generateStyles(theme: ThemeInterface): Styles {
     },
     settingsInput: {},
     settingsPartition: {},
+    paddedCard: {
+      marginBottom: theme?.Space.get?.(1 / 2),
+      marginRight: theme?.Space.get?.(1 / 2),
+      marginLeft: theme?.Space.get?.(1 / 2),
+    },
   });
 }
