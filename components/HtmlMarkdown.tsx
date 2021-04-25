@@ -9,31 +9,8 @@ import { usePost } from "react-ruqqus";
 import TextBox from "./TextBox";
 import URL from "url-parse";
 import _ from "lodash";
+import Color from "color";
 
-function AlignedTextBox(
-  htmlAttribs,
-  children,
-  convertedCSSStyles,
-  passProps,
-): HTML.RendererDeclaration<unknown> {
-  if (htmlAttribs.href) {
-    return (
-      <Pressable onPress={() => passProps.onLinkPress(null, htmlAttribs.href)}>
-        <TextBox
-          color="primary"
-          key="HTMLLINK"
-          style={{
-            marginBottom: -1,
-            padding: 0,
-          }}>
-          {children}
-        </TextBox>
-      </Pressable>
-    );
-  } else {
-    return <TextBox>{children}</TextBox>;
-  }
-}
 interface HtmlMarkdownProps {
   html: string;
 }
@@ -44,6 +21,13 @@ export default function HtmlMarkdown(props: HtmlMarkdownProps) {
   const style = useStyle();
   const navigation = useNavigation<StackNavigationProp<any>>();
   const route = useRoute();
+  const post = usePost();
+
+  useEffect(() => {
+    if (post && post.id === "ad6u") {
+      console.log("HTML TEST POST", props.html);
+    }
+  }, []);
 
   return (
     <HTML
@@ -94,11 +78,19 @@ export default function HtmlMarkdown(props: HtmlMarkdownProps) {
           backgroundColor: theme?.Colors.backgroundHighlight,
           color: theme?.Colors.primary,
         },
+        blockquote: {
+          backgroundColor: Color(theme?.Colors.primaryDark).alpha(0.9),
+          marginLeft: theme?.Space.get?.(1.5),
+          paddingLeft: theme?.Space.get?.(0.5),
+          borderLeftWidth: 2,
+          borderLeftStyle: "solid",
+          borderLeftColor: theme?.Colors.primary,
+        },
       }}
       classesStyles={{
         "profile-pic-20": {
-          width: 1,
-          height: 1,
+          width: theme?.FontSize.get?.(1),
+          height: theme?.FontSize.get?.(1),
           textAlign: "center",
           objectFit: "cover",
           backgroundColor: theme?.Colors.background,
@@ -106,31 +98,8 @@ export default function HtmlMarkdown(props: HtmlMarkdownProps) {
         "align-middle": {
           verticalAlign: "middle",
         },
-        "mr-1": {
-          marginRight: "0.25rem",
-        },
       }}
-      imagesMaxWidth={10}
-      renderers={{
-        p: AlignedTextBox,
-        li: AlignedTextBox,
-        a: AlignedTextBox,
-        img: (htmlAttribs, children, convertedCSSStyles, passProps) => {
-          // debugger;
-          return (
-            <Image
-              source={{ uri: htmlAttribs.src }}
-              style={{
-                width: theme?.FontSize.get?.(1),
-                height: theme?.FontSize.get?.(1),
-                margin: 0,
-                ...convertedCSSStyles,
-              }}
-              {...passProps}
-            />
-          );
-        },
-      }}
+      // imagesMaxWidth={10}
       containerStyle={style?.paddedCard}
       listsPrefixesRenderers={{
         ul: (htmlAttribs, children, convertedCSSStyles, passProps) => {
@@ -146,6 +115,20 @@ export default function HtmlMarkdown(props: HtmlMarkdownProps) {
             </Text>
           );
         },
+        // ol: (htmlAttribs, children, convertedCSSStyles, passProps) => {
+        //   debugger;
+        //   return (
+        //     <Text
+        //       style={{
+        //         color: theme?.Colors?.primary,
+        //         fontSize: theme?.FontSize?.get?.(1.5),
+        //         fontWeight: "bold",
+        //         marginRight: theme?.Space?.get?.(1 / 5),
+        //       }}>
+        //       {children}
+        //     </Text>
+        //   );
+        // },
       }}
       onLinkPress={(evt, href, attr) => {
         let u = new URL(href);
