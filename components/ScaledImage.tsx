@@ -5,6 +5,9 @@ import ImageZoom from "react-native-image-pan-zoom";
 interface ScaledImageProps {
   url: string;
   scalable: boolean;
+  popupOnly?: boolean;
+  visible?: boolean;
+  onRequestClose?: () => void;
 }
 
 const ErrorImage = require("../assets/noimage.jpg");
@@ -44,12 +47,12 @@ export default function ScaledImage(props: ScaledImageProps) {
   );
 
   return (
-    <View>
+    <>
       <Modal
         animationType="slide"
         transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}>
+        visible={props.visible || modalVisible}
+        onRequestClose={props.onRequestClose || (() => setModalVisible(false))}>
         <View
           style={{
             backgroundColor: "rgba(0,0,0,0.8)",
@@ -68,11 +71,15 @@ export default function ScaledImage(props: ScaledImageProps) {
         </View>
       </Modal>
 
-      {props.scalable ? (
-        <Pressable onPress={() => setModalVisible(true)}>{component}</Pressable>
-      ) : (
-        component
-      )}
-    </View>
+      {!props.popupOnly ? (
+        props.scalable ? (
+          <Pressable onPress={() => setModalVisible(true)}>
+            {component}
+          </Pressable>
+        ) : (
+          component
+        )
+      ) : null}
+    </>
   );
 }
