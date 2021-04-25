@@ -19,8 +19,7 @@ export function GuildHeader() {
           source={{ uri: guild.banner_url }}
           style={{
             width: "100%",
-            height: "250px",
-            resizeMode: "contain",
+            aspectRatio: 3.4092307692307693,
           }}
         />
         <View
