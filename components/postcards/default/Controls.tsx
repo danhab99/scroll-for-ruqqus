@@ -1,5 +1,5 @@
 import React from "react";
-import { usePost, useVote } from "@react-ruqqus";
+import { useContextPost, useVote } from "@react-ruqqus";
 import { View } from "react-native";
 import { useTheme, useStyle, useSavedPosts } from "@contexts";
 import * as _ from "lodash";
@@ -11,7 +11,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 
 export function Controls() {
   const { upvote, downvote } = useVote();
-  const post = usePost();
+  const post = useContextPost();
   const style = useStyle();
   const theme = useTheme();
   const [saves, { add, remove }] = useSavedPosts();

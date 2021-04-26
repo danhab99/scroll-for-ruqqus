@@ -4,7 +4,7 @@ import { useRuqqusClient } from "../react-ruqqus/useRuqqusClient";
 import { useTheme, useStyle } from "@contexts";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { usePost } from "react-ruqqus";
+import { useContextPost } from "react-ruqqus";
 import _ from "lodash";
 import AutoHeightWebView from "react-native-autoheight-webview";
 
@@ -18,7 +18,7 @@ export default function HtmlMarkdown(props: HtmlMarkdownProps) {
   const style = useStyle();
   const navigation = useNavigation<StackNavigationProp<any>>();
   const route = useRoute();
-  const post = usePost();
+  const post = useContextPost();
 
   useEffect(() => {
     if (post && post.id === "ad6u") {
@@ -64,6 +64,8 @@ code {
       <AutoHeightWebView
         source={{ html: props.html }}
         customStyle={CSS_STYLE}
+        viewportContent={"width=device-width, user-scalable=no"}
+        scalesPageToFit
       />
     </View>
   );

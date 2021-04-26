@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { usePost } from "react-ruqqus";
+import { useContextPost } from "react-ruqqus";
 import cheerio from "react-native-cheerio";
 import {
   ActivityIndicator,
@@ -14,7 +14,7 @@ import HtmlMarkdown from "./HtmlMarkdown";
 import YoutubePlayer from "react-native-youtube-iframe";
 
 function PostAsImage() {
-  const post = usePost();
+  const post = useContextPost();
   const [loading, setLoading] = useState(true);
   const [url, setUrl] = useState<string>(post.thumb_url);
   const theme = useTheme();
@@ -113,7 +113,7 @@ const VALID_IMAGE_DOMAINS = [
 ];
 
 export default function SubmissionContent() {
-  const post = usePost();
+  const post = useContextPost();
   const theme = useTheme();
 
   if (post?.domain == undefined) {

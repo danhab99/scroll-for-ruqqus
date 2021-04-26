@@ -1,11 +1,11 @@
-import { useGuild } from "@react-ruqqus";
+import { useContextGuild } from "@react-ruqqus";
 import React from "react";
 import { View, Image, Text } from "react-native";
 import HtmlMarkdown from "./HtmlMarkdown";
 import { useStyle, useTheme } from "@contexts";
 
 export function GuildHeader() {
-  const guild = useGuild();
+  const guild = useContextGuild();
   const theme = useTheme();
 
   if (guild) {

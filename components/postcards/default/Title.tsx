@@ -1,11 +1,11 @@
 import React from "react";
-import { usePost } from "@react-ruqqus";
+import { useContextPost } from "@react-ruqqus";
 import { View, Text } from "react-native";
 import { useStyle } from "@contexts";
 import { decode } from "html-entities";
 
 export function Title() {
-  const post = usePost();
+  const post = useContextPost();
   const style = useStyle();
 
   return (

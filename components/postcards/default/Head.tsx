@@ -1,5 +1,5 @@
 import React from "react";
-import { usePost } from "@react-ruqqus";
+import { useContextPost } from "@react-ruqqus";
 import { View, Text, Pressable } from "react-native";
 import { useTheme, useStyle } from "@contexts";
 import TimeAgo from "react-native-timeago";
@@ -21,7 +21,7 @@ function MiniIcon(props: { name: string }) {
 }
 
 export function Head() {
-  const post = usePost();
+  const post = useContextPost();
   const theme = useTheme();
   const style = useStyle();
   const navigation = useNavigation<StackNavigationProp<any>>();

@@ -158,20 +158,20 @@ export function RuqqusFeed(
   );
 }
 
-export function usePost() {
+export function useContextPost() {
   return useContext(PostContext);
 }
 
-export function useUser() {
+export function useContextUser() {
   return useContext(UserContext);
 }
 
-export function useGuild() {
+export function useContextGuild() {
   return useContext(GuildContext);
 }
 
 export function useVote() {
-  const post = usePost();
+  const post = useContextPost();
   const client = useRuqqusClient();
   const mutate = useContext(PostMutatorContext);
 

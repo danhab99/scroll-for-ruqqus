@@ -1,4 +1,4 @@
-import { useUser } from "@react-ruqqus";
+import { useContextUser } from "@react-ruqqus";
 import React from "react";
 import { View, Image, Text } from "react-native";
 import HtmlMarkdown from "./HtmlMarkdown";
@@ -7,7 +7,7 @@ import { useRuqqusClient } from "../react-ruqqus/useRuqqusClient";
 import { Badge } from "./MiniBadge";
 
 export function UserHeader() {
-  const user = useUser();
+  const user = useContextUser();
   const theme = useTheme();
   const style = useStyle();
   const client = useRuqqusClient();
