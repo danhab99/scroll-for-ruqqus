@@ -5,6 +5,39 @@ export interface RuqqusBadge {
   url: string | null;
 }
 
+interface RuqqusRatable {
+  score: number;
+  upvotes: number;
+  downvotes: number;
+}
+
+interface RuqqusFlagged {
+  is_archived: string;
+  is_banned: string;
+  is_bot: string;
+  is_deleted: string;
+  is_nsfl: string;
+  is_nsfw: string;
+  is_offensive: string;
+}
+
+export interface RuqqusComment extends RuqqusRatable, RuqqusFlagged {
+  author_name: string;
+  award_count: number;
+  body: string;
+  body_html: string;
+  created_utc: Date;
+  edited_utc: Date;
+  fullname: string;
+  guild_id: string;
+  id: string;
+  permalink: string;
+  post_id: string;
+  replies: RuqqusComments;
+}
+
+export type RuqqusComments = Array<RuqqusComment>;
+
 export interface RuqqusUser {
   badges: Array<RuqqusBadge>;
   banner_url: string;
@@ -32,7 +65,7 @@ export interface RuqqusUser {
 
 export type RuqqusVote = -1 | 0 | 1;
 
-export interface RuqqusPost {
+export interface RuqqusPost extends RuqqusRatable, RuqqusFlagged {
   author: RuqqusUser;
   author_name: string;
   award_count: number;
@@ -41,20 +74,12 @@ export interface RuqqusPost {
   comment_count: number;
   created_utc: Date;
   domain: string;
-  downvotes: 1;
   edited_utc: 0;
   fullname: string;
   guild: RuqqusGuild;
   guild_id: string;
   guild_name: string;
   id: string;
-  is_archived: boolean;
-  is_banned: boolean;
-  is_bot: boolean;
-  is_deleted: boolean;
-  is_nsfl: boolean;
-  is_nsfw: boolean;
-  is_offensive: boolean;
   meta_description: string;
   meta_title: string;
   original_guild: string;
@@ -62,9 +87,9 @@ export interface RuqqusPost {
   score: number;
   thumb_url: string;
   title: string;
-  upvotes: number;
   url: string;
   voted: RuqqusVote;
+  replies: RuqqusComments;
 }
 
 export interface RuqqusGuild {
