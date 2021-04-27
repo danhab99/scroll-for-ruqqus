@@ -3,21 +3,45 @@ import { RuqqusPost } from "./types";
 import { UseFetchOpts } from "./useFetch";
 import { useRuqqusFetch } from "./useRuqqusFetch";
 import * as _ from "lodash";
-import { SortOptions } from "./RuqqusFeed";
+import { SortOptions, FeedOptions } from "./RuqqusFeed";
 
 type UseFeedOpts = UseFetchOpts<RuqqusPost[]> & { sort: SortOptions };
 
-export function useFeed(edge: string, args?: UseFeedOpts) {
+type RuqqusFeed = {
+  data: RuqqusPost[];
+  next_exists: boolean;
+};
+
+export function useFeed(edge: FeedOptions, args?: UseFeedOpts) {
   const [posts, setPosts] = useState<RuqqusPost[]>();
   const [page, setPage] = useState(1);
   const [more, setMore] = useState(true);
 
-  const { loading, body, refresh } = useRuqqusFetch(`${edge}/listing`, {
-    args: {
-      ...args,
-      page,
+  let ed = "";
+
+  if (typeof edge === "string") {
+    ed = edge;
+  } else if (typeof edge === "object") {
+    if ("guild" in edge) {
+      ed = "guild/" + edge.guild;
+    } else if ("user" in edge) {
+      ed = "user/" + edge.user;
+    }
+  }
+
+  if (!ed) {
+    throw new TypeError("edge is not a FeedOption");
+  }
+
+  const { loading, body, refresh } = useRuqqusFetch<RuqqusFeed>(
+    `${ed}/listing`,
+    {
+      args: {
+        ...args,
+        page,
+      },
     },
-  });
+  );
 
   useEffect(() => {
     if (body) {

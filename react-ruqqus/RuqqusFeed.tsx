@@ -4,7 +4,6 @@ import React, {
   ReactNode,
   useContext,
   useEffect,
-  useState,
 } from "react";
 import {
   ActivityIndicator,
@@ -12,7 +11,6 @@ import {
   FlatListProps,
   RefreshControl,
   RefreshControlProps,
-  View,
 } from "react-native";
 import { useFeed } from "./useFeed";
 import { RuqqusPost, RuqqusGuild, RuqqusUser, RuqqusVote } from "./types";
@@ -24,7 +22,11 @@ export const PostContext = createContext<RuqqusPost>({} as RuqqusPost);
 const GuildContext = createContext<RuqqusGuild>({} as RuqqusGuild);
 const UserContext = createContext<RuqqusUser>({} as RuqqusUser);
 
-type FeedOptions = "front" | "all" | { guild: string } | { user: string };
+export type FeedOptions =
+  | "front"
+  | "all"
+  | { guild: string }
+  | { user: string };
 export type SortOptions = "hot" | "top" | "new" | "disputed" | "activity";
 
 interface PostProps {
@@ -83,7 +85,6 @@ export function RuqqusFeed(
     : props.renderItem;
 
   var renderHeader = props.ListHeaderComponent;
-  var feed: any = props.feed;
 
   if (typeof props.feed === "object") {
     if ("guild" in props.feed) {
@@ -95,7 +96,6 @@ export function RuqqusFeed(
           {props.renderGuildHeader()}
         </ContextManager>
       );
-      feed = "guild/" + props.feed.guild;
     } else if ("user" in props.feed) {
       renderHeader = (
         <ContextManager
@@ -105,11 +105,10 @@ export function RuqqusFeed(
           {props.renderUserHeader()}
         </ContextManager>
       );
-      feed = "user/" + props.feed.user;
     }
   }
 
-  const { loading, posts, nextPage, refresh, setPosts } = useFeed(feed, {
+  const { loading, posts, nextPage, refresh, setPosts } = useFeed(props.feed, {
     sort: props?.sort || "hot",
   });
   const client = useRuqqusClient();
