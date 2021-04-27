@@ -74,7 +74,7 @@ export interface RuqqusPost extends RuqqusRatable, RuqqusFlagged {
   comment_count: number;
   created_utc: Date;
   domain: string;
-  edited_utc: 0;
+  edited_utc: Date;
   fullname: string;
   guild: RuqqusGuild;
   guild_id: string;
@@ -84,7 +84,6 @@ export interface RuqqusPost extends RuqqusRatable, RuqqusFlagged {
   meta_title: string;
   original_guild: string;
   permalink: string;
-  score: number;
   thumb_url: string;
   title: string;
   url: string;
