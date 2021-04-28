@@ -47,10 +47,18 @@ export function fetcher<T>(
 
   console.log("RUQQUS FETCH", { host, edge, opts, options, fid });
 
-  return fetch(
-    `https://${host}/${edge}${args ? "?" : ""}${args}`.toLowerCase(),
-    options,
-  )
+  const url = [
+    "https://",
+    host,
+    edge[0] === "/" ? "" : "/",
+    edge,
+    args ? "?" : "",
+    args,
+  ]
+    .join()
+    .toLowerCase();
+
+  return fetch(url, options)
     .then((r) => {
       let isObject: boolean = (r.headers.get("content-type") || "").includes(
         "json",
