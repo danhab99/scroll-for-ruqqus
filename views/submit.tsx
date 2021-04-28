@@ -10,7 +10,6 @@ export default function Submit() {
   const style = useStyle();
   const submitPost = useSubmit();
 
-  const [ready, setReady] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [board, setBoard] = useState("");
   const [url, setUrl] = useState("");
@@ -31,7 +30,7 @@ export default function Submit() {
     });
   };
 
-  const disabled = !(ready && [board, url, title, body].every((x) => x !== ""));
+  const disabled = ![board, url, title, body].every((x) => x !== "");
 
   return (
     <View style={style?.view}>
