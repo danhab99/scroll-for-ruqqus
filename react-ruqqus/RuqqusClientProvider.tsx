@@ -23,6 +23,7 @@ export interface TokenInterface {
   refresh_token: string;
   client_id: string;
   expires_at: number;
+  siteID: string;
 }
 
 export function RuqqusClientProvider(props: RuqqusClientProviderProps) {
@@ -47,12 +48,17 @@ export function RuqqusClientProvider(props: RuqqusClientProviderProps) {
   const refreshTokens = () => {
     if (tokens?.siteID) {
       console.log("RUQQUS REFRESHING TOKENS");
-      fetcher(clientConfig.authserver, `auth/${tokens.siteID}/refresh`, {
-        body: {
-          refresh_token: tokens.refresh_token,
+      setReady(false);
+      fetcher<TokenInterface>(
+        clientConfig.authserver,
+        `auth/${tokens.siteID}/refresh`,
+        {
+          body: {
+            refresh_token: tokens.refresh_token,
+          },
+          access_token: tokens.access_token,
         },
-        access_token: tokens.access_token,
-      }).then((resp) => {
+      ).then((resp) => {
         if (resp.ok) {
           console.log("RUQQUS READY");
           setTokens(
