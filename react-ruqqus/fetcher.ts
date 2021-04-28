@@ -55,7 +55,7 @@ export function fetcher<T>(
     args ? "?" : "",
     args,
   ]
-    .join()
+    .join("")
     .toLowerCase();
 
   return fetch(url, options)

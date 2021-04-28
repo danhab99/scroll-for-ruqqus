@@ -51,7 +51,7 @@ export function Head() {
   ];
 
   const headComponents = headItems.map((obj, i) => (
-    <Pressable onPress={obj.action}>
+    <Pressable key={i} onPress={obj.action}>
       <Text style={i === 0 ? style?.primaryHeadText : style?.headText}>
         {obj.label}
       </Text>
