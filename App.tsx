@@ -34,10 +34,6 @@ import { GeneralSettings } from "./views/settings/general";
 import { useRuqqusClient } from "./react-ruqqus/useRuqqusClient";
 import { RuqqusClientProvider } from "@react-ruqqus";
 
-type ChildrenOnly = {
-  children: React.ReactNode;
-};
-
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
@@ -81,7 +77,7 @@ function StackTitle(props: StackHeaderTitleProps) {
   );
 }
 
-function StackNavigator(props: ChildrenOnly) {
+function StackNavigator(props: React.PropsWithChildren<{}>) {
   const navigation = useNavigation();
   const theme = useTheme();
 
@@ -109,9 +105,18 @@ function StackNavigator(props: ChildrenOnly) {
   );
 }
 
-function FrontpageStackNavigator(props: ChildrenOnly) {
+function CommentedStackNavigator(props: React.PropsWithChildren<{}>) {
   return (
     <StackNavigator {...props}>
+      {props.children}
+      <Stack.Screen name="Comments" component={Comments} />
+    </StackNavigator>
+  );
+}
+
+function FrontpageStackNavigator(props: React.PropsWithChildren<{}>) {
+  return (
+    <CommentedStackNavigator {...props}>
       <Stack.Screen
         name="Frontpage"
         component={Feed}
@@ -119,14 +124,13 @@ function FrontpageStackNavigator(props: ChildrenOnly) {
           feed: "front",
         }}
       />
-      <Stack.Screen name="Comments" component={Comments} />
-    </StackNavigator>
+    </CommentedStackNavigator>
   );
 }
 
-function AllStackNavigator(props: ChildrenOnly) {
+function AllStackNavigator(props: React.PropsWithChildren<{}>) {
   return (
-    <StackNavigator {...props}>
+    <CommentedStackNavigator {...props}>
       <Stack.Screen
         name="All"
         component={Feed}
@@ -134,16 +138,15 @@ function AllStackNavigator(props: ChildrenOnly) {
           feed: "all",
         }}
       />
-      <Stack.Screen name="Comments" component={Comments} />
-    </StackNavigator>
+    </CommentedStackNavigator>
   );
 }
 
-function UserStackNavigator(props: ChildrenOnly) {
+function UserStackNavigator(props: React.PropsWithChildren<{}>) {
   const client = useRuqqusClient();
 
   return (
-    <StackNavigator {...props}>
+    <CommentedStackNavigator {...props}>
       <Stack.Screen
         name="All"
         component={Feed}
@@ -151,37 +154,35 @@ function UserStackNavigator(props: ChildrenOnly) {
           feed: { user: client.username || "" },
         }}
       />
-      <Stack.Screen name="Comments" component={Comments} />
-    </StackNavigator>
+    </CommentedStackNavigator>
   );
 }
 
-function SavedStackNavigator(props: ChildrenOnly) {
+function SavedStackNavigator(props: React.PropsWithChildren<{}>) {
   return (
-    <StackNavigator {...props}>
+    <CommentedStackNavigator {...props}>
       <Stack.Screen name="Saved" component={Saved} />
-      <Stack.Screen name="Comments" component={Comments} />
-    </StackNavigator>
+    </CommentedStackNavigator>
   );
 }
 
-function LoginStackNavigator(props: ChildrenOnly) {
+function LoginStackNavigator(props: React.PropsWithChildren<{}>) {
   return (
-    <StackNavigator {...props}>
+    <CommentedStackNavigator {...props}>
       <Stack.Screen name="Login" component={ROALogin} />
-    </StackNavigator>
+    </CommentedStackNavigator>
   );
 }
 
-function SubmitStackNavigator(props: ChildrenOnly) {
+function SubmitStackNavigator(props: React.PropsWithChildren<{}>) {
   return (
-    <StackNavigator {...props}>
+    <CommentedStackNavigator {...props}>
       <Stack.Screen name="Submit" component={Submit} />
-    </StackNavigator>
+    </CommentedStackNavigator>
   );
 }
 
-function SettingsStackNavigator(props: ChildrenOnly) {
+function SettingsStackNavigator(props: React.PropsWithChildren<{}>) {
   return (
     <StackNavigator {...props}>
       <Stack.Screen name="Settings" component={Settings} />
