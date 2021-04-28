@@ -155,7 +155,7 @@ function UserStackNavigator(props: ChildrenOnly) {
     </StackNavigator>
   );
 }
-1;
+
 function SavedStackNavigator(props: ChildrenOnly) {
   return (
     <StackNavigator {...props}>
