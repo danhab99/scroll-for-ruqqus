@@ -41,7 +41,6 @@ interface RuqqusFeedProps {
   renderUserHeader: () => ReactNode;
   refreshControlProps?: RefreshControlProps;
   refreshRef: React.Ref<() => void>;
-  noContentComponent: React.ComponentType<any> | ReactNode;
 }
 
 type PostMutatorDispatch = React.Dispatch<
@@ -150,7 +149,6 @@ export function RuqqusFeed(
         refreshControl={refreshControl}
         onEndReachedThreshold={props.onEndReachedThreshold || 3}
         onEndReached={onEndReached}
-        ListEmptyComponent={props.noContentComponent}
         {...props}
       />
     </PostMutatorContext.Provider>

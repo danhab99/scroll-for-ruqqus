@@ -169,7 +169,7 @@ export default function Feed() {
           }}
           refreshRef={refreshRef}
           sort={sort as SortOptions}
-          noContentComponent={<NoPosts />}
+          ListEmptyComponent={<NoPosts />}
         />
       </PopupWrapper>
     </View>
