@@ -168,29 +168,34 @@ export default function HtmlMarkdown(props: HtmlMarkdownProps) {
       }}
       onLinkPress={(evt, href, attr) => {
         let u = new URL(href);
-        if (
-          u.hostname.length === 0 ||
-          u.hostname.includes(client.domain) ||
-          u.hostname.includes("localhost")
-        ) {
-          let edges = _.compact(_.split(u.pathname, "/"));
+        try {
+          if (
+            u.hostname.length === 0 ||
+            u.hostname === client.domain ||
+            u.hostname.includes("localhost")
+          ) {
+            let edges = _.compact(_.split(u.pathname, "/"));
+            let param = edges[0].slice(1);
 
-          switch (edges[0][0]) {
-            case "+":
-              navigation.push(route.name, { feed: { guild: edges[1] } });
-              break;
-            case "@":
-              navigation.push(route.name, {
-                feed: { user: edges[0].slice(1) },
-              });
-              break;
-            default:
-              console.warn("Unable to parse navigation action ");
+            switch (edges[0][0]) {
+              case "+":
+                navigation.push(route.name, {
+                  feed: { guild: param },
+                });
+                break;
+              case "@":
+                navigation.push(route.name, {
+                  feed: { user: param },
+                });
+                break;
+              default:
+                console.warn("Unable to parse navigation action ");
+            }
+          } else {
+            Linking.canOpenURL(href).then(() => Linking.openURL(href));
           }
-        } else {
-          Linking.canOpenURL(href)
-            .then(() => Linking.openURL(href))
-            .catch((err) => console.warn("Cannot open markdown link", err));
+        } catch (err) {
+          console.warn("Cannot open markdown link", err);
         }
       }}
       alterNode={(node) => {
