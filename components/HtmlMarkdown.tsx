@@ -1,6 +1,10 @@
 import React, { useEffect } from "react";
 import { Text, Linking, StyleSheet, Image, Pressable } from "react-native";
-import HTML from "react-native-render-html";
+import HTML, {
+  HtmlAttributesDictionary,
+  NonRegisteredStylesProp,
+  PassProps,
+} from "react-native-render-html";
 import { useRuqqusClient } from "../react-ruqqus/useRuqqusClient";
 import { useTheme, useStyle } from "@contexts";
 import { useNavigation, useRoute } from "@react-navigation/native";
@@ -108,6 +112,7 @@ export default function HtmlMarkdown(props: HtmlMarkdownProps) {
         "profile-pic-20": {
           width: theme?.FontSize.get?.(1),
           height: theme?.FontSize.get?.(1),
+          marginRight: theme?.FontSize.get?.(0.5),
           textAlign: "center",
           objectFit: "cover",
           backgroundColor: "rgba(0,0,0,0)",
@@ -124,9 +129,20 @@ export default function HtmlMarkdown(props: HtmlMarkdownProps) {
         // li: AlignedTextBox,
         // a: AlignedTextBox,
         img: {
-          renderer: (htmlAttribs, children) => {
-            // debugger;
-            return <Image source={{ uri: `${htmlAttribs.src}` }} />;
+          renderer: (
+            htmlAttribs: HtmlAttributesDictionary,
+            children: React.ReactNode,
+            convertedCSSStyles: NonRegisteredStylesProp<any>,
+            passProps: PassProps<any>,
+          ) => {
+            let style = _.cloneDeep(convertedCSSStyles);
+            let classes = `${htmlAttribs.class}`.split(" ");
+            let classStyles = classes.map((x) => passProps.classesStyles?.[x]);
+            _.merge(style, ...classStyles);
+
+            return (
+              <Image source={{ uri: `${htmlAttribs.src}` }} style={style} />
+            );
           },
           wrapper: "Text",
         },
