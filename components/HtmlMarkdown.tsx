@@ -106,40 +106,31 @@ export default function HtmlMarkdown(props: HtmlMarkdownProps) {
       }}
       classesStyles={{
         "profile-pic-20": {
-          width: 1,
-          height: 1,
+          width: theme?.FontSize.get?.(1),
+          height: theme?.FontSize.get?.(1),
           textAlign: "center",
           objectFit: "cover",
-          backgroundColor: theme?.Colors.background,
+          backgroundColor: "rgba(0,0,0,0)",
         },
         "align-middle": {
           verticalAlign: "middle",
         },
         "mr-1": {
-          marginRight: "0.25rem",
+          marginRight: 2,
         },
       }}
-      renderers={
-        {
-          // p: AlignedTextBox,
-          // li: AlignedTextBox,
-          // a: AlignedTextBox,
-          // img: (htmlAttribs, children, convertedCSSStyles, passProps) => {
-          //   // debugger;
-          //   return (
-          //     <Image
-          //       source={{ uri: htmlAttribs.src }}
-          //       style={{
-          //         height: theme?.FontSize.get?.(1),
-          //         margin: 0,
-          //         ...convertedCSSStyles,
-          //       }}
-          //       {...passProps}
-          //     />
-          //   );
-          // },
-        }
-      }
+      renderers={{
+        // p: AlignedTextBox,
+        // li: AlignedTextBox,
+        // a: AlignedTextBox,
+        img: {
+          renderer: (htmlAttribs, children) => {
+            // debugger;
+            return <Image source={{ uri: `${htmlAttribs.src}` }} />;
+          },
+          wrapper: "Text",
+        },
+      }}
       containerStyle={style?.paddedCard}
       listsPrefixesRenderers={{
         ul: (htmlAttribs, children, convertedCSSStyles, passProps) => {
@@ -186,11 +177,11 @@ export default function HtmlMarkdown(props: HtmlMarkdownProps) {
       alterNode={(node) => {
         if (node.name === "img") {
           if (node?.attribs?.src[0] == "/") {
-            return Object.assign(node, {
-              attribs: {
-                src: `https://${client.domain}${node.attribs.src}`,
-              },
-            });
+            _.set(
+              node,
+              ["attribs", "src"],
+              `https://${client.domain}${node.attribs.src}`,
+            );
           }
         }
         return node;
