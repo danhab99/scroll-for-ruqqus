@@ -4,7 +4,7 @@ import { useTheme } from "@contexts";
 
 interface TextBoxProps {
   size?: number;
-  children: string;
+  children: string | React.ReactNode;
   color?: string;
 }
 

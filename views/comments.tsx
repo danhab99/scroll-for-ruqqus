@@ -1,11 +1,11 @@
 import { useRoute } from "@react-navigation/native";
-import React, { useEffect, useContext, createContext } from "react";
+import React, { useEffect, useContext, createContext, useState } from "react";
 import {
-  ActivityIndicator,
   View,
-  Alert,
   ScrollView,
   RefreshControl,
+  Text,
+  Pressable,
 } from "react-native";
 import WebView from "react-native-webview";
 import {
@@ -19,12 +19,24 @@ import { CardSelector } from "components/postcards/cardSelector";
 import { PopupWrapper } from "./PopupWrapper";
 import TextBox from "components/TextBox";
 import HtmlMarkdown from "components/HtmlMarkdown";
+import TimeAgo from "react-native-timeago";
+import Icon from "react-native-vector-icons/FontAwesome";
+import { IconButton } from "components/Buttons";
+import { LoadingControl } from "components/LoadingControl";
 
 const DepthContext = createContext(0);
+
+function Deliminer() {
+  const style = useStyle();
+  return <TextBox style={style?.headBullet}>{" • "}</TextBox>;
+}
 
 function Reply({ reply }: { reply: RuqqusComment }) {
   const depth = useContext(DepthContext);
   const theme = useTheme();
+  const style = useStyle();
+
+  const [visible, setVisible] = useState(false);
 
   const SPACER = 2;
 
@@ -33,11 +45,61 @@ function Reply({ reply }: { reply: RuqqusComment }) {
       <View
         style={{
           borderLeftColor: theme?.Colors.primary,
-          borderLeftWidth: SPACER,
+          borderLeftWidth: depth ? SPACER : 0,
           marginLeft: 2 * SPACER * depth,
           marginBottom: 2 * SPACER,
         }}>
-        <HtmlMarkdown html={reply.body_html} />
+        <Pressable onPress={() => setVisible((x) => !x)}>
+          <View style={{ marginLeft: theme?.Space.get?.(0.5) }}>
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "flex-start",
+              }}>
+              <TextBox size={0.6} color="primary">
+                @{reply.author_name}
+              </TextBox>
+              <Deliminer />
+              <TextBox size={0.6} color="muted">
+                <TimeAgo time={reply.created_utc * 1000} />
+              </TextBox>
+            </View>
+
+            <View style={style?.horizontal}>
+              <Icon
+                name="arrow-circle-up"
+                color={theme?.Colors.primaryLight}
+                size={theme?.FontSize.get?.(2)}
+              />
+              <Text style={style?.upvotes}> {reply.upvotes} </Text>
+              <Icon
+                name="arrow-circle-down"
+                color={theme?.Colors.primaryDark}
+                size={theme?.FontSize.get?.(2)}
+              />
+              <Text style={style?.downvotes}> {reply.downvotes} </Text>
+              <Text style={style?.headText}>({reply.score})</Text>
+            </View>
+          </View>
+
+          <HtmlMarkdown html={reply.body_html} />
+        </Pressable>
+
+        {visible ? (
+          <View
+            style={[
+              style?.horizontal,
+              {
+                backgroundColor: theme?.Colors.backgroundHighlight,
+                paddingLeft: theme?.Space.get?.(1),
+              },
+            ]}>
+            <LoadingControl name="arrow-upward" />
+            <LoadingControl name="arrow-downward" />
+            <IconButton name="reply" />
+          </View>
+        ) : null}
 
         {reply.replies.map((reply) => (
           <Reply reply={reply} />

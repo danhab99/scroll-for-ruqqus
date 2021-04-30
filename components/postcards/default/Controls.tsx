@@ -6,7 +6,7 @@ import * as _ from "lodash";
 import { IconButton } from "components/Buttons";
 import { useNavigation } from "@react-navigation/core";
 import { usePostMenuContext } from "contexts/post-menu-context";
-import { LoadingControl } from "./LoadingControlProps";
+import { LoadingControl } from "../../LoadingControl";
 import { StackNavigationProp } from "@react-navigation/stack";
 
 export function Controls() {
