@@ -37,13 +37,15 @@ const useMassStore = (head: string) => <T>(
     let filei = Math.floor(start / MAX_COUNT);
 
     mkdir(`${head}/col`).then(() => {
-      readFile(`${head}/col/${name}.${filei}.json`).then((raw) => {
-        console.log("COLLECTIONS READ", name, filei, raw);
-        let j = JSON.parse(raw);
-        let l: T[] = _.slice(j, start, start + take);
+      readFile(`${head}/col/${name}.${filei}.json`)
+        .then((raw) => {
+          console.log("COLLECTIONS READ", name, filei, raw);
+          let j = JSON.parse(raw);
+          let l: T[] = _.slice(j, start, start + take);
 
-        setCollection((prev) => (page > 0 ? prev?.concat(l) : l));
-      });
+          setCollection((prev) => (page > 0 ? prev?.concat(l) : l));
+        })
+        .catch((e) => {});
     });
   };
 

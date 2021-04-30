@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { ContextChildrenProps } from "./ContextChildrenProps";
 import {
   DocumentDirectoryPath,
   writeFile,
@@ -21,7 +20,7 @@ const ValueContext = createContext<ValueContextProps>({} as ValueContextProps);
 
 const ValuesFile = DocumentDirectoryPath + "/values.json";
 
-export function ValueProvider(props: ContextChildrenProps) {
+export function ValueProvider(props: React.PropsWithChildren<{}>) {
   const [value, setValue] = useState<UnboundObject>({});
 
   const write = () => {

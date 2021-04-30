@@ -1,5 +1,4 @@
 import React, { createContext, useContext } from "react";
-import { ContextChildrenProps } from "./ContextChildrenProps";
 import { useValue } from "./storage-context";
 import * as _ from "lodash";
 import { ThemeInterface, DEFAULT_THEME } from "./theme/default-theme";
@@ -22,7 +21,7 @@ const Lighten = (c: string) =>
     .lighten(1 / 3)
     .hex();
 
-export function ThemeProvider(props: ContextChildrenProps) {
+export function ThemeProvider(props: React.PropsWithChildren<{}>) {
   var [theme] = useValue<ThemeInterface>("theme");
   theme = _.defaultsDeep(theme, DEFAULT_THEME);
   let style = theme ? generateStyles(theme) : undefined;
