@@ -77,8 +77,8 @@ export function useValue<T>(
         ? incoming(_.get(value, path) as T)
         : incoming;
 
-    let o = _.set(value, path, next);
-    o = Object.assign({}, o);
+    _.set(value, path, next);
+    let o = _.cloneDeep(value);
     setValue(o);
   };
 
