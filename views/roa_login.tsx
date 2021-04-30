@@ -60,8 +60,6 @@ export default function ROALogin(props: any) {
         expires_at: results.expires_at,
       };
       setAccounts((accounts = []) => [...accounts, newAccount]);
-
-      setActiveAccount(newAccount.id);
     }
   });
 
@@ -97,6 +95,7 @@ export default function ROALogin(props: any) {
 
     if (account) {
       login(account);
+      setActiveAccount(id);
       navigation.navigate("Frontpage");
     } else {
       setActiveAccount("");

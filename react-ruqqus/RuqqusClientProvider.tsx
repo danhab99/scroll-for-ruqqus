@@ -45,7 +45,7 @@ export function RuqqusClientProvider(props: RuqqusClientProviderProps) {
     props.config,
   );
 
-  const refreshTokens = () => {
+  const refreshTokens = (tokens: any) => {
     if (tokens?.siteID) {
       console.log("RUQQUS REFRESHING TOKENS");
       setReady(false);
@@ -64,9 +64,7 @@ export function RuqqusClientProvider(props: RuqqusClientProviderProps) {
           setTokens(
             (prev): TokenInterface => {
               let p = _.assign(prev, {
-                client_id: resp.body["client_id"],
                 access_token: resp.body["access_token"],
-                refresh_token: resp.body["refresh_token"],
                 expires_at: resp.body["expires_at"],
               });
 
@@ -84,9 +82,9 @@ export function RuqqusClientProvider(props: RuqqusClientProviderProps) {
   useEffect(() => {
     if (tokens) {
       console.log("RUQQUS TOKENS CHANGED", tokens, props.config);
-      refreshTokens();
+      refreshTokens(tokens);
 
-      let timeout = setTimeout(() => refreshTokens(), 3e5);
+      let timeout = setTimeout(() => refreshTokens(tokens), 120000);
       return () => clearTimeout(timeout);
     } else {
       props.onLoginError?.(new Error("No tokens"));
