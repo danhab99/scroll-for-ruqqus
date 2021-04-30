@@ -1,5 +1,12 @@
 import React, { useEffect } from "react";
-import { Text, Linking, StyleSheet, Image, Pressable } from "react-native";
+import {
+  Text,
+  Linking,
+  StyleSheet,
+  Image,
+  Pressable,
+  View,
+} from "react-native";
 import HTML, {
   HtmlAttributesDictionary,
   NonRegisteredStylesProp,
@@ -14,31 +21,23 @@ import TextBox from "./TextBox";
 import URL from "url-parse";
 import _ from "lodash";
 import { useContextPost } from "../react-ruqqus/RuqqusFeed";
+import ScaledImage from "./ScaledImage";
 
-function AlignedTextBox(
-  htmlAttribs: any,
-  children: any,
-  convertedCSSStyles: any,
-  passProps: any,
-): HTML.RendererDeclaration<unknown> {
-  if (htmlAttribs.href) {
-    return (
-      <Pressable onPress={() => passProps.onLinkPress(null, htmlAttribs.href)}>
-        <TextBox
-          color="primary"
-          key="HTMLLINK"
-          style={{
-            marginBottom: -1,
-            padding: 0,
-          }}>
-          {children}
-        </TextBox>
-      </Pressable>
-    );
-  } else {
-    return <TextBox>{children}</TextBox>;
-  }
+function Bullet() {
+  const theme = useTheme();
+  return (
+    <Text
+      style={{
+        color: theme?.Colors?.primary,
+        fontSize: theme?.FontSize?.get?.(1.5),
+        fontWeight: "bold",
+        marginRight: theme?.Space?.get?.(1 / 2),
+      }}>
+      •
+    </Text>
+  );
 }
+
 interface HtmlMarkdownProps {
   html: string;
 }
@@ -123,11 +122,18 @@ export default function HtmlMarkdown(props: HtmlMarkdownProps) {
         "mr-1": {
           marginRight: 2,
         },
+        "in-comment-image": {
+          width: 100,
+          height: 100,
+        },
+        "rounded-sm": {
+          borderRadius: 10,
+        },
+        "my-2": {
+          marginTop: 5,
+        },
       }}
       renderers={{
-        // p: AlignedTextBox,
-        // li: AlignedTextBox,
-        // a: AlignedTextBox,
         img: {
           renderer: (
             htmlAttribs: HtmlAttributesDictionary,
@@ -135,13 +141,16 @@ export default function HtmlMarkdown(props: HtmlMarkdownProps) {
             convertedCSSStyles: NonRegisteredStylesProp<any>,
             passProps: PassProps<any>,
           ) => {
-            let style = _.cloneDeep(convertedCSSStyles);
             let classes = `${htmlAttribs.class}`.split(" ");
             let classStyles = classes.map((x) => passProps.classesStyles?.[x]);
-            _.merge(style, ...classStyles);
 
             return (
-              <Image source={{ uri: `${htmlAttribs.src}` }} style={style} />
+              <View>
+                <Image
+                  source={{ uri: `${htmlAttribs.src}` }}
+                  style={[convertedCSSStyles, ...classStyles]}
+                />
+              </View>
             );
           },
           wrapper: "Text",
@@ -150,17 +159,11 @@ export default function HtmlMarkdown(props: HtmlMarkdownProps) {
       containerStyle={style?.paddedCard}
       listsPrefixesRenderers={{
         ul: (htmlAttribs, children, convertedCSSStyles, passProps) => {
-          return (
-            <Text
-              style={{
-                color: theme?.Colors?.primary,
-                fontSize: theme?.FontSize?.get?.(1.5),
-                fontWeight: "bold",
-                marginRight: theme?.Space?.get?.(1 / 5),
-              }}>
-              •
-            </Text>
-          );
+          return <Bullet />;
+        },
+        ol: (htmlAttribs, children, convertedCSSStyles, passProps) => {
+          // debugger;
+          return <Bullet />;
         },
       }}
       onLinkPress={(evt, href, attr) => {
