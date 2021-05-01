@@ -1,4 +1,5 @@
 import fetch from "unfetch";
+import encodeurl from "encodeurl";
 export interface fetcherOpts<T> {
   args?: Object;
   body?: T;
@@ -8,7 +9,7 @@ export interface fetcherOpts<T> {
 
 function seralize(obj: any): string {
   return Object.entries(obj || {})
-    .map(([key, value]) => `${key}=${value}`)
+    .map(([key, value]) => `${key}=${encodeurl(value)}`)
     .join("&");
 }
 

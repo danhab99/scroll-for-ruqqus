@@ -41,6 +41,8 @@ interface PostReplyContextProviderProps {
   post: RuqqusPost;
 }
 
+const CHARACTER_LIMIT = 10000;
+
 function PostReplyContextProvider({
   post,
   children,
@@ -52,11 +54,14 @@ function PostReplyContextProvider({
   const [replyID, setReplyID] = useState("");
   const [replyMessage, setReplyMessage] = useState("");
 
+  useEffect(() => console.log("COMMENTS REPLY ID", replyID), [replyID]);
+
   const postReply = () => {
     fetcher(client.domain, `api/v1/comment`, {
       access_token: client.access_token,
       body: {
-        submission: post.fullname,
+        parent_fullname: replyID,
+        submission: replyID,
         body: replyMessage,
       },
     }).then((resp) => {
@@ -68,13 +73,20 @@ function PostReplyContextProvider({
       setReplyID("");
     });
   };
+
   return (
     <PostReplyContext.Provider value={setReplyID}>
       <Popup
         title="Reply"
         visible={replyID ? true : false}
         toggleModal={() => setReplyID("")}>
-        <Input onChangeText={(t) => setReplyMessage(t)} value={replyMessage} />
+        <Input
+          label={`${CHARACTER_LIMIT - replyMessage.length} characters left`}
+          onChangeText={(t) => setReplyMessage(t)}
+          value={
+            replyMessage.length > 0 && replyMessage.length <= CHARACTER_LIMIT
+          }
+        />
         <Button
           text="Post reply"
           disabled={!replyMessage}
@@ -211,7 +223,10 @@ function Reply({ reply }: { reply: RuqqusComment }) {
               onPress={() => vote(-1)}
               highlighted={false}
             />
-            <IconButton name="reply" onPress={() => startPostReply(reply.id)} />
+            <IconButton
+              name="reply"
+              onPress={() => startPostReply(reply.fullname)}
+            />
           </View>
         ) : null}
 
@@ -255,7 +270,7 @@ export default function Comments() {
                 />
               </PopupWrapper>
 
-              {body?.replies.map((reply) => (
+              {body?.replies?.map?.((reply) => (
                 <Reply reply={reply} />
               ))}
             </PostReplyContextProvider>
