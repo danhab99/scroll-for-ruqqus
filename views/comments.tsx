@@ -15,9 +15,9 @@ import {
   RuqqusComment,
   fetcher,
   useContextPost,
+  RuqqusPost,
 } from "@react-ruqqus";
 import { useStyle, useTheme, useValue } from "@contexts";
-import { CardSelector } from "components/postcards/cardSelector";
 import { PopupWrapper } from "./PopupWrapper";
 import TextBox from "components/TextBox";
 import HtmlMarkdown from "components/HtmlMarkdown";
@@ -29,35 +29,28 @@ import Popup from "components/Popup";
 import Input from "components/Input";
 import Color from "color";
 import { StackNavigationProp } from "@react-navigation/stack";
+import DefaultPostcard from "components/postcards/default/postcard";
 
 const DepthContext = createContext(0);
 const RefreshContext = createContext<() => void>(() => {});
+const PostReplyContext = createContext<
+  React.Dispatch<React.SetStateAction<string>>
+>({} as React.Dispatch<React.SetStateAction<string>>);
 
-function Deliminer() {
-  const style = useStyle();
-  return <TextBox style={style?.headBullet}>{" • "}</TextBox>;
+interface PostReplyContextProviderProps {
+  post: RuqqusPost;
 }
 
-function Reply({ reply }: { reply: RuqqusComment }) {
-  const depth = useContext(DepthContext);
-  const refresh = useContext(RefreshContext);
+function PostReplyContextProvider({
+  post,
+  children,
+}: React.PropsWithChildren<PostReplyContextProviderProps>) {
   const theme = useTheme();
-  const style = useStyle();
   const client = useRuqqusClient();
-  const post = useContextPost();
-  const navigation = useNavigation<StackNavigationProp<any>>();
-  const route = useRoute();
+  const refresh = useContext(RefreshContext);
 
-  const [controlsVisible, setControlVisible] = useState(false);
-  const [replyPopupVisible, setReplyPopupVisible] = useState(false);
+  const [replyID, setReplyID] = useState("");
   const [replyMessage, setReplyMessage] = useState("");
-  const [childRepliesVisible, setChildRepliesVisible] = useState(true);
-
-  const SPACER = 4;
-
-  const depthColor = Color([255, 0, 0])
-    .rotate((360 / 8) * depth)
-    .hex();
 
   const postReply = () => {
     fetcher(client.domain, `api/v1/comment`, {
@@ -72,8 +65,55 @@ function Reply({ reply }: { reply: RuqqusComment }) {
       } else {
         console.warn("CANNOT COMMENT", resp);
       }
+      setReplyID("");
     });
   };
+  return (
+    <PostReplyContext.Provider value={setReplyID}>
+      <Popup
+        title="Reply"
+        visible={replyID ? true : false}
+        toggleModal={() => setReplyID("")}>
+        <Input onChangeText={(t) => setReplyMessage(t)} value={replyMessage} />
+        <Button
+          text="Post reply"
+          disabled={!replyMessage}
+          onPress={() => postReply()}
+          style={{
+            marginTop: theme?.Space.get?.(1),
+          }}
+        />
+      </Popup>
+
+      {children}
+    </PostReplyContext.Provider>
+  );
+}
+
+function Deliminer() {
+  const style = useStyle();
+  return <TextBox style={style?.headBullet}>{" • "}</TextBox>;
+}
+
+function Reply({ reply }: { reply: RuqqusComment }) {
+  const depth = useContext(DepthContext);
+  const theme = useTheme();
+  const style = useStyle();
+  const client = useRuqqusClient();
+  const post = useContextPost();
+  const navigation = useNavigation<StackNavigationProp<any>>();
+  const route = useRoute();
+  const refresh = useContext(RefreshContext);
+  const startPostReply = useContext(PostReplyContext);
+
+  const [controlsVisible, setControlVisible] = useState(false);
+  const [childRepliesVisible, setChildRepliesVisible] = useState(true);
+
+  const SPACER = 4;
+
+  const depthColor = Color([255, 0, 0])
+    .rotate((360 / 8) * depth)
+    .hex();
 
   const vote = (dir: -1 | 1) => {
     return fetcher(client.domain, `api/v1/voute/comment/${reply.id}/${dir}`, {
@@ -90,20 +130,6 @@ function Reply({ reply }: { reply: RuqqusComment }) {
 
   return (
     <DepthContext.Provider value={depth + 1}>
-      <Popup
-        title="Reply"
-        visible={replyPopupVisible}
-        toggleModal={() => setReplyPopupVisible((x) => !x)}>
-        <Input onChangeText={(t) => setReplyMessage(t)} value={replyMessage} />
-        <Button
-          text="Post reply"
-          disabled={!replyMessage}
-          onPress={() => postReply()}
-          style={{
-            marginTop: theme?.Space.get?.(1),
-          }}
-        />
-      </Popup>
       <View
         style={{
           borderLeftColor: depthColor,
@@ -185,10 +211,7 @@ function Reply({ reply }: { reply: RuqqusComment }) {
               onPress={() => vote(-1)}
               highlighted={false}
             />
-            <IconButton
-              name="reply"
-              onPress={() => setReplyPopupVisible(true)}
-            />
+            <IconButton name="reply" onPress={() => startPostReply(reply.id)} />
           </View>
         ) : null}
 
@@ -197,6 +220,12 @@ function Reply({ reply }: { reply: RuqqusComment }) {
       </View>
     </DepthContext.Provider>
   );
+}
+
+function ReplyButton() {
+  const startPostReply = useContext(PostReplyContext);
+  const post = useContextPost();
+  return <IconButton name="reply" onPress={() => startPostReply(post.id)} />;
 }
 
 export default function Comments() {
@@ -214,14 +243,22 @@ export default function Comments() {
       }>
       {!loading && body ? (
         <PostContext.Provider value={body}>
-          <PopupWrapper>
-            <CardSelector />
-          </PopupWrapper>
-
           <RefreshContext.Provider value={refresh}>
-            {body?.replies.map((reply) => (
-              <Reply reply={reply} />
-            ))}
+            <PostReplyContextProvider post={body}>
+              <PopupWrapper>
+                <DefaultPostcard
+                  additionalControls={
+                    <>
+                      <ReplyButton />
+                    </>
+                  }
+                />
+              </PopupWrapper>
+
+              {body?.replies.map((reply) => (
+                <Reply reply={reply} />
+              ))}
+            </PostReplyContextProvider>
           </RefreshContext.Provider>
         </PostContext.Provider>
       ) : null}

@@ -10,7 +10,11 @@ import { LoadingControl } from "../../LoadingControl";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useRoute } from "@react-navigation/native";
 
-export function Controls() {
+interface ControlProps {
+  additionalControls?: React.ReactNode;
+}
+
+export function Controls(props: ControlProps) {
   const { upvote, downvote } = useVote();
   const post = useContextPost();
   const style = useStyle();
@@ -63,6 +67,7 @@ export function Controls() {
           })
         }
       />
+      {props.additionalControls}
       <IconButton name="more-vert" onPress={() => setPostMenu(post)} />
     </View>
   );
