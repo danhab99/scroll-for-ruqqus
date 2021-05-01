@@ -9,28 +9,7 @@ import { RuqqusPost, useRuqqusClient, PostContext } from "react-ruqqus";
 import _ from "lodash";
 import TextBox from "../components/TextBox";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-
-function NoPosts() {
-  const theme = useTheme();
-
-  return (
-    <View
-      style={{
-        alignItems: "center",
-        flex: 1,
-        justifyContent: "center",
-        padding: theme?.Space.get?.(5),
-      }}>
-      <Icon
-        name="ghost"
-        color={theme?.Colors.muted}
-        size={theme?.FontSize.get?.(10)}
-        style={{ margin: theme?.Space.get?.(1) }}
-      />
-      <TextBox color="muted">You haven't saved anything yet</TextBox>
-    </View>
-  );
-}
+import { NoContent } from "./NoContent";
 
 export function Saved() {
   const route = useRoute();
@@ -76,7 +55,7 @@ export function Saved() {
           contentContainerStyle={{ marginTop: theme?.Space.get?.(1) }}
           refreshControl={<RefreshControl refreshing={loading} />}
           onEndReachedThreshold={0.1}
-          ListEmptyComponent={<NoPosts />}
+          ListEmptyComponent={<NoContent message="No saved posts" />}
         />
       </PopupWrapper>
     </View>

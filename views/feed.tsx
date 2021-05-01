@@ -13,31 +13,8 @@ import { CardSelector } from "../components/postcards/cardSelector";
 import { PopupWrapper } from "./PopupWrapper";
 import { useEnforceLogin } from "./useEnforceLogin";
 import Input from "components/Input";
-import TextBox from "../components/TextBox";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { StackNavigationProp } from "@react-navigation/stack";
-
-function NoPosts() {
-  const theme = useTheme();
-
-  return (
-    <View
-      style={{
-        alignItems: "center",
-        flex: 1,
-        justifyContent: "center",
-        padding: theme?.Space.get?.(5),
-      }}>
-      <Icon
-        name="ghost"
-        color={theme?.Colors.muted}
-        size={theme?.FontSize.get?.(10)}
-        style={{ margin: theme?.Space.get?.(1) }}
-      />
-      <TextBox color="muted">No Posts Loaded</TextBox>
-    </View>
-  );
-}
+import { NoContent } from "./NoContent";
 
 export default function Feed() {
   const navigation = useNavigation<StackNavigationProp<any>>();
@@ -169,7 +146,7 @@ export default function Feed() {
           }}
           refreshRef={refreshRef}
           sort={sort as SortOptions}
-          ListEmptyComponent={<NoPosts />}
+          ListEmptyComponent={<NoContent message="No posts loaded" />}
         />
       </PopupWrapper>
     </View>

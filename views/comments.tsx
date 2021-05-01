@@ -30,6 +30,7 @@ import Input from "components/Input";
 import Color from "color";
 import { StackNavigationProp } from "@react-navigation/stack";
 import DefaultPostcard from "components/postcards/default/postcard";
+import { NoContent } from "./NoContent";
 
 const DepthContext = createContext(0);
 const RefreshContext = createContext<() => void>(() => {});
@@ -273,6 +274,10 @@ export default function Comments() {
               {body?.replies?.map?.((reply) => (
                 <Reply reply={reply} />
               ))}
+
+              {!body?.replies || body?.replies?.length <= 0 ? (
+                <NoContent message="No comments found" />
+              ) : null}
             </PostReplyContextProvider>
           </RefreshContext.Provider>
         </PostContext.Provider>
