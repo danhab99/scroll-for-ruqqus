@@ -6,7 +6,7 @@ import {
   RefreshControl,
   Text,
   Pressable,
-  Vibration,
+  ToastAndroid,
 } from "react-native";
 import {
   PostContext,
@@ -58,6 +58,9 @@ function PostReplyContextProvider({
   useEffect(() => console.log("COMMENTS REPLY ID", replyID), [replyID]);
 
   const postReply = () => {
+    const id = `${replyID}`;
+    setReplyID("");
+
     fetcher(client.domain, `api/v1/comment`, {
       access_token: client.access_token,
       body: {
@@ -65,14 +68,21 @@ function PostReplyContextProvider({
         submission: replyID,
         body: replyMessage,
       },
-    }).then((resp) => {
-      if (resp.ok) {
-        refresh();
-      } else {
-        console.warn("CANNOT COMMENT", resp);
-      }
-      setReplyID("");
-    });
+    })
+      .then((resp) => {
+        if (resp.ok) {
+          ToastAndroid.show("Comment successfully posted", ToastAndroid.SHORT);
+          refresh();
+        } else {
+          resp.text().then((errMsg) => {
+            ToastAndroid.show("Comment failed: " + errMsg, ToastAndroid.SHORT);
+          });
+          console.warn("CANNOT COMMENT", resp);
+        }
+      })
+      .catch((e) => {
+        ToastAndroid.show("Commenting Error: " + e.message, ToastAndroid.SHORT);
+      });
   };
 
   return (
@@ -129,7 +139,7 @@ function Reply({ reply }: { reply: RuqqusComment }) {
     .hex();
 
   const vote = (dir: -1 | 1) => {
-    return fetcher(client.domain, `api/v1/voute/comment/${reply.id}/${dir}`, {
+    return fetcher(client.domain, `api/v1/vote/comment/${reply.id}/${dir}`, {
       access_token: client.access_token,
       body: {},
     }).then((resp) => {
