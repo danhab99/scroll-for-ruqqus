@@ -28,15 +28,6 @@ export function GeneralSettings() {
         address={["general", "rightHanded"]}
         type={{ type: "checkbox" }}
       />
-
-      <SettingsInput
-        title="Comments view warning"
-        description="Show that appology for using the webapp for comments"
-        iconName="chat"
-        default={true}
-        address={["general", "appologise"]}
-        type={{ type: "checkbox" }}
-      />
     </ScrollView>
   );
 }
