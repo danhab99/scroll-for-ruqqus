@@ -64,8 +64,7 @@ function PostReplyContextProvider({
     fetcher(client.domain, `api/v1/comment`, {
       access_token: client.access_token,
       body: {
-        parent_fullname: replyID,
-        submission: replyID,
+        parent_fullname: id,
         body: replyMessage,
       },
     })
@@ -251,7 +250,9 @@ function Reply({ reply }: { reply: RuqqusComment }) {
 function ReplyButton() {
   const startPostReply = useContext(PostReplyContext);
   const post = useContextPost();
-  return <IconButton name="reply" onPress={() => startPostReply(post.id)} />;
+  return (
+    <IconButton name="reply" onPress={() => startPostReply(post.fullname)} />
+  );
 }
 
 export default function Comments() {
