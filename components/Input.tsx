@@ -3,7 +3,7 @@ import { View, Text, TextInput, TextInputProps } from "react-native";
 import { useStyle } from "@contexts";
 
 type InputProps = {
-  label: string;
+  label?: string;
 } & TextInputProps;
 
 export default function Input(props: InputProps) {
@@ -11,7 +11,9 @@ export default function Input(props: InputProps) {
 
   return (
     <View style={props.style}>
-      <Text style={style?.inputLabel}>{props.label}</Text>
+      {props.label ? (
+        <Text style={style?.inputLabel}>{props.label}</Text>
+      ) : null}
       <TextInput style={style?.input} {...props} />
     </View>
   );

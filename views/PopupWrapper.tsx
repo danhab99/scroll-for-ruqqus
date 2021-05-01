@@ -30,7 +30,10 @@ export function PopupWrapper(props: { children: ReactNode }) {
             label="Comments"
             icon="chat"
             onPress={() => {
-              navigation.push("Comments", { post_id: menuPost.id });
+              navigation.push("Comments", {
+                post_id: menuPost.id,
+                lastRoute: route.name,
+              });
               setMenuPost(undefined);
             }}
           />

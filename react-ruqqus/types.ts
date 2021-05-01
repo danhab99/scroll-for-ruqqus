@@ -9,6 +9,7 @@ interface RuqqusRatable {
   score: number;
   upvotes: number;
   downvotes: number;
+  voted: RuqqusVote;
 }
 
 interface RuqqusFlagged {
@@ -87,7 +88,6 @@ export interface RuqqusPost extends RuqqusRatable, RuqqusFlagged {
   thumb_url: string;
   title: string;
   url: string;
-  voted: RuqqusVote;
   replies: RuqqusComments;
 }
 

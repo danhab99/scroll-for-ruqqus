@@ -8,6 +8,7 @@ import { useNavigation } from "@react-navigation/core";
 import { usePostMenuContext } from "contexts/post-menu-context";
 import { LoadingControl } from "../../LoadingControl";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { useRoute } from "@react-navigation/native";
 
 export function Controls() {
   const { upvote, downvote } = useVote();
@@ -16,6 +17,7 @@ export function Controls() {
   const theme = useTheme();
   const [saves, { add, remove }] = useSavedPosts();
   const navigation = useNavigation<StackNavigationProp<any>>();
+  const route = useRoute();
 
   const [__, setPostMenu] = usePostMenuContext();
 
@@ -54,7 +56,12 @@ export function Controls() {
       />
       <IconButton
         name="comment"
-        onPress={() => navigation.push("Comments", { post_id: post.id })}
+        onPress={() =>
+          navigation.push("Comments", {
+            post_id: post.id,
+            lastRoute: route.name,
+          })
+        }
       />
       <IconButton name="more-vert" onPress={() => setPostMenu(post)} />
     </View>
