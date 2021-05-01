@@ -23,7 +23,7 @@ export function UserHeader() {
           }}
           style={{
             width: "100%",
-            aspectRatio: 3.4092307692307693,
+            aspectRatio: 106 / 25,
           }}
         />
         <View
