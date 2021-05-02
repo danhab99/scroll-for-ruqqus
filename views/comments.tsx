@@ -74,13 +74,13 @@ function PostReplyContextProvider({
           refresh();
         } else {
           resp.text().then((errMsg) => {
-            ToastAndroid.show("Comment failed: " + errMsg, ToastAndroid.SHORT);
+            ToastAndroid.show("Comment failed: " + errMsg, ToastAndroid.LONG);
           });
           console.warn("CANNOT COMMENT", resp);
         }
       })
       .catch((e) => {
-        ToastAndroid.show("Commenting Error: " + e.message, ToastAndroid.SHORT);
+        ToastAndroid.show("Commenting Error: " + e.message, ToastAndroid.LONG);
       });
   };
 
@@ -93,13 +93,13 @@ function PostReplyContextProvider({
         <Input
           label={`${CHARACTER_LIMIT - replyMessage.length} characters left`}
           onChangeText={(t) => setReplyMessage(t)}
-          value={
-            replyMessage.length > 0 && replyMessage.length <= CHARACTER_LIMIT
-          }
+          value={replyMessage}
         />
         <Button
           text="Post reply"
-          disabled={!replyMessage}
+          disabled={
+            replyMessage.length > 0 && replyMessage.length <= CHARACTER_LIMIT
+          }
           onPress={() => postReply()}
           style={{
             marginTop: theme?.Space.get?.(1),
@@ -184,6 +184,10 @@ function Reply({ reply }: { reply: RuqqusComment }) {
               <TextBox size={0.6} color="muted">
                 <TimeAgo time={reply.created_utc * 1000} />
               </TextBox>
+              <Deliminer />
+              <TextBox size={0.6} color="muted">
+                {reply.id}
+              </TextBox>
               {!childRepliesVisible ? (
                 <>
                   <Deliminer />
@@ -257,9 +261,7 @@ function ReplyButton() {
 
 export default function Comments() {
   const route = useRoute<any>();
-  const client = useRuqqusClient();
   const style = useStyle();
-  const theme = useTheme();
   const { loading, body, refresh } = usePost(route.params.post_id);
 
   return (
