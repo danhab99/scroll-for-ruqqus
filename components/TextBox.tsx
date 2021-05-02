@@ -11,17 +11,21 @@ interface TextBoxProps {
 export default function TextBox(props: TextBoxProps & Partial<TextProps>) {
   const theme = useTheme();
 
+  console.log("TEXTBOX STYLE", theme, props);
+
   return (
     <Text
-      style={{
-        color: theme?.Colors?.[props?.color || "text"],
-        fontSize: theme?.FontSize.get?.(props.size || 1),
-        fontFamily: theme?.Fonts.body,
-        display: "flex",
-        flexDirection: "row",
-        flexWrap: "wrap",
-        ...props.style,
-      }}
+      style={[
+        {
+          color: theme?.Colors?.[props?.color || "text"],
+          fontSize: theme?.FontSize.get?.(props.size || 1),
+          fontFamily: theme?.Fonts.body,
+          display: "flex",
+          flexDirection: "row",
+          flexWrap: "wrap",
+        },
+        props.style,
+      ]}
       {...props}>
       {props.children}
     </Text>

@@ -35,6 +35,7 @@ export interface RuqqusComment extends RuqqusRatable, RuqqusFlagged {
   permalink: string;
   post_id: string;
   replies: RuqqusComments;
+  deleted_utc: Date;
 }
 
 export type RuqqusComments = Array<RuqqusComment>;

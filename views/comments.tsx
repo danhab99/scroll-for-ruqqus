@@ -136,7 +136,7 @@ function Reply({ reply }: { reply: RuqqusComment }) {
   const SPACER = 4;
 
   const depthColor = Color([255, 0, 0])
-    .rotate((360 / 8) * depth)
+    .rotate((360 / 7) * depth)
     .hex();
 
   const vote = (dir: -1 | 1) => {
@@ -152,6 +152,8 @@ function Reply({ reply }: { reply: RuqqusComment }) {
     });
   };
 
+  const deleted = reply.is_deleted || reply.deleted_utc;
+
   return (
     <DepthContext.Provider value={depth + 1}>
       <View
@@ -164,10 +166,15 @@ function Reply({ reply }: { reply: RuqqusComment }) {
         <Pressable
           onPress={() => setControlVisible((x) => !x)}
           onLongPress={() => setChildRepliesVisible((x) => !x)}>
-          {reply.is_deleted ? (
+          {deleted ? (
             <View>
-              <TextBox color="muted" style={{ fontStyle: "italic" }}>
-                deleted
+              <TextBox
+                style={{
+                  fontStyle: "italic",
+                  marginLeft: theme?.Space.get?.(0.5),
+                  color: theme?.Colors.muted,
+                }}>
+                deleted <TimeAgo time={reply.deleted_utc * 1000} />
               </TextBox>
             </View>
           ) : (
