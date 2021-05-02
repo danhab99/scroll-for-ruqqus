@@ -31,6 +31,8 @@ import Color from "color";
 import { StackNavigationProp } from "@react-navigation/stack";
 import DefaultPostcard from "components/postcards/default/postcard";
 import { NoContent } from "./NoContent";
+import { MiniIcon } from "components/MiniIcon";
+import { Badge } from "components/MiniBadge";
 
 const DepthContext = createContext(0);
 const RefreshContext = createContext<() => void>(() => {});
@@ -162,60 +164,82 @@ function Reply({ reply }: { reply: RuqqusComment }) {
         <Pressable
           onPress={() => setControlVisible((x) => !x)}
           onLongPress={() => setChildRepliesVisible((x) => !x)}>
-          <View style={{ marginLeft: theme?.Space.get?.(0.5) }}>
-            <View
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "flex-start",
-                flexWrap: "wrap",
-              }}>
-              <Pressable
-                onPress={() =>
-                  navigation.push(route.params?.lastRoute, {
-                    feed: { user: reply.author_name },
-                  })
-                }>
-                <TextBox size={0.6} color="primary">
-                  @{reply.author_name}
-                </TextBox>
-              </Pressable>
-              <Deliminer />
-              <TextBox size={0.6} color="muted">
-                <TimeAgo time={reply.created_utc * 1000} />
+          {reply.is_deleted ? (
+            <View>
+              <TextBox color="muted" style={{ fontStyle: "italic" }}>
+                deleted
               </TextBox>
-              <Deliminer />
-              <TextBox size={0.6} color="muted">
-                {reply.id}
-              </TextBox>
-              {!childRepliesVisible ? (
-                <>
+            </View>
+          ) : (
+            <>
+              <View style={{ marginLeft: theme?.Space.get?.(0.5) }}>
+                <View
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "flex-start",
+                    flexWrap: "wrap",
+                  }}>
+                  <Pressable
+                    onPress={() =>
+                      navigation.push(route.params?.lastRoute, {
+                        feed: { user: reply.author_name },
+                      })
+                    }>
+                    <TextBox size={0.6} color="primary">
+                      @{reply.author_name}
+                    </TextBox>
+                  </Pressable>
                   <Deliminer />
                   <TextBox size={0.6} color="muted">
-                    {reply.replies.length} collapsed comments
+                    <TimeAgo time={reply.created_utc * 1000} />
                   </TextBox>
-                </>
-              ) : null}
-            </View>
+                  <Deliminer />
+                  <TextBox size={0.6} color="muted">
+                    {reply.id}
+                  </TextBox>
+                  {!childRepliesVisible ? (
+                    <>
+                      <Deliminer />
+                      <TextBox size={0.6} color="muted">
+                        {reply.replies.length} collapsed comments
+                      </TextBox>
+                    </>
+                  ) : null}
+                </View>
 
-            <View style={style?.horizontal}>
-              <Icon
-                name="arrow-circle-up"
-                color={theme?.Colors.primaryLight}
-                size={theme?.FontSize.get?.(2)}
-              />
-              <Text style={style?.upvotes}> {reply.upvotes} </Text>
-              <Icon
-                name="arrow-circle-down"
-                color={theme?.Colors.primaryDark}
-                size={theme?.FontSize.get?.(2)}
-              />
-              <Text style={style?.downvotes}> {reply.downvotes} </Text>
-              <Text style={style?.headText}>({reply.score})</Text>
-            </View>
-          </View>
+                <View style={style?.horizontal}>
+                  <Icon
+                    name="arrow-circle-up"
+                    color={theme?.Colors.primaryLight}
+                    size={theme?.FontSize.get?.(2)}
+                  />
+                  <Text style={style?.upvotes}> {reply.upvotes} </Text>
+                  <Icon
+                    name="arrow-circle-down"
+                    color={theme?.Colors.primaryDark}
+                    size={theme?.FontSize.get?.(2)}
+                  />
+                  <Text style={style?.downvotes}> {reply.downvotes} </Text>
+                  <Text style={style?.headText}>({reply.score})</Text>
+                  {reply.is_archived ? <MiniIcon name="archive" /> : null}
+                  {reply.is_banned ? <MiniIcon name="block-helper" /> : null}
+                  {reply.is_bot ? <MiniIcon name="robot" /> : null}
+                  {reply.is_nsfl ? (
+                    <Badge text="NSFL" fg="white" bg="black" />
+                  ) : null}
+                  {reply.is_nsfw ? (
+                    <Badge text="NSFW" fg="white" bg="red" />
+                  ) : null}
+                  {reply.is_offensive ? (
+                    <Badge text="OFFENSIVE" fg="black" bg="orange" />
+                  ) : null}
+                </View>
+              </View>
 
-          <HtmlMarkdown html={reply.body_html} />
+              <HtmlMarkdown html={reply.body_html} />
+            </>
+          )}
         </Pressable>
 
         {controlsVisible ? (

@@ -7,7 +7,7 @@ import * as _ from "lodash";
 import { useNavigation, useRoute } from "@react-navigation/core";
 import { Badge } from "../../MiniBadge";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { MiniIcon } from "./MiniIcon";
+import { MiniIcon } from "../../MiniIcon";
 
 export function Head() {
   const post = useContextPost();
