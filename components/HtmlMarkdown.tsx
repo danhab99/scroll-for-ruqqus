@@ -61,8 +61,10 @@ export default function HtmlMarkdown(props: HtmlMarkdownProps) {
     <HTML
       source={{
         html:
-          typeof props.html === "undefined" || props.html === "undefined"
-            ? ""
+          typeof props.html === "undefined" ||
+          props.html === "undefined" ||
+          !props.html.length
+            ? "<p></p>"
             : props.html,
       }}
       tagsStyles={{
