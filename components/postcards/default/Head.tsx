@@ -5,20 +5,9 @@ import { useTheme, useStyle } from "@contexts";
 import TimeAgo from "react-native-timeago";
 import * as _ from "lodash";
 import { useNavigation, useRoute } from "@react-navigation/core";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { Badge } from "../../MiniBadge";
 import { StackNavigationProp } from "@react-navigation/stack";
-
-function MiniIcon(props: { name: string }) {
-  return (
-    <Icon
-      name={props.name}
-      size={20}
-      color="white"
-      style={{ marginRight: 5 }}
-    />
-  );
-}
+import { MiniIcon } from "./MiniIcon";
 
 export function Head() {
   const post = useContextPost();
