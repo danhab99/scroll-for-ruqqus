@@ -84,7 +84,7 @@ export function RuqqusClientProvider(props: RuqqusClientProviderProps) {
       console.log("RUQQUS TOKENS CHANGED", tokens, props.config);
       refreshTokens(tokens);
 
-      let timeout = setTimeout(() => refreshTokens(tokens), 120000);
+      let timeout = setTimeout(() => refreshTokens(tokens), 600000);
       return () => clearTimeout(timeout);
     } else {
       props.onLoginError?.(new Error("No tokens"));
