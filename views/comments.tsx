@@ -7,6 +7,7 @@ import {
   Text,
   Pressable,
   ToastAndroid,
+  Image,
 } from "react-native";
 import {
   PostContext,
@@ -194,6 +195,15 @@ function Reply({ reply }: { reply: RuqqusComment }) {
                       })
                     }>
                     <TextBox size={0.6} color="primary">
+                      <Image
+                        source={{
+                          uri: `https://ruqqus.com/@${reply.author_name}/pic/profile`,
+                        }}
+                        style={{
+                          width: theme?.FontSize.get?.(1),
+                          height: theme?.FontSize.get?.(1),
+                        }}
+                      />{" "}
                       @{reply.author_name}
                     </TextBox>
                   </Pressable>

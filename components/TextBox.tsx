@@ -11,8 +11,6 @@ interface TextBoxProps {
 export default function TextBox(props: TextBoxProps & Partial<TextProps>) {
   const theme = useTheme();
 
-  console.log("TEXTBOX STYLE", theme, props);
-
   return (
     <Text
       style={[
