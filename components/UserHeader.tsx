@@ -34,7 +34,9 @@ export function UserHeader() {
           }}>
           <View>
             <Image
-              source={{ uri: user.profile_url }}
+              source={{
+                uri: `https://ruqqus.com/@${user.username}/pic/profile`,
+              }}
               style={{
                 width: 64,
                 aspectRatio: 1,
@@ -42,7 +44,11 @@ export function UserHeader() {
                 borderRadius: 4,
               }}
             />
-            <View style={{ padding: theme?.Space.get?.(1) }}>
+            <View
+              style={{
+                padding: theme?.Space.get?.(4 / 5),
+                paddingTop: theme?.Space.get?.(1 / 5),
+              }}>
               {user.is_banned ? (
                 <Badge text="BANNED" fg="white" bg="black" />
               ) : null}
@@ -73,23 +79,14 @@ export function UserHeader() {
               {"\n"}
               Comment rep: {user.comment_rep}
             </Text>
-            {user.badges.map((badge) => (
-              <View style={{ display: "flex", flexDirection: "row" }}>
+            <View style={{ display: "flex", flexDirection: "row" }}>
+              {user.badges.map((badge) => (
                 <Image
                   source={{ uri: badge.icon_url }}
                   style={{ width: 26, height: 26 }}
                 />
-                <Text
-                  style={{
-                    color: theme?.Colors.text,
-                    fontSize: theme?.FontSize.get?.(1),
-                    overflow: "scroll",
-                  }}>
-                  {" "}
-                  {badge.text}
-                </Text>
-              </View>
-            ))}
+              ))}
+            </View>
           </View>
         </View>
         <HtmlMarkdown html={user.bio_html} />
