@@ -101,7 +101,7 @@ function PostReplyContextProvider({
         <Button
           text="Post reply"
           disabled={
-            replyMessage.length > 0 && replyMessage.length <= CHARACTER_LIMIT
+            !(replyMessage.length > 0 && replyMessage.length <= CHARACTER_LIMIT)
           }
           onPress={() => postReply()}
           style={{
