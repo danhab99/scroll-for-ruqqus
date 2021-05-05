@@ -18,7 +18,7 @@ import {
 } from "@react-navigation/drawer";
 import { StatusBar } from "expo-status-bar";
 import React, { useRef } from "react";
-import { View, Text } from "react-native";
+import { View, Text, ToastAndroid } from "react-native";
 
 import { IconButton } from "./components/Buttons";
 import Feed from "./views/feed";
@@ -203,10 +203,16 @@ export default function App() {
 
   const navRef = useRef<NavigationContainerRef | null>();
 
+  const apiError = (e: Error) => {
+    if (e.message.includes("login") || e.message.includes("No tokens")) {
+      navRef.current?.navigate("Login");
+    } else {
+      ToastAndroid.show("API ERROR: " + e.message, ToastAndroid.LONG);
+    }
+  };
+
   return (
-    <RuqqusClientProvider
-      config={RUQQUS_CLIENT_CONFIG}
-      onLoginError={() => navRef.current?.navigate("Login")}>
+    <RuqqusClientProvider config={RUQQUS_CLIENT_CONFIG} onApiError={apiError}>
       <View style={style?.root}>
         <StatusBar />
         <NavigationContainer ref={(r) => (navRef.current = r)}>

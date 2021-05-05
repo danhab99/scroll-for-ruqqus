@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import { AuthErrorContext, PrimerContext } from "./ClientContext";
+import { ApiErrorContext, PrimerContext } from "./ClientContext";
 import { fetcher, fetcherOpts } from "./fetcher";
 
 export type UseFetchOpts<T> = fetcherOpts<T> & {
@@ -16,7 +16,7 @@ export function useFetch<T>(
   const [resp, setResp] = useState<any>();
   const [body, setBody] = useState<T | undefined>(opts?.initial);
   const [refresher, setRefresher] = useState(false);
-  const authError = useContext(AuthErrorContext);
+  const apiError = useContext(ApiErrorContext);
 
   useEffect(() => {
     let disabled = typeof opts?.disabled === "boolean" ? opts.disabled : false;
@@ -30,14 +30,9 @@ export function useFetch<T>(
           setLoading(false);
         })
         .catch((e: Error) => {
+          apiError(e);
           setResp(e);
           setBody(undefined);
-
-          if (e.message.includes("Client") || e.message.includes("Login")) {
-            console.error("RUQQUS AUTH ERROR", e);
-            authError(e);
-          }
-
           setLoading(false);
         });
 

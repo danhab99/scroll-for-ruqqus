@@ -3,7 +3,7 @@ import {
   UserContext,
   WebAuthContext,
   ClientContext,
-  AuthErrorContext,
+  ApiErrorContext,
   PrimerContext,
 } from "./ClientContext";
 import { fetcher } from "./fetcher";
@@ -14,7 +14,7 @@ interface RuqqusClientProviderProps {
     domain: string;
     authserver: string;
   };
-  onLoginError?: (e: Error) => void;
+  onApiError?: (e: Error) => void;
   children: React.ReactNode;
 }
 
@@ -73,7 +73,7 @@ export function RuqqusClientProvider(props: RuqqusClientProviderProps) {
           );
           setReady(true);
         } else {
-          props.onLoginError?.(new Error("Token error"));
+          props.onApiError?.(new Error("Token error"));
         }
       });
     }
@@ -87,7 +87,7 @@ export function RuqqusClientProvider(props: RuqqusClientProviderProps) {
       let timeout = setTimeout(() => refreshTokens(tokens), 600000);
       return () => clearTimeout(timeout);
     } else {
-      props.onLoginError?.(new Error("No tokens"));
+      props.onApiError?.(new Error("No tokens"));
     }
   }, [tokens, props.config]);
 
@@ -95,12 +95,12 @@ export function RuqqusClientProvider(props: RuqqusClientProviderProps) {
     <UserContext.Provider value={setTokens}>
       <WebAuthContext.Provider value={{ authSite, setAuthSite }}>
         <ClientContext.Provider value={clientConfig as any}>
-          <AuthErrorContext.Provider
-            value={(e) => props.onLoginError && props.onLoginError(e)}>
+          <ApiErrorContext.Provider
+            value={(e) => props.onApiError && props.onApiError(e)}>
             <PrimerContext.Provider value={ready}>
               {props.children}
             </PrimerContext.Provider>
-          </AuthErrorContext.Provider>
+          </ApiErrorContext.Provider>
         </ClientContext.Provider>
       </WebAuthContext.Provider>
     </UserContext.Provider>

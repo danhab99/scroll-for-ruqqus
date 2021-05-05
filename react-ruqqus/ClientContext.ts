@@ -30,10 +30,10 @@ export const UserContext = createContext<UserContextType>(
   {} as UserContextType,
 );
 
-type AuthErrorContextProps = (e: Error) => void;
+type ApiErrorContextProps = (e: Error) => void;
 
-export const AuthErrorContext = createContext<AuthErrorContextProps>(
-  {} as AuthErrorContextProps,
+export const ApiErrorContext = createContext<ApiErrorContextProps>(
+  {} as ApiErrorContextProps,
 );
 
 interface WebAuthContextProps {
