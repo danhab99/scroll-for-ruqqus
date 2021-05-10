@@ -88,7 +88,8 @@ function PostAsImage() {
   );
 }
 
-const YOUTUBE_VID = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+const YOUTUBE_VID =
+  /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
 
 const VALID_IMAGE_DOMAINS = [
   "backdatassup.com",

@@ -143,6 +143,7 @@ export function RuqqusFeed(
         ref={(r) => {
           flatlistRef.current = r;
         }}
+        keyExtractor={(e) => e.fullname}
         data={posts || []}
         renderItem={renderPost}
         ListHeaderComponent={renderHeader}
@@ -189,7 +190,7 @@ export function useVote() {
       })
       .then((resp) => {
         let p = resp.body as RuqqusPost;
-        mutate((prev) => prev?.map((x) => (x.id === p.id ? p : x)));
+        mutate((prev) => prev?.map((x) => (x.fullname === p.fullname ? p : x)));
         return resp;
       });
   };

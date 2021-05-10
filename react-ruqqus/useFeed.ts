@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { RuqqusPost } from "./types";
 import { UseFetchOpts } from "./useFetch";
 import { useRuqqusFetch } from "./useRuqqusFetch";
@@ -16,6 +16,7 @@ export function useFeed(edge: FeedOptions, args?: UseFeedOpts) {
   const [posts, setPosts] = useState<RuqqusPost[]>();
   const [page, setPage] = useState(1);
   const [more, setMore] = useState(true);
+  const pageHistory = useRef<Number[]>([]);
 
   let ed = "";
 
@@ -46,10 +47,22 @@ export function useFeed(edge: FeedOptions, args?: UseFeedOpts) {
   useEffect(() => {
     if (body) {
       let data = body.data;
+
       setPosts((prev) => {
-        let next = page > 1 ? prev?.concat(data) : data;
-        next = _.uniqBy(next, (x) => x.id);
-        if (next.length < 1) {
+        pageHistory.current[page] = data.length;
+        let next = _.cloneDeep(prev);
+
+        if (page > 1) {
+          let offset = next?.reduce(
+            (acc, _, i) => (i === next?.length ? acc : acc + i),
+            0,
+          );
+          next?.splice(offset || 0, data.length, ...data);
+        } else {
+          next = data;
+        }
+
+        if (data.length < 1) {
           console.warn("RUQQUS may have not retrieved new posts");
         }
         return next;

@@ -61,16 +61,14 @@ export function RuqqusClientProvider(props: RuqqusClientProviderProps) {
       ).then((resp) => {
         if (resp.ok) {
           console.log("RUQQUS READY");
-          setTokens(
-            (prev): TokenInterface => {
-              let p = _.assign(prev, {
-                access_token: resp.body["access_token"],
-                expires_at: resp.body["expires_at"],
-              });
+          setTokens((prev): TokenInterface => {
+            let p = _.assign(prev, {
+              access_token: resp.body["access_token"],
+              expires_at: resp.body["expires_at"],
+            });
 
-              return p;
-            },
-          );
+            return p;
+          });
           setReady(true);
         } else {
           props.onApiError?.(new Error("Token error"));
