@@ -32,7 +32,7 @@ export function generateStyles(theme: ThemeInterface): Styles {
 
   return StyleSheet.create<Styles>({
     view: {
-      paddingTop: Space(1),
+      padding: Space(1),
       backgroundColor: theme.Colors.background,
       height: "100%",
     },

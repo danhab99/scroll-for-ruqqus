@@ -82,7 +82,7 @@ export default function Feed() {
   };
 
   return (
-    <View>
+    <View style={style?.root}>
       <Popup
         visible={sortPopupVisible}
         toggleModal={() => setSortPopupVisible((x) => !x)}
