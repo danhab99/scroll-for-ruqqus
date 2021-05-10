@@ -12,7 +12,7 @@ export function useSubmit() {
   const client = useRuqqusClient();
 
   return (post: Post) =>
-    fetcher(client.domain, "submit", {
+    fetcher(client.domain, "api/v1/submit", {
       access_token: client.access_token,
       body: post,
     });

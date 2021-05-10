@@ -4,11 +4,14 @@ import Input from "../components/Input";
 import { Button } from "../components/Buttons";
 import { useTheme, useStyle } from "@contexts";
 import { useSubmit } from "@react-ruqqus";
+import { useNavigation } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
 
 export default function Submit() {
   const theme = useTheme();
   const style = useStyle();
   const submitPost = useSubmit();
+  const navigation = useNavigation<StackNavigationProp<any>>();
 
   const [submitting, setSubmitting] = useState(false);
   const [board, setBoard] = useState("");
@@ -26,11 +29,17 @@ export default function Submit() {
       url,
     }).then((resp) => {
       setSubmitting(false);
-      // navigation.navigate('Comments', {post});
+      debugger;
+      navigation.push("Comments", {
+        post_id: resp.body.id,
+        lastRoute: "Submit",
+      });
     });
   };
 
-  const disabled = ![board, url, title, body].every((x) => x !== "");
+  const enabled =
+    [board, title].every((x) => x.length > 0) &&
+    [body, url].some((x) => x.length > 0);
 
   return (
     <View style={style?.view}>
@@ -55,7 +64,7 @@ export default function Submit() {
       <Input label="Body" onChangeText={setBody} value={body} multiline />
 
       <Button
-        disabled={disabled}
+        disabled={!enabled}
         text="Submit"
         style={{
           marginTop: theme?.Space.get?.(1),
