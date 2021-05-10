@@ -5,14 +5,14 @@ export interface RuqqusBadge {
   url: string | null;
 }
 
-interface RuqqusRatable {
+export interface RuqqusRatable {
   score: number;
   upvotes: number;
   downvotes: number;
   voted: RuqqusVote;
 }
 
-interface RuqqusFlagged {
+export interface RuqqusFlagged {
   is_archived: string;
   is_banned: string;
   is_bot: string;
@@ -22,13 +22,19 @@ interface RuqqusFlagged {
   is_offensive: string;
 }
 
-export interface RuqqusComment extends RuqqusRatable, RuqqusFlagged {
+export interface RuqqusDateStamped {
+  created_utc: Date;
+  edited_utc: Date;
+}
+
+export interface RuqqusComment
+  extends RuqqusRatable,
+    RuqqusFlagged,
+    RuqqusDateStamped {
   author_name: string;
   award_count: number;
   body: string;
   body_html: string;
-  created_utc: Date;
-  edited_utc: Date;
   fullname: string;
   guild_id: string;
   id: string;
@@ -40,14 +46,13 @@ export interface RuqqusComment extends RuqqusRatable, RuqqusFlagged {
 
 export type RuqqusComments = Array<RuqqusComment>;
 
-export interface RuqqusUser {
+export interface RuqqusUser extends RuqqusDateStamped {
   badges: Array<RuqqusBadge>;
   banner_url: string;
   bio: string;
   bio_html: string;
   comment_count: number;
   comment_rep: number;
-  created_utc: Date;
   id: string;
   is_banned: boolean;
   is_premium: boolean;
@@ -67,16 +72,17 @@ export interface RuqqusUser {
 
 export type RuqqusVote = -1 | 0 | 1;
 
-export interface RuqqusPost extends RuqqusRatable, RuqqusFlagged {
+export interface RuqqusPost
+  extends RuqqusRatable,
+    RuqqusFlagged,
+    RuqqusDateStamped {
   author: RuqqusUser;
   author_name: string;
   award_count: number;
   body: string;
   body_html: string;
   comment_count: number;
-  created_utc: Date;
   domain: string;
-  edited_utc: Date;
   fullname: string;
   guild: RuqqusGuild;
   guild_id: string;
@@ -92,10 +98,9 @@ export interface RuqqusPost extends RuqqusRatable, RuqqusFlagged {
   replies: RuqqusComments;
 }
 
-export interface RuqqusGuild {
+export interface RuqqusGuild extends RuqqusDateStamped {
   banner_url: string;
   color: string;
-  created_utc: Date;
   description: string;
   description_html: string;
   fullname: string;
@@ -111,3 +116,23 @@ export interface RuqqusGuild {
   profile_url: string;
   subscriber_count: number;
 }
+
+export interface RuqqusNotification
+  extends RuqqusRatable,
+    RuqqusDateStamped,
+    RuqqusFlagged {
+  author: RuqqusUser;
+  author_name: string;
+  award_count: number;
+  body: string;
+  body_html: string;
+  fullname: string;
+  guild: RuqqusGuild;
+  guild_id: string;
+  id: string;
+  level: number;
+  permalink: string;
+  post: RuqqusPost;
+}
+
+export type RuqqusNotifications = Array<RuqqusNotification>;
