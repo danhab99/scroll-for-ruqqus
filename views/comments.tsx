@@ -169,7 +169,7 @@ function Reply(props: { reply: RuqqusComment }) {
                   color: theme?.Colors.muted,
                 }}>
                 reply {reply.id} was deleted{" "}
-                <TimeAgo time={reply.deleted_utc.getTime() * 1000} />
+                <TimeAgo time={reply.deleted_utc * 1000} />
               </TextBox>
             </View>
           ) : (
@@ -203,7 +203,7 @@ function Reply(props: { reply: RuqqusComment }) {
                   </Pressable>
                   <Deliminer />
                   <TextBox size={0.6} color="muted">
-                    <TimeAgo time={reply.created_utc.getTime() * 1000} />
+                    <TimeAgo time={reply.created_utc * 1000} />
                   </TextBox>
                   <Deliminer />
                   <TextBox size={0.6} color="muted">
