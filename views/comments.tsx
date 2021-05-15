@@ -112,8 +112,8 @@ function Reply(props: { reply: RuqqusComment }) {
     .hex();
 
   const vote = (dir: -1 | 1) => {
-    let d = reply.voted === dir ? 0 : dir;
-    let last = _.get(reply, "voted");
+    let last = reply.voted;
+    let d = last === dir ? 0 : dir;
 
     return fetcher(client.domain, `api/v1/vote/comment/${reply.id}/${d}`, {
       access_token: client.access_token,
@@ -122,8 +122,8 @@ function Reply(props: { reply: RuqqusComment }) {
       if (resp.ok) {
         setReply((prev) => {
           let c = _.clone(prev);
-          let reset = last === d ? -1 : 1;
-          switch (c.voted) {
+          let reset = last === dir ? -1 : 1;
+          switch (dir) {
             case -1:
               _.set(c, "downvotes", c.downvotes + reset);
             case 1:
@@ -265,12 +265,12 @@ function Reply(props: { reply: RuqqusComment }) {
             <LoadingControl
               name="arrow-upward"
               onPress={() => vote(1)}
-              highlighted={false}
+              highlighted={reply.voted === 1}
             />
             <LoadingControl
               name="arrow-downward"
               onPress={() => vote(-1)}
-              highlighted={false}
+              highlighted={reply.voted === -1}
             />
             <IconButton name="reply" onPress={() => setPopupVisible(true)} />
           </View>
