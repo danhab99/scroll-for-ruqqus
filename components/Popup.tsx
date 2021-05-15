@@ -5,14 +5,13 @@ import { OptionalEventHandler } from "./OptionalEventHandler";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { useTheme } from "@contexts";
 
-interface PopupProps {
+export interface PopupProps {
   visible: boolean;
   toggleModal: (() => void) | undefined;
   title: string;
-  children: React.ReactNode;
 }
 
-export default function Popup(props: PopupProps) {
+export default function Popup(props: React.PropsWithChildren<PopupProps>) {
   const theme = useTheme();
 
   return (
