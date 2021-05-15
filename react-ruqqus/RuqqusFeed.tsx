@@ -175,13 +175,17 @@ export function useVote() {
 
   const vote = (dir: RuqqusVote) => {
     let d = post.voted === dir ? 0 : dir;
-    return fetcher(client.domain, `api/v1/vote/post/${post.id}/${d}`, {
-      access_token: client.access_token,
-      body: {},
-    })
+    return fetcher<RuqqusPost, {}>(
+      client.domain,
+      `api/v1/vote/post/${post.id}/${d}`,
+      {
+        access_token: client.access_token,
+        body: {},
+      },
+    )
       .then((resp) => {
         if (resp.ok) {
-          return fetcher(client.domain, `api/v1/post/${post.id}`, {
+          return fetcher<RuqqusPost>(client.domain, `api/v1/post/${post.id}`, {
             access_token: client.access_token,
           });
         } else {
@@ -189,7 +193,7 @@ export function useVote() {
         }
       })
       .then((resp) => {
-        let p = resp.body as RuqqusPost;
+        let p = resp.body;
         mutate((prev) => prev?.map((x) => (x.fullname === p.fullname ? p : x)));
         return resp;
       });

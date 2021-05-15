@@ -7,14 +7,14 @@ export type UseFetchOpts<T> = fetcherOpts<T> & {
   disabled?: boolean;
 };
 
-export function useFetch<T>(
+export function useFetch<RESPONSE_BODY>(
   host: string,
   edge: string,
-  opts?: UseFetchOpts<T>,
+  opts?: UseFetchOpts<RESPONSE_BODY>,
 ) {
   const [loading, setLoading] = useState(false);
   const [resp, setResp] = useState<any>();
-  const [body, setBody] = useState<T | undefined>(opts?.initial);
+  const [body, setBody] = useState<RESPONSE_BODY | undefined>(opts?.initial);
   const [refresher, setRefresher] = useState(false);
   const apiError = useContext(ApiErrorContext);
 
@@ -23,10 +23,10 @@ export function useFetch<T>(
     if (!disabled) {
       const controller = new AbortController();
       setLoading(true);
-      fetcher(host, edge, { ...opts, controller })
+      fetcher<RESPONSE_BODY>(host, edge, { ...opts, controller })
         .then((d) => {
           setResp(d);
-          setBody(d?.body);
+          setBody(d.body);
           setLoading(false);
         })
         .catch((e: Error) => {

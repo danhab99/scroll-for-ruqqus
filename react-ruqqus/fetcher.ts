@@ -15,10 +15,12 @@ function seralize(obj: any): string {
 
 var FETCH_ID = 0;
 
-export function fetcher<T>(
+type ERRORABLE<T> = T & { error: string };
+
+export function fetcher<RESPONCE_BODY, REQUEST_BODY = unknown>(
   host: string,
   edge: string,
-  opts: fetcherOpts<T> = {},
+  opts: fetcherOpts<REQUEST_BODY> = {},
 ) {
   let args = seralize(opts.args);
   let reqbody = seralize(opts.body);
@@ -66,7 +68,7 @@ export function fetcher<T>(
       );
       let b: Promise<any> = isObject ? r.json() : r.text();
 
-      return b.then((body: T) => ({
+      return b.then((body: ERRORABLE<RESPONCE_BODY>) => ({
         ...r,
         body,
       }));
@@ -84,7 +86,7 @@ export function fetcher<T>(
         return resp;
       } else if (
         typeof resp.body === "object" &&
-        resp.body["error"] == "401 Not Authorized. Invalid or Expired Token"
+        resp.body.error == "401 Not Authorized. Invalid or Expired Token"
       ) {
         throw new Error("Login error: " + JSON.stringify(resp));
       } else {

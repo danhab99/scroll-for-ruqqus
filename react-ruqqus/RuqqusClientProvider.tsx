@@ -49,7 +49,7 @@ export function RuqqusClientProvider(props: RuqqusClientProviderProps) {
     if (tokens?.siteID) {
       console.log("RUQQUS REFRESHING TOKENS");
       setReady(false);
-      fetcher<TokenInterface>(
+      fetcher<TokenInterface, { refresh_token: string }>(
         clientConfig.authserver,
         `auth/${tokens.siteID}/refresh`,
         {

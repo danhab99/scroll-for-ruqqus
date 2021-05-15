@@ -19,13 +19,13 @@ export function useOnWebviewClear(clear: (user: UserData) => void) {
 
         const controller = new AbortController();
 
-        fetcher(client.domain, "api/v1/identity", {
+        fetcher<RuqqusUser>(client.domain, "api/v1/identity", {
           access_token: client.access_token,
           controller,
         }).then((resp) => {
           clear({
             ...client,
-            user: resp.body as RuqqusUser,
+            user: resp.body,
           });
         });
 
