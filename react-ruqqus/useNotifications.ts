@@ -1,6 +1,8 @@
 import { RuqqusNotifications } from "./types";
 import { useRuqqusFetch } from "./useRuqqusFetch";
 
-export function useNotifications() {
-  return useRuqqusFetch<RuqqusNotifications>("notifications");
+export function useNotifications(all: boolean = false) {
+  return useRuqqusFetch<RuqqusNotifications>("notifications", {
+    args: all ? "true" : "false",
+  });
 }
