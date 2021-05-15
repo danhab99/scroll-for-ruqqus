@@ -21,10 +21,12 @@ import React, { useRef } from "react";
 import { View, Text, ToastAndroid } from "react-native";
 
 import { IconButton } from "./components/Buttons";
+
 import Feed from "./views/feed";
 import Comments from "./views/comments";
 import Submit from "./views/submit";
 import ROALogin from "./views/roa_login";
+import Notifications from "./views/notifications";
 
 import { useStyle, useTheme } from "@contexts";
 import { Saved } from "./views/saved";
@@ -182,6 +184,14 @@ function SubmitStackNavigator(props: React.PropsWithChildren<{}>) {
   );
 }
 
+function NotificationsStackNavigator(props: React.PropsWithChildren<{}>) {
+  return (
+    <CommentedStackNavigator {...props}>
+      <Stack.Screen name="Notifications" component={Notifications} />
+    </CommentedStackNavigator>
+  );
+}
+
 function SettingsStackNavigator(props: React.PropsWithChildren<{}>) {
   return (
     <StackNavigator {...props}>
@@ -230,6 +240,10 @@ export default function App() {
             <Drawer.Screen name="All" component={AllStackNavigator} />
             <Drawer.Screen name="Saved" component={SavedStackNavigator} />
             <Drawer.Screen name="Me" component={UserStackNavigator} />
+            <Drawer.Screen
+              name="Notifications"
+              component={NotificationsStackNavigator}
+            />
             <Drawer.Screen name="Login" component={LoginStackNavigator} />
             <Drawer.Screen name="Submit" component={SubmitStackNavigator} />
             <Drawer.Screen name="Settings" component={SettingsStackNavigator} />
