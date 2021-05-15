@@ -27,11 +27,15 @@ export function Saved() {
       setLoading(true);
       for (const sav of saves) {
         if (!(_.findIndex(posts, (x) => x.id === sav.id) >= 0)) {
-          let resp = await fetcher(client.domain, `api/v1/post/${sav.id}`, {
-            access_token: client.access_token,
-          });
+          let resp = await fetcher<RuqqusPost>(
+            client.domain,
+            `api/v1/post/${sav.id}`,
+            {
+              access_token: client.access_token,
+            },
+          );
           if (resp.ok) {
-            let newPost: RuqqusPost = resp.body;
+            let newPost = resp.body;
             setPosts((prev) => (prev ? prev.concat([newPost]) : [newPost]));
           }
         }
