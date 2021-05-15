@@ -101,7 +101,7 @@ function Reply(props: { reply: RuqqusComment }) {
 
   const [controlsVisible, setControlVisible] = useState(false);
   const [childRepliesVisible, setChildRepliesVisible] = useState(true);
-  const [replies, setReplies] = useState(props.reply.replies);
+  const [replies, setReplies] = useState(props?.reply?.replies || []);
   const [reply, setReply] = useState(props.reply);
   const [popupVisible, setPopupVisible] = useState(false);
 
@@ -145,7 +145,9 @@ function Reply(props: { reply: RuqqusComment }) {
     <DepthContext.Provider value={depth + 1}>
       <PostReplyPopup
         parent={reply}
-        newReply={(comment) => setReplies((prev) => prev.concat([comment]))}
+        newReply={(comment) =>
+          setReplies((prev) => ([] as RuqqusComments).concat([comment], prev))
+        }
         visible={popupVisible}
         toggleModal={() => setPopupVisible((x) => !x)}
       />
@@ -276,7 +278,8 @@ function Reply(props: { reply: RuqqusComment }) {
           </View>
         ) : null}
 
-        {childRepliesVisible && replies.map((reply) => <Reply reply={reply} />)}
+        {childRepliesVisible &&
+          replies?.map((reply) => <Reply reply={reply} />)}
       </View>
     </DepthContext.Provider>
   );
