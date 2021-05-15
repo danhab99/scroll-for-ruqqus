@@ -13,13 +13,14 @@ export interface RuqqusRatable {
 }
 
 export interface RuqqusFlagged {
-  is_archived: string;
-  is_banned: string;
-  is_bot: string;
-  is_deleted: string;
-  is_nsfl: string;
-  is_nsfw: string;
-  is_offensive: string;
+  is_archived: boolean;
+  is_banned: boolean;
+  is_bot: boolean;
+  is_deleted: boolean;
+  is_nsfl: boolean;
+  is_nsfw: boolean;
+  is_offensive: boolean;
+  is_pinned: boolean;
 }
 
 export interface RuqqusDateStamped {

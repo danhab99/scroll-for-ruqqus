@@ -57,6 +57,7 @@ export function Head() {
     <View>
       <View style={style?.horizontal}>{head}</View>
       <View style={style?.horizontal}>
+        {post.is_pinned ? <MiniIcon name="pin" /> : null}
         {post.is_archived ? <MiniIcon name="archive" /> : null}
         {post.is_banned ? <MiniIcon name="block-helper" /> : null}
         {post.is_bot ? <MiniIcon name="robot" /> : null}
