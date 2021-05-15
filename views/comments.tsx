@@ -8,6 +8,7 @@ import {
   Pressable,
   ToastAndroid,
   Image,
+  ActivityIndicator,
 } from "react-native";
 import {
   PostContext,
@@ -15,8 +16,9 @@ import {
   usePost,
   RuqqusComment,
   fetcher,
-  useContextPost,
   RuqqusPost,
+  useReplyPoster,
+  RuqqusComments,
 } from "@react-ruqqus";
 import { useStyle, useTheme, useValue } from "@contexts";
 import { PopupWrapper } from "./PopupWrapper";
@@ -26,7 +28,7 @@ import TimeAgo from "react-native-timeago";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Button, IconButton } from "components/Buttons";
 import { LoadingControl } from "components/LoadingControl";
-import Popup from "components/Popup";
+import Popup, { PopupProps } from "components/Popup";
 import Input from "components/Input";
 import Color from "color";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -34,84 +36,53 @@ import DefaultPostcard from "components/postcards/default/postcard";
 import { NoContent } from "./NoContent";
 import { MiniIcon } from "components/MiniIcon";
 import { Badge } from "components/MiniBadge";
+import _ from "lodash";
 
 const DepthContext = createContext(0);
-const RefreshContext = createContext<() => void>(() => {});
-const PostReplyContext = createContext<
-  React.Dispatch<React.SetStateAction<string>>
->({} as React.Dispatch<React.SetStateAction<string>>);
 
-interface PostReplyContextProviderProps {
-  post: RuqqusPost;
+interface PostReplyContextProviderProps extends Omit<PopupProps, "title"> {
+  parent: RuqqusPost | RuqqusComment;
+  newReply: (reply: RuqqusComment) => void;
 }
 
 const CHARACTER_LIMIT = 10000;
 
-function PostReplyContextProvider({
-  post,
-  children,
-}: React.PropsWithChildren<PostReplyContextProviderProps>) {
+function PostReplyPopup(props: PostReplyContextProviderProps) {
   const theme = useTheme();
-  const client = useRuqqusClient();
-  const refresh = useContext(RefreshContext);
-
-  const [replyID, setReplyID] = useState("");
   const [replyMessage, setReplyMessage] = useState("");
+  const { loading, postReply } = useReplyPoster(props.parent.fullname);
 
-  useEffect(() => console.log("COMMENTS REPLY ID", replyID), [replyID]);
-
-  const postReply = () => {
-    const id = `${replyID}`;
-    setReplyID("");
-
-    fetcher(client.domain, `api/v1/comment`, {
-      access_token: client.access_token,
-      body: {
-        parent_fullname: id,
-        body: replyMessage,
-      },
-    })
-      .then((resp) => {
-        if (resp.ok) {
-          ToastAndroid.show("Comment successfully posted", ToastAndroid.SHORT);
-          refresh();
-        } else {
-          resp.text().then((errMsg) => {
-            ToastAndroid.show("Comment failed: " + errMsg, ToastAndroid.LONG);
-          });
-          console.warn("CANNOT COMMENT", resp);
-        }
-      })
-      .catch((e) => {
-        ToastAndroid.show("Commenting Error: " + e.message, ToastAndroid.LONG);
-      });
-  };
+  const post = () =>
+    postReply(replyMessage).then((comment) => {
+      ToastAndroid.show("Posted a reply", ToastAndroid.SHORT);
+      props.newReply(comment);
+      props.toggleModal?.();
+    });
 
   return (
-    <PostReplyContext.Provider value={setReplyID}>
-      <Popup
-        title="Reply"
-        visible={replyID ? true : false}
-        toggleModal={() => setReplyID("")}>
-        <Input
-          label={`${CHARACTER_LIMIT - replyMessage.length} characters left`}
-          onChangeText={(t) => setReplyMessage(t)}
-          value={replyMessage}
-        />
-        <Button
-          text="Post reply"
-          disabled={
-            !(replyMessage.length > 0 && replyMessage.length <= CHARACTER_LIMIT)
-          }
-          onPress={() => postReply()}
-          style={{
-            marginTop: theme?.Space.get?.(1),
-          }}
-        />
-      </Popup>
-
-      {children}
-    </PostReplyContext.Provider>
+    <Popup
+      title="Reply"
+      visible={props.visible}
+      toggleModal={props.toggleModal}>
+      <Input
+        label={`${CHARACTER_LIMIT - replyMessage.length} characters left`}
+        onChangeText={(t) => setReplyMessage(t)}
+        value={replyMessage}
+      />
+      <Button
+        text="Post reply"
+        disabled={
+          !(replyMessage.length > 0 && replyMessage.length <= CHARACTER_LIMIT)
+        }
+        onPress={() => post()}
+        style={{
+          marginTop: theme?.Space.get?.(1),
+        }}
+      />
+      {loading ? (
+        <ActivityIndicator color={theme?.Colors.primary} size="small" />
+      ) : null}
+    </Popup>
   );
 }
 
@@ -120,33 +91,48 @@ function Deliminer() {
   return <TextBox style={style?.headBullet}>{" • "}</TextBox>;
 }
 
-function Reply({ reply }: { reply: RuqqusComment }) {
+function Reply(props: { reply: RuqqusComment }) {
   const depth = useContext(DepthContext);
   const theme = useTheme();
   const style = useStyle();
   const client = useRuqqusClient();
-  const post = useContextPost();
   const navigation = useNavigation<StackNavigationProp<any>>();
-  const route = useRoute();
-  const refresh = useContext(RefreshContext);
-  const startPostReply = useContext(PostReplyContext);
+  const route = useRoute<any>();
 
   const [controlsVisible, setControlVisible] = useState(false);
   const [childRepliesVisible, setChildRepliesVisible] = useState(true);
+  const [replies, setReplies] = useState(props.reply.replies);
+  const [reply, setReply] = useState(props.reply);
+  const [popupVisible, setPopupVisible] = useState(false);
 
   const SPACER = 4;
 
   const depthColor = Color([255, 0, 0])
-    .rotate((360 / 7) * depth)
+    .rotate((360.0 / 7.0) * depth)
     .hex();
 
   const vote = (dir: -1 | 1) => {
-    return fetcher(client.domain, `api/v1/vote/comment/${reply.id}/${dir}`, {
+    let d = reply.voted === dir ? 0 : dir;
+    let last = _.get(reply, "voted");
+
+    return fetcher(client.domain, `api/v1/vote/comment/${reply.id}/${d}`, {
       access_token: client.access_token,
       body: {},
     }).then((resp) => {
       if (resp.ok) {
-        refresh();
+        setReply((prev) => {
+          let c = _.clone(prev);
+          let reset = last === d ? -1 : 1;
+          switch (c.voted) {
+            case -1:
+              _.set(c, "downvotes", c.downvotes + reset);
+            case 1:
+              _.set(c, "upvotes", c.upvotes + reset);
+          }
+          _.set(c, "voted", d);
+
+          return c;
+        });
       } else {
         console.warn("CANNOT VOTE", resp);
       }
@@ -157,6 +143,13 @@ function Reply({ reply }: { reply: RuqqusComment }) {
 
   return (
     <DepthContext.Provider value={depth + 1}>
+      <PostReplyPopup
+        parent={reply}
+        newReply={(comment) => setReplies((prev) => prev.concat([comment]))}
+        visible={popupVisible}
+        toggleModal={() => setPopupVisible((x) => !x)}
+      />
+
       <View
         style={{
           borderLeftColor: depthColor,
@@ -175,7 +168,8 @@ function Reply({ reply }: { reply: RuqqusComment }) {
                   marginLeft: theme?.Space.get?.(0.5),
                   color: theme?.Colors.muted,
                 }}>
-                deleted <TimeAgo time={reply.deleted_utc * 1000} />
+                reply {reply.id} was deleted{" "}
+                <TimeAgo time={reply.deleted_utc.getTime() * 1000} />
               </TextBox>
             </View>
           ) : (
@@ -209,7 +203,7 @@ function Reply({ reply }: { reply: RuqqusComment }) {
                   </Pressable>
                   <Deliminer />
                   <TextBox size={0.6} color="muted">
-                    <TimeAgo time={reply.created_utc * 1000} />
+                    <TimeAgo time={reply.created_utc.getTime() * 1000} />
                   </TextBox>
                   <Deliminer />
                   <TextBox size={0.6} color="muted">
@@ -278,25 +272,13 @@ function Reply({ reply }: { reply: RuqqusComment }) {
               onPress={() => vote(-1)}
               highlighted={false}
             />
-            <IconButton
-              name="reply"
-              onPress={() => startPostReply(reply.fullname)}
-            />
+            <IconButton name="reply" onPress={() => setPopupVisible(true)} />
           </View>
         ) : null}
 
-        {childRepliesVisible &&
-          reply.replies.map((reply) => <Reply reply={reply} />)}
+        {childRepliesVisible && replies.map((reply) => <Reply reply={reply} />)}
       </View>
     </DepthContext.Provider>
-  );
-}
-
-function ReplyButton() {
-  const startPostReply = useContext(PostReplyContext);
-  const post = useContextPost();
-  return (
-    <IconButton name="reply" onPress={() => startPostReply(post.fullname)} />
   );
 }
 
@@ -304,6 +286,14 @@ export default function Comments() {
   const route = useRoute<any>();
   const style = useStyle();
   const { loading, body, refresh } = usePost(route.params.post_id);
+  const [popupVisible, setPopupVisible] = useState(false);
+  const [replies, setReplies] = useState<RuqqusComments>([]);
+
+  useEffect(() => {
+    if (body) {
+      setReplies(body.replies);
+    }
+  }, [body]);
 
   return (
     <ScrollView
@@ -313,27 +303,32 @@ export default function Comments() {
       }>
       {!loading && body ? (
         <PostContext.Provider value={body}>
-          <RefreshContext.Provider value={refresh}>
-            <PostReplyContextProvider post={body}>
-              <PopupWrapper>
-                <DefaultPostcard
-                  additionalControls={
-                    <>
-                      <ReplyButton />
-                    </>
-                  }
-                />
-              </PopupWrapper>
+          <PostReplyPopup
+            parent={body}
+            newReply={(comment) => setReplies((prev) => prev.concat([comment]))}
+            toggleModal={() => setPopupVisible((x) => !x)}
+            visible={popupVisible}
+          />
+          <PopupWrapper>
+            <DefaultPostcard
+              additionalControls={
+                <>
+                  <IconButton
+                    name="reply"
+                    onPress={() => setPopupVisible(true)}
+                  />
+                </>
+              }
+            />
+          </PopupWrapper>
 
-              {body?.replies?.map?.((reply) => (
-                <Reply reply={reply} />
-              ))}
+          {replies?.map?.((reply) => (
+            <Reply reply={reply} />
+          ))}
 
-              {!body?.replies || body?.replies?.length <= 0 ? (
-                <NoContent message="No comments found" />
-              ) : null}
-            </PostReplyContextProvider>
-          </RefreshContext.Provider>
+          {!body?.replies || body?.replies?.length <= 0 ? (
+            <NoContent message="No comments found" />
+          ) : null}
         </PostContext.Provider>
       ) : null}
     </ScrollView>
