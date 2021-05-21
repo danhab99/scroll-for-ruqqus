@@ -308,7 +308,11 @@ export default function Comments() {
         <PostContext.Provider value={body}>
           <PostReplyPopup
             parent={body}
-            newReply={(comment) => setReplies((prev) => prev.concat([comment]))}
+            newReply={(comment) =>
+              setReplies((prev) =>
+                ([] as RuqqusComments).concat([comment], prev),
+              )
+            }
             toggleModal={() => setPopupVisible((x) => !x)}
             visible={popupVisible}
           />
