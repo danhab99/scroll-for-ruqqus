@@ -14,6 +14,10 @@ export function RuqqusBadges(props: RuqqusFlagged) {
       {props.is_banned ? <MiniIcon name="block-helper" /> : null}
       {props.is_bot ? <MiniIcon name="robot" /> : null}
       {props.is_deleted ? <MiniIcon name="trash-can" /> : null}
+      {props.is_heralded || props.is_distinguished ? (
+        <MiniIcon name="crown" />
+      ) : null}
+
       {props.is_nsfl ? <Badge text="NSFL" fg="white" bg="black" /> : null}
       {props.is_nsfw ? <Badge text="NSFW" fg="white" bg="red" /> : null}
       {props.is_offensive ? (
