@@ -37,6 +37,7 @@ import { NoContent } from "./NoContent";
 import { MiniIcon } from "components/MiniIcon";
 import { Badge } from "components/MiniBadge";
 import _ from "lodash";
+import { Deliminer } from "../components/Deliminer";
 
 const DepthContext = createContext(0);
 
@@ -88,11 +89,6 @@ function PostReplyPopup(props: PostReplyContextProviderProps) {
       ) : null}
     </Popup>
   );
-}
-
-function Deliminer() {
-  const style = useStyle();
-  return <TextBox style={style?.headBullet}>{" • "}</TextBox>;
 }
 
 function Reply(props: { reply: RuqqusComment }) {
