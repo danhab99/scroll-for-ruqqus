@@ -118,7 +118,9 @@ export default function ROALogin(props: any) {
           <RefreshControl refreshing={loading} onRefresh={() => refresh()} />
         }>
         {sites?.map?.((site: Site, i: number) => (
-          <View key={`${i}`} style={style?.card}>
+          <View
+            key={`${i}`}
+            style={[style?.card, { marginBottom: theme?.Space.get?.(1) }]}>
             <View style={{ padding: theme?.Space.get?.(1) }}>
               <Text
                 style={{
