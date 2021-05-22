@@ -5,9 +5,8 @@ import { useTheme, useStyle } from "@contexts";
 import TimeAgo from "react-native-timeago";
 import * as _ from "lodash";
 import { useNavigation, useRoute } from "@react-navigation/core";
-import { Badge } from "../../MiniBadge";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { MiniIcon } from "../../MiniIcon";
+import { RuqqusBadges } from "components/RuqqusBadges";
 
 export function Head() {
   const post = useContextPost();
@@ -56,18 +55,7 @@ export function Head() {
   return (
     <View>
       <View style={style?.horizontal}>{head}</View>
-      <View style={style?.horizontal}>
-        {post.is_pinned ? <MiniIcon name="pin" /> : null}
-        {post.is_archived ? <MiniIcon name="archive" /> : null}
-        {post.is_banned ? <MiniIcon name="block-helper" /> : null}
-        {post.is_bot ? <MiniIcon name="robot" /> : null}
-        {post.is_deleted ? <MiniIcon name="trash-can" /> : null}
-        {post.is_nsfl ? <Badge text="NSFL" fg="white" bg="black" /> : null}
-        {post.is_nsfw ? <Badge text="NSFW" fg="white" bg="red" /> : null}
-        {post.is_offensive ? (
-          <Badge text="OFFENSIVE" fg="black" bg="orange" />
-        ) : null}
-      </View>
+      <RuqqusBadges {...post} />
     </View>
   );
 }
