@@ -53,11 +53,15 @@ function PostReplyPopup(props: PostReplyContextProviderProps) {
   const { loading, postReply } = useReplyPoster(props.parent.fullname);
 
   const post = () =>
-    postReply(replyMessage).then((comment) => {
-      ToastAndroid.show("Posted a reply", ToastAndroid.SHORT);
-      props.newReply(comment);
-      props.toggleModal?.();
-    });
+    postReply(replyMessage)
+      .then((comment) => {
+        ToastAndroid.show("Posted a reply", ToastAndroid.SHORT);
+        props.newReply(comment);
+        props.toggleModal?.();
+      })
+      .catch((e) => {
+        ToastAndroid.show("Comment error: " + e.message, ToastAndroid.LONG);
+      });
 
   return (
     <Popup

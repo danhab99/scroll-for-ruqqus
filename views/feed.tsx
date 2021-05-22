@@ -74,7 +74,7 @@ export default function Feed() {
 
     navigation.push(route.name, {
       feed: {
-        [target || ""]: navigate.slice(1),
+        [target || ""]: navigate.slice(1).trim(),
       },
     });
     setNavigate("");

@@ -22,6 +22,7 @@ export interface RuqqusFlagged {
   is_offensive: boolean;
   is_pinned: boolean;
   is_heralded: boolean;
+  is_distinguished: boolean;
 }
 
 export interface RuqqusDateStamped {
