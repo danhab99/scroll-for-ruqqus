@@ -15,7 +15,7 @@ export default function TextBox(props: TextBoxProps & Partial<TextProps>) {
     <Text
       style={[
         {
-          color: theme?.Colors?.[props?.color || "text"],
+          color: theme?.Colors?.[props?.color || "text"] || props?.color,
           fontSize: theme?.FontSize.get?.(props.size || 1),
           fontFamily: theme?.Fonts.body,
           display: "flex",

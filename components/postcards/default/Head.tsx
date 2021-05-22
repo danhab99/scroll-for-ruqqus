@@ -7,6 +7,8 @@ import * as _ from "lodash";
 import { useNavigation, useRoute } from "@react-navigation/core";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RuqqusBadges } from "components/RuqqusBadges";
+import TextBox from "components/TextBox";
+import { Deliminer } from "components/Deliminer";
 
 export function Head() {
   const post = useContextPost();
@@ -24,8 +26,6 @@ export function Head() {
     },
     {
       label: post.author_name,
-      action: () =>
-        navigation.push(route.name, { feed: { user: post.author_name } }),
     },
     {
       label: post.domain,
@@ -54,7 +54,51 @@ export function Head() {
 
   return (
     <View>
-      <View style={style?.horizontal}>{head}</View>
+      <View style={style?.horizontal}>
+        <Pressable
+          onPress={() =>
+            navigation.push(route.name, { feed: { guild: post.guild_name } })
+          }>
+          <TextBox color="primary" size={0.6}>
+            +{post.guild.name}
+          </TextBox>
+        </Pressable>
+
+        <Deliminer />
+
+        <Pressable
+          onPress={() =>
+            navigation.push(route.name, { feed: { user: post.author_name } })
+          }>
+          <Text>
+            <TextBox color="muted" size={0.6}>
+              {post.author_name}
+            </TextBox>
+
+            <TextBox color={post?.author?.title?.color || "muted"} size={0.6}>
+              {post?.author?.title?.text}
+            </TextBox>
+          </Text>
+        </Pressable>
+
+        <Deliminer />
+
+        <TextBox size={0.6} color="muted">
+          {post.domain}
+        </TextBox>
+
+        <Deliminer />
+
+        <TextBox size={0.6} color="muted">
+          <TimeAgo time={post?.created_utc * 1000} />
+        </TextBox>
+
+        <Deliminer />
+
+        <TextBox size={0.6} color="muted">
+          {post.id}
+        </TextBox>
+      </View>
       <RuqqusBadges {...post} />
     </View>
   );
