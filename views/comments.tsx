@@ -73,6 +73,7 @@ function PostReplyPopup(props: PostReplyContextProviderProps) {
         label={`${CHARACTER_LIMIT - replyMessage.length} characters left`}
         onChangeText={(t) => setReplyMessage(t)}
         value={replyMessage}
+        multiline
       />
       <Button
         text="Post reply"
