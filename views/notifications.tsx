@@ -13,6 +13,7 @@ import { RuqqusNotification } from "../react-ruqqus/types";
 
 import TextBox from "../components/TextBox";
 import HtmlMarkdown from "../components/HtmlMarkdown";
+import { RuqqusBadges } from "components/RuqqusBadges";
 
 function NotificationItem({ item }: { item: RuqqusNotification }) {
   const style = useStyle();
@@ -43,6 +44,8 @@ function NotificationItem({ item }: { item: RuqqusNotification }) {
           <TextBox color="primary">@{item.author_name}</TextBox>{" "}
           <Icon name="arrow-right-bold" /> {item.post.id}
         </TextBox>
+
+        <RuqqusBadges {...item} />
 
         <HtmlMarkdown html={item.body_html} />
       </View>
