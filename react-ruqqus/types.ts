@@ -21,6 +21,7 @@ export interface RuqqusFlagged {
   is_nsfw: boolean;
   is_offensive: boolean;
   is_pinned: boolean;
+  is_heralded: boolean;
 }
 
 export interface RuqqusDateStamped {
@@ -28,17 +29,22 @@ export interface RuqqusDateStamped {
   edited_utc: Date;
 }
 
+export interface RuqqusID {
+  // name: string;
+  fullname: string;
+  id: string;
+}
+
 export interface RuqqusComment
   extends RuqqusRatable,
     RuqqusFlagged,
-    RuqqusDateStamped {
+    RuqqusDateStamped,
+    RuqqusID {
   author_name: string;
   award_count: number;
   body: string;
   body_html: string;
-  fullname: string;
   guild_id: string;
-  id: string;
   permalink: string;
   post_id: string;
   replies: RuqqusComments;
@@ -47,14 +53,13 @@ export interface RuqqusComment
 
 export type RuqqusComments = Array<RuqqusComment>;
 
-export interface RuqqusUser extends RuqqusDateStamped {
+export interface RuqqusUser extends RuqqusDateStamped, RuqqusID {
   badges: Array<RuqqusBadge>;
   banner_url: string;
   bio: string;
   bio_html: string;
   comment_count: number;
   comment_rep: number;
-  id: string;
   is_banned: boolean;
   is_premium: boolean;
   is_private: boolean;
@@ -76,7 +81,9 @@ export type RuqqusVote = -1 | 0 | 1;
 export interface RuqqusPost
   extends RuqqusRatable,
     RuqqusFlagged,
-    RuqqusDateStamped {
+    RuqqusDateStamped,
+    RuqqusGuildPart,
+    RuqqusID {
   author: RuqqusUser;
   author_name: string;
   award_count: number;
@@ -84,11 +91,6 @@ export interface RuqqusPost
   body_html: string;
   comment_count: number;
   domain: string;
-  fullname: string;
-  guild: RuqqusGuild;
-  guild_id: string;
-  guild_name: string;
-  id: string;
   meta_description: string;
   meta_title: string;
   original_guild: string;
@@ -99,14 +101,18 @@ export interface RuqqusPost
   replies: RuqqusComments;
 }
 
-export interface RuqqusGuild extends RuqqusDateStamped {
+export interface RuqqusGuildPart {
+  guild: RuqqusGuild;
+  guild_id: string;
+  herald_guild: RuqqusGuild;
+}
+
+export interface RuqqusGuild extends RuqqusDateStamped, RuqqusID {
   banner_url: string;
   color: string;
   description: string;
   description_html: string;
-  fullname: string;
   guildmasters: Array<RuqqusUser>;
-  id: string;
   is_banned: boolean;
   is_private: boolean;
   is_restricted: boolean;
@@ -121,16 +127,14 @@ export interface RuqqusGuild extends RuqqusDateStamped {
 export interface RuqqusNotification
   extends RuqqusRatable,
     RuqqusDateStamped,
-    RuqqusFlagged {
+    RuqqusFlagged,
+    RuqqusGuildPart,
+    RuqqusID {
   author: RuqqusUser;
   author_name: string;
   award_count: number;
   body: string;
   body_html: string;
-  fullname: string;
-  guild: RuqqusGuild;
-  guild_id: string;
-  id: string;
   level: number;
   permalink: string;
   post: RuqqusPost;
