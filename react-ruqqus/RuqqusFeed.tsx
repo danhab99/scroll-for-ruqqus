@@ -12,7 +12,7 @@ import {
   RefreshControl,
   RefreshControlProps,
 } from "react-native";
-import { useFeed } from "./useFeed";
+import { RuqqusFeedSequence, useFeed } from "./useFeed";
 import { RuqqusPost, RuqqusGuild, RuqqusUser, RuqqusVote } from "./types";
 import { useRuqqusClient } from "./useRuqqusClient";
 import { fetcher } from "./fetcher";
@@ -44,7 +44,7 @@ interface RuqqusFeedProps {
 }
 
 type PostMutatorDispatch = React.Dispatch<
-  React.SetStateAction<RuqqusPost[] | undefined>
+  React.SetStateAction<RuqqusFeedSequence | undefined>
 >;
 
 const PostMutatorContext = createContext<PostMutatorDispatch>(
@@ -194,7 +194,10 @@ export function useVote() {
       })
       .then((resp) => {
         let p = resp.body;
-        mutate((prev) => prev?.map((x) => (x.fullname === p.fullname ? p : x)));
+        mutate((prev) => ({
+          data: prev?.data.map((x) => (x.fullname === p.fullname ? p : x)),
+          next_exists: prev?.next_exists,
+        }));
         return resp;
       });
   };

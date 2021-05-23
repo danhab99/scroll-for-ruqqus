@@ -7,7 +7,7 @@ import { SortOptions, FeedOptions } from "./RuqqusFeed";
 
 type UseFeedOpts = UseFetchOpts<RuqqusPost[]> & { sort: SortOptions };
 
-type RuqqusFeed = {
+export type RuqqusFeedSequence = {
   data: RuqqusPost[];
   next_exists: boolean;
 };
@@ -31,9 +31,8 @@ export function useFeed(edge: FeedOptions, args?: UseFeedOpts) {
     throw new TypeError("edge is not a FeedOption");
   }
 
-  const { loading, body, refresh, setBody } = useRuqqusFetch<RuqqusFeed>(
-    `${ed}/listing`,
-    {
+  const { loading, body, refresh, setBody } =
+    useRuqqusFetch<RuqqusFeedSequence>(`${ed}/listing`, {
       args: {
         ...args,
         page,
@@ -45,8 +44,7 @@ export function useFeed(edge: FeedOptions, args?: UseFeedOpts) {
               next_exists: incoming?.next_exists,
             }
           : incoming,
-    },
-  );
+    });
 
   useEffect(() => setPage(1), [args?.sort]);
 
