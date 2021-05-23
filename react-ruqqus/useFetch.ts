@@ -2,9 +2,13 @@ import { useState, useEffect, useContext } from "react";
 import { ApiErrorContext, PrimerContext } from "./ClientContext";
 import { fetcher, fetcherOpts } from "./fetcher";
 
-export type UseFetchOpts<T> = fetcherOpts<T> & {
-  initial?: T;
+export type UseFetchOpts<RESPONCE_BODY> = fetcherOpts<RESPONCE_BODY> & {
   disabled?: boolean;
+  onBodyChange?: (
+    old: RESPONCE_BODY | undefined,
+    args: any | undefined,
+    incoming: RESPONCE_BODY | undefined,
+  ) => RESPONCE_BODY;
 };
 
 export function useFetch<RESPONSE_BODY>(
@@ -26,7 +30,11 @@ export function useFetch<RESPONSE_BODY>(
       fetcher<RESPONSE_BODY>(host, edge, { ...opts, controller })
         .then((d) => {
           setResp(d);
-          setBody(d.body);
+          setBody(
+            opts?.onBodyChange
+              ? (prev) => opts.onBodyChange?.(prev, opts.args, d.body)
+              : d.body,
+          );
           setLoading(false);
         })
         .catch((e: Error) => {
@@ -47,5 +55,11 @@ export function useFetch<RESPONSE_BODY>(
     ...Object.values(opts?.args || {}),
   ]);
 
-  return { loading, resp, body, refresh: () => setRefresher((x) => !x) };
+  return {
+    loading,
+    resp,
+    body,
+    refresh: () => setRefresher((x) => !x),
+    setBody,
+  };
 }

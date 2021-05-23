@@ -62,7 +62,7 @@ export function RuqqusClientProvider(props: RuqqusClientProviderProps) {
         if (resp.ok) {
           console.log("RUQQUS READY");
           setTokens((prev): TokenInterface => {
-            let p = _.assign(prev, {
+            let p = _.assign({}, prev, {
               access_token: resp.body["access_token"],
               expires_at: resp.body["expires_at"],
             });
@@ -87,7 +87,7 @@ export function RuqqusClientProvider(props: RuqqusClientProviderProps) {
     } else {
       props.onApiError?.(new Error("No tokens"));
     }
-  }, [tokens, props.config]);
+  }, [tokens?.refresh_token, props.config]);
 
   return (
     <UserContext.Provider value={setTokens}>

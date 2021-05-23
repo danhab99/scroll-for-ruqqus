@@ -13,10 +13,7 @@ type RuqqusFeed = {
 };
 
 export function useFeed(edge: FeedOptions, args?: UseFeedOpts) {
-  const [posts, setPosts] = useState<RuqqusPost[]>();
   const [page, setPage] = useState(1);
-  const [more, setMore] = useState(true);
-  const pageHistory = useRef<Number[]>([]);
 
   let ed = "";
 
@@ -34,50 +31,30 @@ export function useFeed(edge: FeedOptions, args?: UseFeedOpts) {
     throw new TypeError("edge is not a FeedOption");
   }
 
-  const { loading, body, refresh } = useRuqqusFetch<RuqqusFeed>(
+  const { loading, body, refresh, setBody } = useRuqqusFetch<RuqqusFeed>(
     `${ed}/listing`,
     {
       args: {
         ...args,
         page,
       },
+      onBodyChange: (old, args, incoming) =>
+        args?.page > 1
+          ? {
+              data: [].concat(old?.data || [], incoming?.data || []),
+              next_exists: incoming?.next_exists,
+            }
+          : incoming,
     },
   );
-
-  useEffect(() => {
-    if (body) {
-      let data = body.data;
-
-      setPosts((prev) => {
-        pageHistory.current[page] = data.length;
-        let next = _.cloneDeep(prev);
-
-        if (page > 1) {
-          let offset = next?.reduce(
-            (acc, _, i) => (i === next?.length ? acc : acc + i),
-            0,
-          );
-          next?.splice(offset || 0, data.length, ...data);
-        } else {
-          next = data;
-        }
-
-        if (data.length < 1) {
-          console.warn("RUQQUS may have not retrieved new posts");
-        }
-        return next;
-      });
-      setMore(body.next_exists);
-    }
-  }, [body]);
 
   useEffect(() => setPage(1), [args?.sort]);
 
   return {
     loading,
-    posts,
-    nextPage: () => setPage((x) => (more ? x + 1 : x)),
+    posts: body?.data,
+    nextPage: () => (body?.next_exists ? setPage((x) => x + 1) : null),
     refresh,
-    setPosts,
+    setPosts: setBody,
   };
 }
