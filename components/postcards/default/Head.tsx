@@ -70,15 +70,18 @@ export function Head() {
           onPress={() =>
             navigation.push(route.name, { feed: { user: post.author_name } })
           }>
-          <Text>
-            <TextBox color="muted" size={0.6}>
-              {post.author_name}
-            </TextBox>
+          <TextBox color="muted" size={0.6}>
+            {post.author_name}{" "}
+          </TextBox>
+        </Pressable>
 
-            <TextBox color={post?.author?.title?.color || "muted"} size={0.6}>
-              {post?.author?.title?.text}
-            </TextBox>
-          </Text>
+        <Pressable
+          onPress={() =>
+            navigation.push(route.name, { feed: { user: post.author_name } })
+          }>
+          <TextBox color={post?.author?.title?.color || "muted"} size={0.6}>
+            {post?.author?.title?.text}
+          </TextBox>
         </Pressable>
 
         <Deliminer />
