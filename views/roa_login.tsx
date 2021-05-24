@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, createContext, useContext } from "react";
 import {
   View,
   Text,
@@ -7,7 +7,16 @@ import {
   BackHandler,
 } from "react-native";
 import { Button, IconButton } from "../components/Buttons";
-import { useValue, useStyle, useTheme } from "@contexts";
+import {
+  useValue,
+  useStyle,
+  useTheme,
+  IRealmAccount,
+  useCreator,
+  useFilter,
+  useDestroyer,
+  useGetter,
+} from "@contexts";
 import {
   AuthSiteWebview,
   useAuthSites,
@@ -34,12 +43,103 @@ interface Account extends TokenInterface {
   siteID: string;
 }
 
+const ConnectAccountContext = createContext<(id: string) => void>(
+  (id: string) => {},
+);
+
+const PickAccountContext = createContext<(id: string) => void>(
+  (id: string) => {},
+);
+
+function SiteAccounts(props: { site: Site }) {
+  const style = useStyle();
+  const theme = useTheme();
+  const [activeAccount, setActiveAccount] = useValue<string>("active-account");
+  const accounts = useFilter<IRealmAccount>(
+    "account",
+    `siteID == "${props.site._id}"`,
+  );
+  const deleter = useDestroyer<IRealmAccount>("account");
+  const connectAccount = useContext(ConnectAccountContext);
+  const pickAccount = useContext(PickAccountContext);
+
+  return (
+    <View style={[style?.card, { marginBottom: theme?.Space.get?.(1) }]}>
+      <View style={{ padding: theme?.Space.get?.(1) }}>
+        <Text
+          style={{
+            color: theme?.Colors?.text,
+            fontSize: theme?.FontSize.get?.(2),
+            fontWeight: "bold",
+          }}>
+          {props.site.domain}
+        </Text>
+
+        <View>
+          {accounts
+            ?.filter((x) => x.siteID === props.site._id)
+            .map((account, i) => (
+              <View
+                key={`${i}`}
+                style={{
+                  marginTop: theme?.Space.get?.(1),
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "flex-end",
+                  alignContent: "center",
+                  alignItems: "center",
+                }}>
+                <Text
+                  style={{
+                    color: theme?.Colors.text,
+                    fontWeight: "bold",
+                    textAlign: "center",
+                    margin: "auto",
+                    alignContent: "center",
+                    fontSize: theme?.FontSize.get?.(1.5),
+                    marginRight: theme?.Space.get?.(1),
+                  }}>
+                  {activeAccount === account._id ? (
+                    <Icon name="star" size={theme?.FontSize?.get?.(2)} />
+                  ) : null}{" "}
+                  @{account.username}
+                </Text>
+
+                <Button
+                  text="Login"
+                  style={{
+                    marginRight: theme?.Space.get?.(1),
+                  }}
+                  onPress={() => pickAccount(account._id)}
+                />
+
+                <IconButton
+                  name="delete"
+                  onPress={() => deleter(`_id == "${account._id}"`)}
+                />
+              </View>
+            ))}
+        </View>
+
+        <Button
+          text="Connect an account"
+          onPress={() => connectAccount(props.site._id)}
+          style={{
+            marginTop: theme?.Space.get?.(1),
+          }}
+        />
+      </View>
+    </View>
+  );
+}
+
 export default function ROALogin(props: any) {
   const [connecting, setConnecting] = useState(false);
   const [siteID, setSiteID] = useState<string>();
   const style = useStyle();
-  const theme = useTheme();
-  const [accounts, setAccounts] = useValue<Account[]>("accounts");
+  const createAccount = useCreator<IRealmAccount>("account");
+  const accounts = useGetter<IRealmAccount>("account");
+
   const [activeAccount, setActiveAccount] = useValue<string>("active-account");
   const { loading, sites, getAuthURL, refresh } = useAuthSites();
   const navigation = useNavigation<StackNavigationProp<any>>();
@@ -51,7 +151,6 @@ export default function ROALogin(props: any) {
 
     if (siteID) {
       let newAccount = {
-        id: v4(),
         siteID,
         access_token: results.access_token,
         refresh_token: results.refresh_token,
@@ -59,7 +158,7 @@ export default function ROALogin(props: any) {
         client_id: sites.filter((site) => site._id === siteID)[0].clientID,
         expires_at: results.expires_at,
       };
-      setAccounts((accounts = []) => [...accounts, newAccount]);
+      createAccount(newAccount);
     }
   });
 
@@ -80,26 +179,24 @@ export default function ROALogin(props: any) {
     }
   }, [connecting, navigation]);
 
+  const pickAccount = (id: string) => {
+    if (accounts) {
+      let account: TokenInterface = accounts.filter((x) => x._id === id)[0];
+
+      if (account) {
+        login(account);
+        setActiveAccount(id);
+        navigation.navigate("Frontpage");
+      } else {
+        setActiveAccount("");
+      }
+    }
+  };
+
   const connectAccount = (id: string) => {
     setConnecting(true);
     getAuthURL(id);
     setSiteID(id);
-  };
-
-  const deleteAccount = (id: string) => {
-    setAccounts((prev) => prev.filter((x) => x.id !== id));
-  };
-
-  const pickAccount = (id: string) => {
-    let account: TokenInterface = accounts.filter((x) => x.id === id)[0];
-
-    if (account) {
-      login(account);
-      setActiveAccount(id);
-      navigation.navigate("Frontpage");
-    } else {
-      setActiveAccount("");
-    }
   };
 
   useEffect(() => {
@@ -112,84 +209,22 @@ export default function ROALogin(props: any) {
     return <AuthSiteWebview />;
   } else {
     return (
-      <ScrollView
-        style={style?.view}
-        refreshControl={
-          <RefreshControl refreshing={loading} onRefresh={() => refresh()} />
-        }>
-        {sites?.map?.((site: Site, i: number) => (
-          <View
-            key={`${i}`}
-            style={[style?.card, { marginBottom: theme?.Space.get?.(1) }]}>
-            <View style={{ padding: theme?.Space.get?.(1) }}>
-              <Text
-                style={{
-                  color: theme?.Colors?.text,
-                  fontSize: theme?.FontSize.get?.(2),
-                  fontWeight: "bold",
-                }}>
-                {site.domain}
-              </Text>
-
-              <View>
-                {(Array.isArray(accounts) ? accounts : [])
-                  .filter((x) => x.siteID === site._id)
-                  .map((account, i) => (
-                    <View
-                      key={`${i}`}
-                      style={{
-                        marginTop: theme?.Space.get?.(1),
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "flex-end",
-                        alignContent: "center",
-                        alignItems: "center",
-                      }}>
-                      <Text
-                        style={{
-                          color: theme?.Colors.text,
-                          fontWeight: "bold",
-                          textAlign: "center",
-                          margin: "auto",
-                          alignContent: "center",
-                          fontSize: theme?.FontSize.get?.(1.5),
-                          marginRight: theme?.Space.get?.(1),
-                        }}>
-                        {activeAccount === account.id ? (
-                          <Icon name="star" size={theme?.FontSize?.get?.(2)} />
-                        ) : null}{" "}
-                        @{account.username}
-                      </Text>
-
-                      <Button
-                        text="Login"
-                        style={{
-                          marginRight: theme?.Space.get?.(1),
-                        }}
-                        onPress={() => pickAccount(account.id)}
-                      />
-
-                      <IconButton
-                        name="delete"
-                        onPress={() => deleteAccount(account.id)}
-                      />
-                    </View>
-                  ))}
-              </View>
-
-              <Button
-                text="Connect an account"
-                onPress={() => connectAccount(site._id)}
-                style={{
-                  marginTop: theme?.Space.get?.(1),
-                }}
+      <PickAccountContext.Provider value={pickAccount}>
+        <ConnectAccountContext.Provider value={connectAccount}>
+          <ScrollView
+            style={style?.view}
+            refreshControl={
+              <RefreshControl
+                refreshing={loading}
+                onRefresh={() => refresh()}
               />
-            </View>
-          </View>
-        ))}
-      </ScrollView>
+            }>
+            {sites?.map?.((site: Site, i: number) => (
+              <SiteAccounts site={site} key={i} />
+            ))}
+          </ScrollView>
+        </ConnectAccountContext.Provider>
+      </PickAccountContext.Provider>
     );
   }
-
-  return <View></View>;
 }
