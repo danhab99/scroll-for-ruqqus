@@ -181,7 +181,9 @@ export default function ROALogin(props: any) {
 
   const pickAccount = (id: string) => {
     if (accounts) {
-      let account: TokenInterface = accounts.filter((x) => x._id === id)[0];
+      let account: TokenInterface = accounts
+        .filter((x) => x._id === id)[0]
+        .toJSON();
 
       if (account) {
         login(account);
