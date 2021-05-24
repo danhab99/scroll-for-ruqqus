@@ -43,6 +43,7 @@ function PostResolver(props: { postID: string }) {
 
 export function Saved() {
   const style = useStyle();
+  const theme = useTheme();
 
   const posts = useGetter<IRealmSavedPost>("saved", (obj) =>
     obj.sorted("savedAt", true),
@@ -54,7 +55,7 @@ export function Saved() {
         <FlatList
           data={posts}
           renderItem={({ item }) => <PostResolver postID={item.postID} />}
-          // contentContainerStyle={{ marginTop: theme?.Space.get?.(1) }}
+          contentContainerStyle={{ marginTop: theme?.Space.get?.(1) }}
           ListEmptyComponent={<NoContent message="No saved posts" />}
         />
       </PopupWrapper>
