@@ -51,7 +51,7 @@ export function useFetch<RESPONSE_BODY>(
                 d.body as RESPONSE_BODY,
               );
             } else {
-              d.body;
+              return d.body;
             }
           });
           setLoading(false);
