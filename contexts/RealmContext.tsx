@@ -83,7 +83,21 @@ export function useFilter<T extends RealmSchemaInterfaces>(
   const [res, setRes] = useRealmState<T>();
 
   useEffect(() => {
-    setRes(objs?.filtered(predicate));
+    const handler: Realm.CollectionChangeCallback<T & Realm.Object> = (
+      prev,
+      changes,
+    ) => {
+      let o = objs?.filtered(predicate);
+      console.log("REALM FILTER", { schema, predicate, o });
+      setRes(o);
+    };
+
+    handler(null, null);
+    objs?.addListener(handler);
+
+    return () => {
+      objs?.removeListener(handler);
+    };
   }, [objs, predicate]);
 
   return res;
