@@ -19,16 +19,18 @@ import { useGetter } from "../contexts/RealmContext";
 import { IRealmSavedPost } from "../contexts/realm/savedPosts";
 
 function PostResolver(props: { postID: string }) {
-  const [post, setPost] = useState<RuqqusPost>();
+  const [post, setPost] = useState<RuqqusPost | undefined>(undefined);
   const client = useRuqqusClient();
 
   useEffect(() => {
     fetcher<RuqqusPost>(client.domain, `api/v1/post/${props.postID}`, {
       access_token: client.access_token,
-    }).then((resp) => setPost(resp.body as RuqqusPost));
-  });
+    }).then((resp) => {
+      setPost(resp.body as RuqqusPost);
+    });
+  }, [props.postID]);
 
-  if (post) {
+  if (post !== undefined) {
     return (
       <PostContext.Provider value={post}>
         <CardSelector />
@@ -40,11 +42,11 @@ function PostResolver(props: { postID: string }) {
 }
 
 export function Saved() {
-  const route = useRoute();
-  const theme = useTheme();
   const style = useStyle();
 
-  const posts = useGetter<IRealmSavedPost>("saved");
+  const posts = useGetter<IRealmSavedPost>("saved", (obj) =>
+    obj.sorted("savedAt"),
+  );
 
   return (
     <View style={style?.root}>
@@ -52,10 +54,7 @@ export function Saved() {
         <FlatList
           data={posts}
           renderItem={({ item }) => <PostResolver postID={item.postID} />}
-          // onEndReached={() => nextPage()}
-          contentContainerStyle={{ marginTop: theme?.Space.get?.(1) }}
-          // refreshControl={<RefreshControl refreshing={loading} />}
-          // onEndReachedThreshold={0.1}
+          // contentContainerStyle={{ marginTop: theme?.Space.get?.(1) }}
           ListEmptyComponent={<NoContent message="No saved posts" />}
         />
       </PopupWrapper>
