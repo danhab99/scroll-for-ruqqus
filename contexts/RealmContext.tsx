@@ -59,6 +59,7 @@ export function useGetter<T extends RealmSchemaInterfaces>(
 
   useEffect(() => {
     let o = realm.objects<T>(schema);
+    console.log("REALM GET", { schema, o });
     setRes(query ? query(o) : o);
   }, [realm, schema, query, ...dependencies]);
 
