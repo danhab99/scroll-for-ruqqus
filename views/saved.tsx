@@ -45,7 +45,7 @@ export function Saved() {
   const style = useStyle();
 
   const posts = useGetter<IRealmSavedPost>("saved", (obj) =>
-    obj.sorted("savedAt"),
+    obj.sorted("savedAt", true),
   );
 
   return (
