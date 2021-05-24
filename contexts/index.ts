@@ -1,3 +1,3 @@
-export * from "./storage-context";
-export * from "./theme-context";
+export * from "./StorageContext";
+export * from "./ThemeContext";
 export * from "./useCollection";

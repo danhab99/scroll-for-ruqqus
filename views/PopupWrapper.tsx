@@ -3,7 +3,7 @@ import { Share, View, Linking } from "react-native";
 import Popup, { PopupButton } from "components/Popup";
 import { RuqqusPost } from "react-ruqqus/types";
 import { useNavigation, useRoute } from "@react-navigation/core";
-import { PostMenuContext } from "contexts/post-menu-context";
+import { PostMenuContext } from "contexts/PostMenuContext";
 import { StackNavigationProp } from "@react-navigation/stack";
 
 export function PopupWrapper(props: { children: ReactNode }) {

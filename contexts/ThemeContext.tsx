@@ -1,5 +1,5 @@
 import React, { createContext, useContext } from "react";
-import { useValue } from "./storage-context";
+import { useValue } from "./StorageContext";
 import * as _ from "lodash";
 import { ThemeInterface, DEFAULT_THEME } from "./theme/default-theme";
 import { generateStyles, gen } from "./theme/style";

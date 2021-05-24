@@ -5,7 +5,7 @@ import { useTheme, useStyle, useSavedPosts } from "@contexts";
 import * as _ from "lodash";
 import { IconButton } from "components/Buttons";
 import { useNavigation } from "@react-navigation/core";
-import { usePostMenuContext } from "contexts/post-menu-context";
+import { usePostMenuContext } from "contexts/PostMenuContext";
 import { LoadingControl } from "../../LoadingControl";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useRoute } from "@react-navigation/native";

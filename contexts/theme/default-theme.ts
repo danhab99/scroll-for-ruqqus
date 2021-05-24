@@ -1,4 +1,4 @@
-import { ThemeValue } from "../theme-context";
+import { ThemeValue } from "../ThemeContext";
 import Color from "color";
 
 export type ThemeRange = {
