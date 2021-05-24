@@ -37,13 +37,16 @@ export function useFeed(edge: FeedOptions, args?: UseFeedOpts) {
         ...args,
         page,
       },
-      onBodyChange: (old, args, incoming) =>
-        args?.page > 1
+      onBodyChange: (old, args, incoming): RuqqusFeedSequence => {
+        return args?.page > 1
           ? {
-              data: [].concat(old?.data || [], incoming?.data || []),
+              data: ([] as RuqqusPost[]).concat(old?.data || [], incoming.data),
               next_exists: incoming?.next_exists,
             }
-          : incoming,
+          : incoming;
+      },
+      disabled: (): boolean =>
+        typeof body?.next_exists === "boolean" ? body.next_exists : false,
     });
 
   useEffect(() => setPage(1), [args?.sort]);

@@ -87,7 +87,7 @@ export function RuqqusClientProvider(props: RuqqusClientProviderProps) {
     } else {
       props.onApiError?.(new Error("No tokens"));
     }
-  }, [tokens?.refresh_token, props.config]);
+  }, [tokens?.refresh_token, tokens?.siteID, props.config]);
 
   return (
     <UserContext.Provider value={setTokens}>

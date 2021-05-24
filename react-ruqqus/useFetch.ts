@@ -3,12 +3,13 @@ import { ApiErrorContext, PrimerContext } from "./ClientContext";
 import { fetcher, fetcherOpts } from "./fetcher";
 
 export type UseFetchOpts<RESPONCE_BODY> = fetcherOpts<RESPONCE_BODY> & {
-  disabled?: boolean;
+  disabled?: (() => boolean) | boolean;
   onBodyChange?: (
     old: RESPONCE_BODY | undefined,
-    args: any | undefined,
-    incoming: RESPONCE_BODY | undefined,
+    args: any,
+    incoming: RESPONCE_BODY,
   ) => RESPONCE_BODY;
+  initial?: RESPONCE_BODY;
 };
 
 export function useFetch<RESPONSE_BODY>(
@@ -23,18 +24,36 @@ export function useFetch<RESPONSE_BODY>(
   const apiError = useContext(ApiErrorContext);
 
   useEffect(() => {
-    let disabled = typeof opts?.disabled === "boolean" ? opts.disabled : false;
+    let disabled: boolean;
+    switch (typeof opts?.disabled) {
+      case "function":
+        disabled = opts.disabled?.();
+        break;
+      case "boolean":
+        disabled = opts.disabled;
+        break;
+      case "undefined":
+      default:
+        disabled = false;
+    }
+
     if (!disabled) {
       const controller = new AbortController();
       setLoading(true);
       fetcher<RESPONSE_BODY>(host, edge, { ...opts, controller })
         .then((d) => {
           setResp(d);
-          setBody(
-            opts?.onBodyChange
-              ? (prev) => opts.onBodyChange?.(prev, opts.args, d.body)
-              : d.body,
-          );
+          setBody((prev) => {
+            if (opts?.onBodyChange) {
+              return opts.onBodyChange?.(
+                prev,
+                opts.args,
+                d.body as RESPONSE_BODY,
+              );
+            } else {
+              d.body;
+            }
+          });
           setLoading(false);
         })
         .catch((e: Error) => {
@@ -49,8 +68,8 @@ export function useFetch<RESPONSE_BODY>(
       };
     }
   }, [
-    opts?.body,
     refresher,
+    opts?.body,
     opts?.disabled,
     ...Object.values(opts?.args || {}),
   ]);

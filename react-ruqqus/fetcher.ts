@@ -68,7 +68,7 @@ export function fetcher<RESPONCE_BODY, REQUEST_BODY = unknown>(
       );
       let b: Promise<any> = isObject ? r.json() : r.text();
 
-      return b.then((body: ERRORABLE<RESPONCE_BODY>) => ({
+      return b.then((body: ERRORABLE<RESPONCE_BODY | string>) => ({
         ...r,
         body,
       }));
@@ -82,6 +82,7 @@ export function fetcher<RESPONCE_BODY, REQUEST_BODY = unknown>(
         resp,
         fid,
       });
+
       if (resp.ok) {
         return resp;
       } else if (
