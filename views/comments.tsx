@@ -34,10 +34,9 @@ import Color from "color";
 import { StackNavigationProp } from "@react-navigation/stack";
 import DefaultPostcard from "components/postcards/default/postcard";
 import { NoContent } from "./NoContent";
-import { MiniIcon } from "components/MiniIcon";
-import { Badge } from "components/MiniBadge";
 import _ from "lodash";
 import { Deliminer } from "../components/Deliminer";
+import { RuqqusBadges } from "../components/RuqqusBadges";
 
 const DepthContext = createContext(0);
 
@@ -59,6 +58,7 @@ function PostReplyPopup(props: PostReplyContextProviderProps) {
         ToastAndroid.show("Posted a reply", ToastAndroid.SHORT);
         props.newReply(comment);
         props.toggleModal?.();
+        setReplyMessage("");
       })
       .catch((e) => {
         ToastAndroid.show("Comment error: " + e.message, ToastAndroid.LONG);
@@ -123,12 +123,14 @@ function Reply(props: { reply: RuqqusComment }) {
       if (resp.ok) {
         setReply((prev) => {
           let c = _.clone(prev);
-          let reset = last === dir ? -1 : 1;
+          let change = last === dir ? -1 : 1;
           switch (dir) {
             case -1:
-              _.set(c, "downvotes", c.downvotes + reset);
+              _.set(c, "downvotes", c.downvotes + change);
+              break;
             case 1:
-              _.set(c, "upvotes", c.upvotes + reset);
+              _.set(c, "upvotes", c.upvotes + change);
+              break;
           }
           _.set(c, "voted", d);
 
@@ -140,15 +142,17 @@ function Reply(props: { reply: RuqqusComment }) {
     });
   };
 
-  const deleted = reply.is_deleted || reply.deleted_utc;
+  const deleted = reply?.is_deleted || reply?.deleted_utc || false;
 
   return (
     <DepthContext.Provider value={depth + 1}>
       <PostReplyPopup
         parent={reply}
-        newReply={(comment) =>
-          setReplies((prev) => ([] as RuqqusComments).concat([comment], prev))
-        }
+        newReply={(comment) => {
+          let c = [comment].concat(replies);
+          setReplies([]);
+          setReplies(c);
+        }}
         visible={popupVisible}
         toggleModal={() => setPopupVisible((x) => !x)}
       />
@@ -236,18 +240,7 @@ function Reply(props: { reply: RuqqusComment }) {
                   />
                   <Text style={style?.downvotes}> {reply.downvotes} </Text>
                   <Text style={style?.headText}>({reply.score})</Text>
-                  {reply.is_archived ? <MiniIcon name="archive" /> : null}
-                  {reply.is_banned ? <MiniIcon name="block-helper" /> : null}
-                  {reply.is_bot ? <MiniIcon name="robot" /> : null}
-                  {reply.is_nsfl ? (
-                    <Badge text="NSFL" fg="white" bg="black" />
-                  ) : null}
-                  {reply.is_nsfw ? (
-                    <Badge text="NSFW" fg="white" bg="red" />
-                  ) : null}
-                  {reply.is_offensive ? (
-                    <Badge text="OFFENSIVE" fg="black" bg="orange" />
-                  ) : null}
+                  <RuqqusBadges {...reply} />
                 </View>
               </View>
 
@@ -280,7 +273,7 @@ function Reply(props: { reply: RuqqusComment }) {
         ) : null}
 
         {childRepliesVisible &&
-          replies?.map((reply) => <Reply reply={reply} />)}
+          replies?.map((reply, i) => <Reply key={i} reply={reply} />)}
       </View>
     </DepthContext.Provider>
   );
@@ -309,11 +302,11 @@ export default function Comments() {
         <PostContext.Provider value={body}>
           <PostReplyPopup
             parent={body}
-            newReply={(comment) =>
-              setReplies((prev) =>
-                ([] as RuqqusComments).concat([comment], prev),
-              )
-            }
+            newReply={(comment) => {
+              let c = [comment].concat(replies);
+              setReplies([]);
+              setReplies(c);
+            }}
             toggleModal={() => setPopupVisible((x) => !x)}
             visible={popupVisible}
           />
@@ -330,9 +323,9 @@ export default function Comments() {
             />
           </PopupWrapper>
 
-          {replies?.map?.((reply) => (
-            <Reply reply={reply} />
-          ))}
+          {replies?.map?.((reply, i) => {
+            return <Reply reply={reply} key={i} />;
+          })}
 
           {!body?.replies || body?.replies?.length <= 0 ? (
             <NoContent message="No comments found" />

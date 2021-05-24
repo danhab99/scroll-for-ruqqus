@@ -17,7 +17,6 @@ export function useSaved(): [boolean, () => void] {
   const saved = (filter?.length || 0) > 0;
 
   const toggle = () => {
-    debugger;
     if (saved) {
       deleter(predicator);
     } else {
