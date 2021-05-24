@@ -51,7 +51,7 @@ function useRealmState<T>() {
 
 export function useGetter<T extends RealmSchemaInterfaces>(
   schema: RealmSchemaNames,
-  query?: (obj: RealmResult<T>) => RealmResult<T>,
+  postProcess?: (obj: RealmResult<T>) => RealmResult<T>,
   dependencies: Array<any> = [],
 ) {
   const realm = useRealm();
@@ -60,8 +60,8 @@ export function useGetter<T extends RealmSchemaInterfaces>(
   useEffect(() => {
     let o = realm.objects<T>(schema);
     console.log("REALM GET", { schema, o });
-    setRes(query ? query(o) : o);
-  }, [realm, schema, query, ...dependencies]);
+    setRes(postProcess ? postProcess(o) : o);
+  }, [realm, schema, ...dependencies]);
 
   return res;
 }
