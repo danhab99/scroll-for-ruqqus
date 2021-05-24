@@ -3,8 +3,15 @@ import Realm from "realm";
 import _ from "lodash";
 
 import { RealmResult } from "./realm/schema";
+import { IRealmAccount } from "./realm/account";
+import { IRealmSettings } from "./realm/settings";
+import { IRealmTheme } from "./realm/theme";
 
-export type RealmSchemas = "theme" | "settings";
+export type RealmSchemaNames = "theme" | "settings" | "account" | "post";
+export type RealmSchemaInterfaces =
+  | IRealmAccount
+  | IRealmSettings
+  | IRealmTheme;
 
 const RealmContext = createContext<Realm>({} as Realm);
 
@@ -37,8 +44,8 @@ function useRealmState<T>() {
   return useState<RealmResult<T>>();
 }
 
-export function useGetter<T>(
-  schema: RealmSchemas,
+export function useGetter<T extends RealmSchemaInterfaces>(
+  schema: RealmSchemaNames,
   query?: (obj: RealmResult<T>) => RealmResult<T>,
   dependencies: Array<any> = [],
 ) {
@@ -53,7 +60,9 @@ export function useGetter<T>(
   return res;
 }
 
-export function useCreator<T>(schema: RealmSchemas) {
+export function useCreator<T extends RealmSchemaInterfaces>(
+  schema: RealmSchemaNames,
+) {
   const realm = useRealm();
 
   return (newObj: T) => {
@@ -66,7 +75,10 @@ export function useCreator<T>(schema: RealmSchemas) {
   };
 }
 
-export function useFilter<T>(schema: RealmSchemas, predicate: string) {
+export function useFilter<T extends RealmSchemaInterfaces>(
+  schema: RealmSchemaNames,
+  predicate: string,
+) {
   const objs = useGetter<T>(schema);
   const [res, setRes] = useRealmState<T>();
 
@@ -77,7 +89,9 @@ export function useFilter<T>(schema: RealmSchemas, predicate: string) {
   return res;
 }
 
-export function useModifier<T>(schema: RealmSchemas) {
+export function useModifier<T extends RealmSchemaInterfaces>(
+  schema: RealmSchemaNames,
+) {
   const realm = useRealm();
   const objs = useGetter<T>(schema);
 
@@ -89,7 +103,9 @@ export function useModifier<T>(schema: RealmSchemas) {
   };
 }
 
-export function useDestroyer<T>(schema: RealmSchemas) {
+export function useDestroyer<T extends RealmSchemaInterfaces>(
+  schema: RealmSchemaNames,
+) {
   const realm = useRealm();
   const objs = useGetter<T>(schema);
 
