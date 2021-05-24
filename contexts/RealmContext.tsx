@@ -59,8 +59,22 @@ export function useGetter<T extends RealmSchemaInterfaces>(
 
   useEffect(() => {
     let o = realm.objects<T>(schema);
-    console.log("REALM GET", { schema, o });
-    setRes(postProcess ? postProcess(o) : o);
+
+    const handler: Realm.CollectionChangeCallback<T & Realm.Object> = (
+      prev,
+      change,
+    ) => {
+      let objs = realm.objects<T>(schema);
+      console.log("REALM GET", { schema, objs });
+      setRes(postProcess ? postProcess(objs) : objs);
+    };
+
+    handler(o, undefined);
+
+    o.addListener(handler);
+    return () => {
+      o.removeListener(handler);
+    };
   }, [realm, schema, ...dependencies]);
 
   return res;
