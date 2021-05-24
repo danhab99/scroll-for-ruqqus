@@ -9,6 +9,7 @@ import { usePostMenuContext } from "contexts/PostMenuContext";
 import { LoadingControl } from "../../LoadingControl";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useRoute } from "@react-navigation/native";
+import { useSaved } from "../useSaved";
 
 interface ControlProps {
   additionalControls?: React.ReactNode;
@@ -19,27 +20,14 @@ export function Controls(props: ControlProps) {
   const post = useContextPost();
   const style = useStyle();
   const theme = useTheme();
-  const [saves, { add, remove }] = useSavedPosts();
   const navigation = useNavigation<StackNavigationProp<any>>();
   const route = useRoute();
+  const [saved, toggleSaved] = useSaved();
 
   const [__, setPostMenu] = usePostMenuContext();
 
   const predicate = (x: { id: string; date_saved: Date }): boolean =>
     x.id.includes(post.id);
-
-  const saved = _.findIndex(saves, predicate) >= 0;
-
-  const toggleSaved = () => {
-    if (saved) {
-      remove(predicate);
-    } else {
-      add({
-        id: post.id,
-        date_saved: new Date(),
-      });
-    }
-  };
 
   return (
     <View style={style?.controlrow}>
