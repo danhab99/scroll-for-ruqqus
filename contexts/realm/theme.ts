@@ -78,7 +78,7 @@ export const RealmTheme: ISchema<IRealmTheme> = {
       body: "number",
       heading: "number",
     },
-    _id: "int",
+    _id: "string",
   },
   primaryKey: "_id",
 };

@@ -11,9 +11,9 @@ export interface IRealmAccount {
 export const RealmAccount: ISchema<IRealmAccount> = {
   name: "account",
   properties: {
-    _id: "int",
+    _id: "string",
     access_token: "string",
-    expires_at: "number",
+    expires_at: "int",
     refresh_token: "string",
     siteID: "string",
     username: "string",

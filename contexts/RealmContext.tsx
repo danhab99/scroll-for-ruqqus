@@ -2,16 +2,19 @@ import React, { useState, useEffect, createContext, useContext } from "react";
 import Realm from "realm";
 import _ from "lodash";
 
-import { RealmResult } from "./realm/schema";
-import { IRealmAccount } from "./realm/account";
-import { IRealmSettings } from "./realm/settings";
-import { IRealmTheme } from "./realm/theme";
+import { ISchema, RealmResult } from "./realm/schema";
+import { IRealmAccount, RealmAccount } from "./realm/account";
+import { IRealmSettings, RealmSettings } from "./realm/settings";
+import { IRealmTheme, RealmTheme } from "./realm/theme";
+import { IRealmSavedPost, RealmSavedPost } from "./realm/savedPosts";
+import uuid from "react-native-uuid";
 
-export type RealmSchemaNames = "theme" | "settings" | "account" | "post";
+export type RealmSchemaNames = "theme" | "settings" | "account" | "saved";
 export type RealmSchemaInterfaces =
   | IRealmAccount
   | IRealmSettings
-  | IRealmTheme;
+  | IRealmTheme
+  | IRealmSavedPost;
 
 const RealmContext = createContext<Realm>({} as Realm);
 
@@ -21,8 +24,10 @@ export function RealmContextProvider(props: React.PropsWithChildren<{}>) {
   useEffect(() => {
     Realm.open({
       path: "realm",
-      schema: [],
-    }).then((r) => setRealm(r));
+      schema: [RealmSavedPost, RealmAccount],
+    }).then((r) => {
+      setRealm(r);
+    });
   }, []);
 
   if (realm) {
@@ -68,7 +73,11 @@ export function useCreator<T extends RealmSchemaInterfaces>(
   return (newObj: T) => {
     return new Promise<T & Realm.Object>((resolve) => {
       realm.write(() => {
-        let o = realm.create<T>(schema, newObj);
+        let o = realm.create<T>(schema, {
+          _id: uuid.v4(),
+          ...newObj,
+        });
+        console.log("REALM CREATE", { schema, newObj, o });
         resolve(o);
       });
     });
@@ -112,6 +121,7 @@ export function useModifier<T extends RealmSchemaInterfaces>(
   return (predicate: string, inject: Partial<T>) => {
     realm.write(() => {
       let f = objs?.filtered(predicate);
+      console.log("REALM MODIFY", { schema, predicate, inject, f });
       f?.forEach((x) => _.defaultsDeep(x, inject));
     });
   };
@@ -126,6 +136,7 @@ export function useDestroyer<T extends RealmSchemaInterfaces>(
   return (predicate: string) => {
     realm.write(() => {
       const o = objs?.filtered(predicate);
+      console.log("REALM DESTROY", { schema, predicate, o });
       realm.delete(o);
     });
   };
