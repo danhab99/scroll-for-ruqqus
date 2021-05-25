@@ -7,6 +7,7 @@ import {
   Text,
   View,
   Linking,
+  Image,
 } from "react-native";
 import ScaledImage from "./ScaledImage";
 import { useTheme } from "@contexts";
@@ -65,24 +66,14 @@ function PostAsImage() {
   }, [post.url]);
 
   return (
-    <View>
+    <View style={{ aspectRatio: 2 }}>
       {loading ? (
-        <ActivityIndicator
-          size={100}
-          color={theme?.Colors?.primary}
-          style={{
-            position: "absolute",
-            left: 0,
-            right: 0,
-            top: 0,
-            bottom: 0,
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 2000,
-          }}
-        />
+        <ActivityIndicator color={theme?.Colors?.primary} size="large" />
       ) : (
-        <ScaledImage url={url} />
+        <Image
+          source={{ uri: url }}
+          style={{ width: "100%", height: "100%", resizeMode: "cover" }}
+        />
       )}
     </View>
   );

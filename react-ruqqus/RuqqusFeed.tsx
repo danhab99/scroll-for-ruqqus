@@ -143,13 +143,14 @@ export function RuqqusFeed(
         ref={(r) => {
           flatlistRef.current = r;
         }}
-        keyExtractor={(e) => e.fullname}
+        keyExtractor={(e, i) => e.fullname + i}
         data={posts || []}
         renderItem={renderPost}
         ListHeaderComponent={renderHeader}
         refreshControl={refreshControl}
-        onEndReachedThreshold={props.onEndReachedThreshold || 3}
+        onEndReachedThreshold={props.onEndReachedThreshold || 5}
         onEndReached={onEndReached}
+        removeClippedSubviews={true}
         {...props}
       />
     </PostMutatorContext.Provider>

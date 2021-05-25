@@ -39,9 +39,9 @@ export default function ScaledImage(props: ScaledImageProps) {
       source={source}
       style={{
         width: "100%",
-        aspectRatio: aspectRatio,
         height: null,
         resizeMode: "contain",
+        aspectRatio,
       }}
     />
   );
@@ -73,9 +73,11 @@ export default function ScaledImage(props: ScaledImageProps) {
 
       {!props.popupOnly ? (
         props.scalable ? (
-          <Pressable onPress={() => setModalVisible(true)}>
-            {component}
-          </Pressable>
+          <View style={{ aspectRatio }}>
+            <Pressable onPress={() => setModalVisible(true)}>
+              {component}
+            </Pressable>
+          </View>
         ) : (
           component
         )
