@@ -1,5 +1,5 @@
 export interface RuqqusBadge {
-  created_utc: Date | null;
+  created_utc: number | null;
   icon_url: string;
   text: string;
   url: string | null;
@@ -25,9 +25,9 @@ export interface RuqqusFlagged {
   is_distinguished: boolean;
 }
 
-export interface RuqqusDateStamped {
-  created_utc: Date;
-  edited_utc: Date;
+export interface RuqqusnumberStamped {
+  created_utc: number;
+  edited_utc: number;
 }
 
 export interface RuqqusID {
@@ -39,7 +39,7 @@ export interface RuqqusID {
 export interface RuqqusComment
   extends RuqqusRatable,
     RuqqusFlagged,
-    RuqqusDateStamped,
+    RuqqusnumberStamped,
     RuqqusID {
   author_name: string;
   award_count: number;
@@ -49,12 +49,12 @@ export interface RuqqusComment
   permalink: string;
   post_id: string;
   replies: RuqqusComments;
-  deleted_utc: Date;
+  deleted_utc: number;
 }
 
 export type RuqqusComments = Array<RuqqusComment>;
 
-export interface RuqqusUser extends RuqqusDateStamped, RuqqusID {
+export interface RuqqusUser extends RuqqusnumberStamped, RuqqusID {
   badges: Array<RuqqusBadge>;
   banner_url: string;
   bio: string;
@@ -82,7 +82,7 @@ export type RuqqusVote = -1 | 0 | 1;
 export interface RuqqusPost
   extends RuqqusRatable,
     RuqqusFlagged,
-    RuqqusDateStamped,
+    RuqqusnumberStamped,
     RuqqusGuildPart,
     RuqqusID {
   author: RuqqusUser;
@@ -108,7 +108,7 @@ export interface RuqqusGuildPart {
   herald_guild: RuqqusGuild;
 }
 
-export interface RuqqusGuild extends RuqqusDateStamped, RuqqusID {
+export interface RuqqusGuild extends RuqqusnumberStamped, RuqqusID {
   banner_url: string;
   color: string;
   description: string;
@@ -127,7 +127,7 @@ export interface RuqqusGuild extends RuqqusDateStamped, RuqqusID {
 
 export interface RuqqusNotification
   extends RuqqusRatable,
-    RuqqusDateStamped,
+    RuqqusnumberStamped,
     RuqqusFlagged,
     RuqqusGuildPart,
     RuqqusID {
