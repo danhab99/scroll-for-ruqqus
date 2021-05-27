@@ -37,7 +37,7 @@ export function Head() {
             navigation.push(route.name, { feed: { user: post.author_name } })
           }>
           <TextBox color="muted" size={0.6}>
-            {post.author_name}{" "}
+            {post.author_name}
           </TextBox>
         </Pressable>
 
