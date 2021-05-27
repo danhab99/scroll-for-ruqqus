@@ -109,7 +109,7 @@ function Reply(props: { reply: RuqqusComment }) {
   const SPACER = 4;
 
   const depthColor = Color([255, 0, 0])
-    .rotate((360.0 / 7.0) * depth)
+    .rotate((360.0 / 8.0) * depth)
     .hex();
 
   const vote = (dir: -1 | 1) => {
@@ -175,8 +175,8 @@ function Reply(props: { reply: RuqqusComment }) {
                   marginLeft: theme?.Space.get?.(0.5),
                   color: theme?.Colors.muted,
                 }}>
-                reply {reply.id} was deleted{" "}
-                <TimeAgo time={reply.deleted_utc * 1000} />
+                reply {reply?.id} was deleted{" "}
+                <TimeAgo time={reply?.deleted_utc * 1000} />
               </TextBox>
             </View>
           ) : (
@@ -210,17 +210,17 @@ function Reply(props: { reply: RuqqusComment }) {
                   </Pressable>
                   <Deliminer />
                   <TextBox size={0.6} color="muted">
-                    <TimeAgo time={reply.created_utc * 1000} />
+                    <TimeAgo time={reply?.created_utc * 1000} />
                   </TextBox>
                   <Deliminer />
                   <TextBox size={0.6} color="muted">
-                    {reply.id}
+                    {reply?.id}
                   </TextBox>
                   {!childRepliesVisible ? (
                     <>
                       <Deliminer />
                       <TextBox size={0.6} color="muted">
-                        {reply.replies.length} collapsed comments
+                        {reply?.replies.length} collapsed comments
                       </TextBox>
                     </>
                   ) : null}
@@ -232,19 +232,19 @@ function Reply(props: { reply: RuqqusComment }) {
                     color={theme?.Colors.primaryLight}
                     size={theme?.FontSize.get?.(2)}
                   />
-                  <Text style={style?.upvotes}> {reply.upvotes} </Text>
+                  <Text style={style?.upvotes}> {reply?.upvotes} </Text>
                   <Icon
                     name="arrow-circle-down"
                     color={theme?.Colors.primaryDark}
                     size={theme?.FontSize.get?.(2)}
                   />
-                  <Text style={style?.downvotes}> {reply.downvotes} </Text>
-                  <Text style={style?.headText}>({reply.score})</Text>
+                  <Text style={style?.downvotes}> {reply?.downvotes} </Text>
+                  <Text style={style?.headText}>({reply?.score})</Text>
                   <RuqqusBadges {...reply} />
                 </View>
               </View>
 
-              <HtmlMarkdown html={reply.body_html} />
+              <HtmlMarkdown html={reply?.body_html} />
             </>
           )}
         </Pressable>
@@ -261,12 +261,12 @@ function Reply(props: { reply: RuqqusComment }) {
             <LoadingControl
               name="arrow-upward"
               onPress={() => vote(1)}
-              highlighted={reply.voted === 1}
+              highlighted={reply?.voted === 1}
             />
             <LoadingControl
               name="arrow-downward"
               onPress={() => vote(-1)}
-              highlighted={reply.voted === -1}
+              highlighted={reply?.voted === -1}
             />
             <IconButton name="reply" onPress={() => setPopupVisible(true)} />
           </View>
