@@ -192,20 +192,20 @@ function Reply(props: { reply: RuqqusComment }) {
                   <Pressable
                     onPress={() =>
                       navigation.push(route.params?.lastRoute, {
-                        feed: { user: reply.author_name },
+                        feed: { user: reply?.author_name },
                       })
                     }>
                     <TextBox size={0.6} color="primary">
                       <Image
                         source={{
-                          uri: `https://ruqqus.com/@${reply.author_name}/pic/profile`,
+                          uri: `https://ruqqus.com/@${reply?.author_name}/pic/profile`,
                         }}
                         style={{
                           width: theme?.FontSize.get?.(1),
                           height: theme?.FontSize.get?.(1),
                         }}
                       />{" "}
-                      @{reply.author_name}
+                      @{reply?.author_name}
                     </TextBox>
                   </Pressable>
                   <Deliminer />
