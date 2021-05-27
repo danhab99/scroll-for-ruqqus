@@ -102,6 +102,7 @@ const VALID_IMAGE_DOMAINS = [
   "media.tenor.com",
   "puu.sh",
   "tenor.com",
+  "files.catbox.moe",
 ];
 
 export default function SubmissionContent() {
