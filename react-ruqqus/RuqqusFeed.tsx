@@ -176,6 +176,8 @@ export function useVote() {
 
   const vote = (dir: RuqqusVote) => {
     let d = post.voted === dir ? 0 : dir;
+    let last = post.voted;
+
     return fetcher<RuqqusPost, {}>(
       client.domain,
       `api/v1/vote/post/${post.id}/${d}`,
@@ -183,24 +185,33 @@ export function useVote() {
         access_token: client.access_token,
         body: {},
       },
-    )
-      .then((resp) => {
-        if (resp.ok) {
-          return fetcher<RuqqusPost>(client.domain, `api/v1/post/${post.id}`, {
-            access_token: client.access_token,
-          });
-        } else {
-          throw resp;
-        }
-      })
-      .then((resp) => {
-        let p = resp.body;
-        mutate((prev) => ({
-          data: prev?.data.map((x) => (x.fullname === p.fullname ? p : x)),
-          next_exists: prev?.next_exists,
-        }));
-        return resp;
-      });
+    ).then((resp) => {
+      if (resp.ok) {
+        mutate((prev) => {
+          return {
+            data: prev?.data.map((prevPost: RuqqusPost): RuqqusPost => {
+              if (prevPost.fullname == post.fullname) {
+                let change = last === dir ? -1 : 1;
+                switch (dir) {
+                  case -1:
+                    prevPost.downvotes = prevPost.downvotes + change;
+                    break;
+                  case 1:
+                    prevPost.upvotes = prevPost.upvotes + change;
+                    break;
+                }
+                prevPost.voted = d;
+              }
+
+              return prevPost;
+            }),
+            next_exists: prev?.next_exists,
+          } as RuqqusFeedSequence;
+        });
+      } else {
+        throw resp;
+      }
+    });
   };
 
   return {
