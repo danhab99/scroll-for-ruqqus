@@ -42,7 +42,8 @@ function NotificationItem({ item }: { item: RuqqusNotification }) {
         </TextBox>
         <TextBox>
           <TextBox color="primary">@{item.author_name}</TextBox>{" "}
-          <Icon name="arrow-right-bold" /> {item.post.id}
+          <Icon name="arrow-right-bold" /> {item.post.title}{" "}
+          <TextBox color="muted">({item.post.id})</TextBox>
         </TextBox>
 
         <RuqqusBadges {...item} />
