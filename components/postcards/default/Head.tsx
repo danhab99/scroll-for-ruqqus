@@ -18,40 +18,6 @@ export function Head() {
 
   const route = useRoute();
 
-  const headItems = [
-    {
-      label: "+" + post.guild.name,
-      action: () =>
-        navigation.push(route.name, { feed: { guild: post.guild_name } }),
-    },
-    {
-      label: post.author_name,
-    },
-    {
-      label: post.domain,
-    },
-    {
-      label: <TimeAgo time={post?.created_utc * 1000} />,
-    },
-    {
-      label: post.id,
-    },
-  ];
-
-  const headComponents = headItems.map((obj, i) => (
-    <Pressable key={i} onPress={obj.action}>
-      <Text style={i === 0 ? style?.primaryHeadText : style?.headText}>
-        {obj.label}
-      </Text>
-    </Pressable>
-  ));
-
-  const head = _.flatMap(headComponents, (value, index, array) =>
-    array.length - 1 !== index
-      ? [value, <Text style={style?.headBullet}>{" • "}</Text>]
-      : value,
-  );
-
   return (
     <View>
       <View style={style?.horizontal}>
