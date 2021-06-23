@@ -17,6 +17,7 @@ import { RuqqusPost, RuqqusGuild, RuqqusUser, RuqqusVote } from "./types";
 import { useRuqqusClient } from "./useRuqqusClient";
 import { fetcher } from "./fetcher";
 import { useRuqqusFetch } from "./useRuqqusFetch";
+import { OptimizedFlatList } from "react-native-optimized-flatlist";
 
 export const PostContext = createContext<RuqqusPost>({} as RuqqusPost);
 const GuildContext = createContext<RuqqusGuild>({} as RuqqusGuild);
@@ -139,11 +140,7 @@ export function RuqqusFeed(
 
   return (
     <PostMutatorContext.Provider value={setPosts}>
-      <FlatList
-        ref={(r) => {
-          flatlistRef.current = r;
-        }}
-        keyExtractor={(e, i) => e.fullname + i}
+      <OptimizedFlatList
         data={posts || []}
         renderItem={renderPost}
         ListHeaderComponent={renderHeader}
