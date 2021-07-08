@@ -148,6 +148,7 @@ export function RuqqusFeed(
         onEndReachedThreshold={props.onEndReachedThreshold || 5}
         onEndReached={onEndReached}
         removeClippedSubviews={true}
+        extraData={posts}
         {...props}
       />
     </PostMutatorContext.Provider>
