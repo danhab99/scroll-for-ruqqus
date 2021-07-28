@@ -51,16 +51,10 @@ export function useFeed(edge: FeedOptions, args?: UseFeedOpts) {
 
   useEffect(() => setPage(1), [args?.sort]);
 
-  const nextPage = () => {
-    if (body?.next_exists && !loading) {
-      setPage((x) => x + 1);
-    }
-  };
-
   return {
     loading,
     posts: body?.data,
-    nextPage,
+    nextPage: () => (body?.next_exists ? setPage((x) => x + 1) : null),
     refresh,
     setPosts: setBody,
   };

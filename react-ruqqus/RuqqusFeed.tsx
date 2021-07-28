@@ -140,7 +140,7 @@ export function RuqqusFeed(
 
   return (
     <PostMutatorContext.Provider value={setPosts}>
-      <OptimizedFlatList
+      <FlatList
         data={posts || []}
         renderItem={renderPost}
         ListHeaderComponent={renderHeader}
@@ -148,7 +148,10 @@ export function RuqqusFeed(
         onEndReachedThreshold={props.onEndReachedThreshold || 5}
         onEndReached={onEndReached}
         removeClippedSubviews={true}
-        extraData={posts}
+        keyExtractor={(item: RuqqusPost, index: number) =>
+          `${item.fullname}>${index}`
+        }
+        maxToRenderPerBatch={4}
         {...props}
       />
     </PostMutatorContext.Provider>
