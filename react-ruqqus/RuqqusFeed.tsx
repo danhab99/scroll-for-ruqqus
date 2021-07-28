@@ -19,6 +19,9 @@ import { fetcher } from "./fetcher";
 import { useRuqqusFetch } from "./useRuqqusFetch";
 import { OptimizedFlatList } from "react-native-optimized-flatlist";
 
+const pdebug = (msg: string, ...extras: any) =>
+  console.debug(`RuqqusFeed | ${msg}`, ...extras);
+
 export const PostContext = createContext<RuqqusPost>({} as RuqqusPost);
 const GuildContext = createContext<RuqqusGuild>({} as RuqqusGuild);
 const UserContext = createContext<RuqqusUser>({} as RuqqusUser);
@@ -88,6 +91,7 @@ export function RuqqusFeed(
 
   if (typeof props.feed === "object") {
     if ("guild" in props.feed) {
+      pdebug("Feed is a guild");
       renderHeader = (
         <ContextManager
           context={GuildContext}
@@ -97,6 +101,7 @@ export function RuqqusFeed(
         </ContextManager>
       );
     } else if ("user" in props.feed) {
+      pdebug("Field is user");
       renderHeader = (
         <ContextManager
           context={UserContext}
@@ -116,11 +121,13 @@ export function RuqqusFeed(
   const flatlistRef = useRef<FlatList<RuqqusPost> | null>();
 
   const doRefresh = () => {
+    pdebug("Feed refresh sequence");
     refresh();
     flatlistRef?.current?.scrollToOffset?.({ offset: 0, animated: true });
   };
 
   useEffect(() => {
+    pdebug("Client changed, refreshing");
     doRefresh();
   }, [client]);
 
@@ -128,7 +135,12 @@ export function RuqqusFeed(
     props.refreshRef = () => doRefresh();
   }
 
-  const onEndReached = props.onEndReached || (() => nextPage());
+  const onEndReached =
+    props.onEndReached ||
+    (() => {
+      pdebug("Refreshing because end reached");
+      nextPage();
+    });
 
   const refreshControl = props.refreshControl || (
     <RefreshControl
@@ -148,9 +160,9 @@ export function RuqqusFeed(
         onEndReachedThreshold={props.onEndReachedThreshold || 5}
         onEndReached={onEndReached}
         removeClippedSubviews={true}
-        keyExtractor={(item: RuqqusPost, index: number) =>
-          `${item.fullname}>${index}`
-        }
+        keyExtractor={(item: RuqqusPost, index: number) => {
+          return  `${item.fullname}>${index}`
+        }}
         maxToRenderPerBatch={4}
         {...props}
       />
@@ -176,6 +188,7 @@ export function useVote() {
   const mutate = useContext(PostMutatorContext);
 
   const vote = (dir: RuqqusVote) => {
+    pdebug("Vote", dir, post);
     let d = post.voted === dir ? 0 : dir;
     let last = post.voted;
 
@@ -189,23 +202,27 @@ export function useVote() {
     ).then((resp) => {
       if (resp.ok) {
         mutate((prev) => {
+          pdebug("Mutating posts to refelect votes");
           return {
-            data: prev?.data.map((prevPost: RuqqusPost): RuqqusPost => {
-              if (prevPost.fullname == post.fullname) {
-                let change = last === dir ? -1 : 1;
-                switch (dir) {
-                  case -1:
-                    prevPost.downvotes = prevPost.downvotes + change;
-                    break;
-                  case 1:
-                    prevPost.upvotes = prevPost.upvotes + change;
-                    break;
+            data: prev?.data.map(
+              (prevPost: RuqqusPost): RuqqusPost => {
+                if (prevPost.fullname == post.fullname) {
+                  pdebug("Mutating", prevPost);
+                  let change = last === dir ? -1 : 1;
+                  switch (dir) {
+                    case -1:
+                      prevPost.downvotes = prevPost.downvotes + change;
+                      break;
+                    case 1:
+                      prevPost.upvotes = prevPost.upvotes + change;
+                      break;
+                  }
+                  prevPost.voted = d;
                 }
-                prevPost.voted = d;
-              }
 
-              return prevPost;
-            }),
+                return prevPost;
+              },
+            ),
             next_exists: prev?.next_exists,
           } as RuqqusFeedSequence;
         });
