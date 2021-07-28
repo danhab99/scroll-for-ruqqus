@@ -17,8 +17,10 @@ import {
   DrawerItemList,
 } from "@react-navigation/drawer";
 import { StatusBar } from "expo-status-bar";
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
+import { FileLogger } from "react-native-file-logger";
 import { View, Text, ToastAndroid } from "react-native";
+import { ExternalStorageDirectoryPath } from "react-native-fs";
 
 import { IconButton } from "./components/Buttons";
 
@@ -220,6 +222,17 @@ export default function App() {
       ToastAndroid.show("API ERROR: " + e.message, ToastAndroid.LONG);
     }
   };
+
+  useEffect(() => {
+    FileLogger.configure({
+      maximumFileSize: 0,
+      maximumNumberOfFiles: 0,
+      captureConsole: true,
+      logsDirectory: ExternalStorageDirectoryPath,
+    });
+    FileLogger.enableConsoleCapture();
+    console.log(`Logging to ${ExternalStorageDirectoryPath}`);
+  }, []);
 
   return (
     <RuqqusClientProvider config={RUQQUS_CLIENT_CONFIG} onApiError={apiError}>

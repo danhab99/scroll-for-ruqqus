@@ -130,6 +130,7 @@ android {
 
     defaultConfig {
         applicationId "com.scrollforruqqus"
+        multiDexEnabled true
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
@@ -181,6 +182,9 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-fs')
+    implementation 'com.android.support:multidex:1.0.3'
+
     implementation fileTree(dir: "libs", include: ["*.jar"])
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
