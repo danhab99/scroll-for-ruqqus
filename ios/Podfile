@@ -10,7 +10,6 @@ target 'scrollforruqqus' do
 
   pod 'RNCMaskedView', :path => '../node_modules/@react-native-community/masked-view'
 
-  pod 'RNGestureHandler', :path => '../node_modules/react-native-gesture-handler'
 
   pod 'RNReanimated', :path => '../node_modules/react-native-reanimated'
 
@@ -27,6 +26,8 @@ target 'scrollforruqqus' do
   pod 'RNCCheckbox', :path => '../node_modules/@react-native-community/checkbox'
 
   pod 'react-native-slider', :path => '../node_modules/@react-native-community/slider'
+
+  pod 'RNGestureHandler', :path => '../node_modules/react-native-gesture-handler'
 
   target 'scrollforruqqusTests' do
     inherit! :complete
