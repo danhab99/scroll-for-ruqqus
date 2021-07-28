@@ -8,12 +8,9 @@
     "start": "react-native start --resetCache",
     "test": "jest",
     "lint": "eslint .",
-    "format": "prettier --write ."
+    "format": "prettier --write $(git diff --name-only)"
   },
-  "pre-commit": [
-    "format",
-    "lint"
-  ],
+  "pre-commit": ["format", "lint"],
   "dependencies": {
     "@bam.tech/react-native-make": "^3.0.0",
     "@react-native-community/checkbox": "^0.5.7",
