@@ -62,7 +62,7 @@ export function ValueProvider(props: React.PropsWithChildren<{}>) {
   );
 }
 
-type ValueSetter<T> = T & ((prev: T) => T);
+type ValueSetter<T> = T | ((prev: T) => T);
 
 export function useValue<T>(
   ...path: string[]
