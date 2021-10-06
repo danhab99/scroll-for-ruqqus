@@ -64,7 +64,7 @@
     "realm": "^10.4.1",
     "unfetch": "^4.2.0",
     "url": "^0.11.0",
-    "url-parse": "^1.5.1"
+    "url-parse": "^1.5.2"
   },
   "devDependencies": {
     "@babel/core": "7.12.9",
