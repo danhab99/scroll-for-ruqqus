@@ -1,3 +1,7 @@
+# !!! ARCHIVED !!!
+
+Scroll for Ruqqus is no longer being developed because ruqqus.com shut down. For more information, please refer to [the reason I closed this one Ruqqus feature request issue](https://github.com/ruqqus/ruqqus/issues/553#issuecomment-945033825) for my reason why.
+
 # Scroll For Ruqqus
 
 This is a 3rd party [Ruqqus](https://ruqqus.com/) client for Android and iOS\* written in React Native following [Boost For Reddit's](https://play.google.com/store/apps/details?id=com.rubenmayayo.reddit) UI/UX.
